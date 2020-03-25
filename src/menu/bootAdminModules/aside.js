@@ -7,8 +7,12 @@ export default [
       {
         title: '百度',
         path: 'https://www.baidu.com/'
+      },
+      {
+        title: '菜单管理',
+        path: `${pre}/menu`
       }
-    ])('/bootAdmin/system')
+    ])('/bootAdmin/systemManager')
   },
   {
     title: '用户中心',
@@ -19,6 +23,6 @@ export default [
         path: `${pre}/userList`,
         icon: ''
       }
-    ])('/bootAdmin/userManger')
+    ])('/bootAdmin/userManager')
   }
 ]

@@ -7,11 +7,11 @@ const meta = {
   auth: true
 }
 export default {
-  path: '/bootAdmin/userManger',
-  name: 'userManger',
+  path: '/bootAdmin/userManager',
+  name: 'userManager',
   meta,
   redirect: {
-    name: 'user-manger-index'
+    name: 'user-manager-index'
   },
   component: layoutHeaderAside,
   children: (pre => [
@@ -33,5 +33,5 @@ export default {
         title: '用戶信息'
       }
     }
-  ])('userManger-')
+  ])('userManager-')
 }
