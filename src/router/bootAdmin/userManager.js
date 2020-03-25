@@ -23,7 +23,6 @@ export default {
         ...meta,
         title: '用户管理'
       }
-<<<<<<< HEAD
     },
     {
       path: 'userInfo',
@@ -33,8 +32,6 @@ export default {
         ...meta,
         title: '用戶信息'
       }
-=======
->>>>>>> 8c114cca1c6ff08c5c62205b85af71da3afa454e
     }
   ])('userManger-')
 }
