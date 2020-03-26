@@ -127,20 +127,20 @@
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" plain icon="fa fa-search">搜索</el-button>
-                <el-dropdown size="small"  class="filter-item">
+                <el-dropdown size="small" @command="handlerPermissionAddNew" class="filter-item">
                   <el-button plain type="primary">
                     更多
                     <i class="el-icon-arrow-down el-icon--right"></i>
                   </el-button>
-                  <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item @click="handlerPermissionAddNew">添加</el-dropdown-item>
+                  <el-dropdown-menu split-button slot="dropdown">
+                    <el-dropdown-item command="addNew">添加</el-dropdown-item>
                   </el-dropdown-menu>
                 </el-dropdown>
               </el-form-item>
             </el-form>
           </el-col>
         </el-row>
-        <el-row style="padding-top:10">
+        <el-row style="padding-top:10%;">
           <el-col>
             <el-table
               :data="permissionList"
@@ -150,12 +150,115 @@
               check-strictly
               :highlight-current="true"
               default-expand-all
-            ></el-table>
+              style="width: 100%;"
+              border
+              :fit="true"
+            >
+              <el-table-column
+                type="selection"
+                sortable
+                resizable
+                :show-overflow-tooltip="true"
+                align="center"
+              ></el-table-column>
+              <el-table-column
+                prop="name"
+                label="名称"
+                sortable
+                resizable
+                :show-overflow-tooltip="true"
+                align="center"
+              ></el-table-column>
+              <el-table-column
+                prop="mark"
+                label="标识"
+                sortable
+                resizable
+                :show-overflow-tooltip="true"
+                align="center"
+              ></el-table-column>
+              <el-table-column
+                label="操作"
+                sortable
+                resizable
+                :show-overflow-tooltip="true"
+                align="center"
+              >
+                <template slot-scope="scope">
+                  <el-button
+                    @click="handlePermissionEdit(scope.row)"
+                    type="text"
+                    icon="el-icon-edit"
+                    circle
+                  ></el-button>
+                  <el-button
+                    type="text"
+                    @click="handlePermissionDelete(scope.row)"
+                    icon="el-icon-delete"
+                    circle
+                  ></el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+            <el-pagination
+              align="left"
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+              :current-page="pages.page"
+              :page-sizes="[10, 20, 50, 100]"
+              :page-size="pages.pageSize"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="pages.total"
+            ></el-pagination>
           </el-col>
         </el-row>
       </el-card>
     </el-col>
-    <el-dialog title="权限信息" :visible.sync="dialogTableVisible">
+    <el-dialog title="权限信息" :before-close="handleDialogClose" :visible.sync="dialogTableVisible">
+      <el-form
+        label-width="auto"
+        :model="permissionInfo"
+        :label-position="position"
+        ref="permissionForm"
+        required-asterisk
+        :rules="permissionRules"
+        center
+      >
+        <el-form-item required label="名称" prop="name">
+          <el-input v-model="permissionInfo.name" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="英文名称" prop="enname">
+          <el-input v-model="permissionInfo.enname" clearable></el-input>
+        </el-form-item>
+        <el-form-item required label="权限标识" prop="mark">
+          <el-input v-model="permissionInfo.mark" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="所属菜单" prop="menuName">
+          <el-input disabled v-model="permissionInfo.menuName" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="排序" prop="sort">
+          <el-input-number
+            style="width: 100%"
+            controls-position="right"
+            v-model="permissionInfo.sort"
+            placeholder="排序"
+            clearable
+          ></el-input-number>
+        </el-form-item>
+        <el-form-item label="备注" prop="description">
+          <el-input type="textarea" v-model="permissionInfo.description" placeholder="备注" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="是否启用" prop="isEnabled">
+          <el-radio-group v-model="permissionInfo.isEnabled">
+            <el-radio :label="1">启用</el-radio>
+            <el-radio :label="0">禁用</el-radio>
+          </el-radio-group>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="handlePermissionSave" plain>保存</el-button>
+        <el-button @click="handleDialogClose" plain>取 消</el-button>
+      </div>
     </el-dialog>
   </d2-container>
 </template>
@@ -165,7 +268,11 @@ import {
   menuTreePath,
   menuSavePath,
   menuUpdatePath,
-  menuDeletePath
+  menuDeletePath,
+  permissionSavePath,
+  permissionPagePath,
+  permissionUpdatePath,
+  permissionDeletePath
 } from "@/api/baseUrl";
 import { MessageBox } from "element-ui";
 export default {
@@ -196,13 +303,36 @@ export default {
         name: [{ required: true, message: "请输入名称", trigger: "blur" }],
         url: [{ required: true, message: "请输入路径", trigger: "blur" }]
       },
+      permissionRules: {
+        name: [{ required: true, message: "请输入名称", trigger: "blur" }],
+        mark: [{ required: true, message: "请输入标识", trigger: "blur" }]
+      },
       permissionList: [],
       props: {
         value: "id",
         label: "name"
       },
       searchPermission: {},
-      dialogTableVisible: true
+      dialogTableVisible: false,
+      permissionInfo: {
+        id: "",
+        menuId: "",
+        menuName: "",
+        name: "",
+        enname: "",
+        mark: "",
+        sort: 0,
+        description: "",
+        isEnabled: 1
+      },
+      isPermissionUpdate: false,
+      isPermissionView: false,
+      // 分页
+      pages: {
+        page: 1,
+        pageSize: 10,
+        total: 0
+      }
     };
   },
   mounted() {
@@ -210,7 +340,16 @@ export default {
     _self.getMenuTree();
   },
   methods: {
-    ...mapActions("bootAdmin/menu", ["menuTree", "menuSave", "menuUpdate",'menuDelete']),
+    ...mapActions("bootAdmin/menu", [
+      "menuTree",
+      "menuSave",
+      "menuUpdate",
+      "menuDelete",
+      "permissionPageList",
+      "permissionSave",
+      "permissionUpdate",
+      "permissionDelete"
+    ]),
     /**
      * 选中change(单选)
      */
@@ -246,6 +385,7 @@ export default {
         description: data.description,
         isEnabled: data.isEnabled
       };
+      _self.getPermissionPageList(data.id);
       _self.isUpdate = true;
     },
     /**
@@ -389,11 +529,152 @@ export default {
         _self.getMenuTree();
       });
     },
+    handleSizeChange(val) {
+      this.pages.pageSize = val;
+    },
+    handleCurrentChange(Page) {
+      this.pages.page = Page;
+    },
+    /**
+     * 获取分页的权限信息
+     */
+    getPermissionPageList(id) {
+      let _self = this;
+      let url =
+        permissionPagePath +
+        "/" +
+        id +
+        "/" +
+        _self.pages.page +
+        "/" +
+        _self.pages.pageSize;
+      _self.permissionPageList({ url: url, data: null }).then(result => {
+        _self.permissionList = result.list;
+        _self.pages.total = Number(result.total);
+      });
+    },
+    /**
+     * 关闭弹框
+     */
+    handleDialogClose() {
+      let _self = this;
+      _self.dialogTableVisible = false;
+      _self.permissionInfo = {
+        id: "",
+        menuId: "",
+        menuName: "",
+        name: "",
+        enname: "",
+        mark: "",
+        sort: 0,
+        description: "",
+        isEnabled: 1
+      };
+      let currentNodes = _self.$refs.tree.getCheckedNodes(false);
+      if (currentNodes.length > 0) {
+        let currentNode = currentNodes[0];
+        _self.getPermissionPageList(currentNode.id);
+      }
+    },
     /**
      * 添加权限
      */
-    handlerPermissionAddNew(){
-
+    handlerPermissionAddNew(command) {
+      let _self = this;
+      if (command == "addNew") {
+        let _self = this;
+        let currentNodes = _self.$refs.tree.getCheckedNodes(false);
+        _self.isUpdate = false;
+        if (currentNodes.length > 0) {
+          _self.isPermissionUpdate = false;
+          let currentNode = currentNodes[0];
+          _self.permissionInfo = {
+            id: "",
+            menuId: currentNode.id,
+            menuName: currentNode.name,
+            name: "",
+            enname: "",
+            mark: "",
+            sort: 0,
+            description: "",
+            isEnabled: 1
+          };
+          _self.dialogTableVisible = true;
+        } else {
+          this.$message({
+            message: "请选择菜单",
+            type: "warning"
+          });
+        }
+      }
+    },
+    /**
+     * 添加权限
+     */
+    handlePermissionSave() {
+      let _self = this;
+      // permissionForm
+      _self.$refs.permissionForm.validate(valid => {
+        if (valid) {
+          if (_self.isPermissionUpdate) {
+            _self.PermissionUpdate();
+          } else {
+            _self.PermissionSave();
+          }
+        } else {
+          this.$message.error("表单校验失败，请检查");
+        }
+      });
+    },
+    PermissionSave() {
+      let _self = this;
+      let params = JSON.parse(JSON.stringify(_self.permissionInfo));
+      let url = permissionSavePath + "/" + params.menuId;
+      _self.permissionSave({ url: url, data: params }).then(result => {
+        _self.handleDialogClose();
+      });
+    },
+    /**
+     * 编辑权限
+     */
+    handlePermissionEdit(row) {
+      let _self = this;
+      let info = JSON.parse(JSON.stringify(row));
+      _self.permissionInfo = info;
+      let currentNodes = _self.$refs.tree.getCheckedNodes(false);
+      _self.permissionInfo.menuName = currentNodes[0].name;
+      _self.dialogTableVisible = true;
+      _self.isPermissionUpdate = true;
+    },
+    /**
+     * 用户修改
+     */
+    PermissionUpdate() {
+      let _self = this;
+      let params = JSON.parse(JSON.stringify(_self.permissionInfo));
+      let url = permissionUpdatePath + "/" + params.id;
+      _self.permissionUpdate({ url: url, data: params }).then(result => {
+        _self.handleDialogClose();
+      });
+    },
+    /**
+     * 删除权限
+     */
+    handlePermissionDelete(row) {
+      let _self = this;
+      let info = JSON.parse(JSON.stringify(row));
+      MessageBox.confirm("是否删除该数据", "删除", {
+        type: "warning"
+      }).then(() => {
+        _self.PermissionDelete(row.id);
+      });
+    },
+    PermissionDelete(id) {
+      let _self = this;
+      let url = permissionDeletePath + "/" + id;
+      _self.permissionDelete({ url: url, data: null }).then(result => {
+        _self.handleDialogClose();
+      });
     }
   }
 };
@@ -403,7 +684,7 @@ export default {
   float: right;
 }
 .filter-item {
-    display: inline-block;
-    vertical-align: middle;
+  display: inline-block;
+  vertical-align: middle;
 }
 </style>

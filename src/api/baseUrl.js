@@ -41,5 +41,27 @@ export const menuSavePath = '/save'
  */
 export const menuUpdatePath = '/update'
 
+/**
+ * 删除
+ */
 export const menuDeletePath = '/delete'
+
+/**
+ * 获取权限
+ */
+export const permissionSavePath= '/permission/save'
+
+/**
+ * 分页后的权限
+ */
+export const permissionPagePath = '/permission'
+
+/**
+ * 修改权限
+ */
+export const permissionUpdatePath='/permission/update'
+/**
+ * 删除
+ */
+export const permissionDeletePath='/permission/delete'
 /*************菜单操作 end*******************/
