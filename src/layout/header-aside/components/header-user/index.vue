@@ -46,7 +46,7 @@ export default {
      */
     getUserInfo () {
       router.push({
-        name: 'userManger-userInfo'
+        name: 'userManager-userInfo'
       })
     }
   }

@@ -24,3 +24,22 @@ export const userUpdateInfoPath='/update/info'
  */
 export const userUpdatePasswordPath = '/update/password'
 /*************用户操作 end**********************/
+
+/*************菜单操作 start*******************/
+/**
+ *树形菜单
+ */
+export const menuTreePath ='/tree'
+
+/**
+ * 菜单新增
+ */
+export const menuSavePath = '/save'
+
+/**
+ * 菜单修改
+ */
+export const menuUpdatePath = '/update'
+
+export const menuDeletePath = '/delete'
+/*************菜单操作 end*******************/

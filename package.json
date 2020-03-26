@@ -25,6 +25,7 @@
     "core-js": "^3.4.3",
     "countup.js": "^2.0.4",
     "dayjs": "^1.8.17",
+    "e-icon-picker": "^1.0.2",
     "echarts": "^4.5.0",
     "element-ui": "^2.13.0",
     "flex.css": "^1.1.7",

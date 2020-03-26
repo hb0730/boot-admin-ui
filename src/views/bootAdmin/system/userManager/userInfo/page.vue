@@ -101,6 +101,7 @@ import {
   userUpdatePasswordPath
 } from "@/api/baseUrl";
 export default {
+  name: 'userManger-userInfo',
   data() {
     var validatePass = (rule, value, callback) => {
       if (value === "") {

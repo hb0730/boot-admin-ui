@@ -12,6 +12,17 @@ import router from './router'
 import { menuHeader, menuAside } from '@/menu'
 import { frameInRoutes } from '@/router/routes'
 
+import iconPicker from 'e-icon-picker';
+import 'e-icon-picker/dist/index.css';//基础样式
+import 'e-icon-picker/dist/main.css'; //fontAwesome 图标库样式
+
+//使用时必须引用ElementUI相关的组件以及css
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
+
+Vue.use(iconPicker);//使用e-icon-picker
+Vue.use(ElementUI); //使用ElementUI
+
 // 核心插件
 Vue.use(d2Admin)
 

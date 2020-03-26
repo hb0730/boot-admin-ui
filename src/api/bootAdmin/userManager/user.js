@@ -34,7 +34,6 @@ export function UserUpdatePassword(url, data) {
 }
 
 function baseUrl(url) {
-    console.log(userServer)
     if (url) {
         url = userServer + url
     } else {
