@@ -65,3 +65,25 @@ export const permissionUpdatePath='/permission/update'
  */
 export const permissionDeletePath='/permission/delete'
 /*************菜单操作 end*******************/
+
+/*************组织操作 start*****************/
+/**
+ * 组织保存
+ */
+export const orgSavePath='/save'
+
+/**
+ * 组织树
+ */
+export const orgTreePath='/tree'
+
+/**
+ * 修改组织信息
+ */
+export const orgUpdatePath = '/update'
+
+/**
+ * 删除
+ */
+export const orgDeletePath = '/delete'
+/*************组织操作 end*******************/

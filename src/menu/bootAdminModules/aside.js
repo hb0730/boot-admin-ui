@@ -15,6 +15,11 @@ export default [
     icon: '',
     children: [
       {
+        title: '组织管理',
+        path: '/bootAdmin/userManager/org',
+        icon: ''
+      },
+      {
         title: '用户管理',
         path: `/bootAdmin/userManager/userList`,
         icon: ''

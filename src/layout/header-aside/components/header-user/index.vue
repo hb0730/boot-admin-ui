@@ -1,8 +1,8 @@
 <template>
   <el-dropdown size="small" class="d2-mr">
     <span class="btn-text">{{info.name ? `你好 ${info.name}` : '未登录'}}</span>
-    <el-dropdown-menu slot="dropdown" @click.native="settingUser">
-      <el-dropdown-item>
+    <el-dropdown-menu slot="dropdown" >
+      <el-dropdown-item @click.native="settingUser">
         <i class="fa fa-cogs" aria-hidden="true"></i>
         设置
       </el-dropdown-item>

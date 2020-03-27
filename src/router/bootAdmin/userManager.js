@@ -25,6 +25,15 @@ export default {
       }
     },
     {
+      path: 'org',
+      name: `${pre}org`,
+      component: _import('bootAdmin/system/userManager/org/index'),
+      meta: {
+        ...meta,
+        title: '组织管理'
+      }
+    },
+    {
       path: 'userInfo',
       name: `${pre}userInfo`,
       component: _import('bootAdmin/system/userManager/userInfo/index'),
