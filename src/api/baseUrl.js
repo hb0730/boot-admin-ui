@@ -108,4 +108,13 @@ export const roleUpdatePath = '/update'
  * 删除角色
  */
 export const roleDeletePath = '/delete'
+
+/**
+ * 获取角色权限
+ */
+export const rolePermissionAllPath= '/permission/id'
+/**
+ * 更新角色权限
+ */
+export const rolePermissionSavePath = '/permission/save'
 /*************角色操作 end*******************/

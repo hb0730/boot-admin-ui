@@ -1,4 +1,4 @@
-import { RoleAll, RolePageAll, RoleSave, RoleUpdate, RoleDelete } from "@/api/bootAdmin/systemManager/role"
+import { RoleAll, RolePageAll, RoleSave, RoleUpdate, RoleDelete, RolePermissionAll, RolePermissionSave } from "@/api/bootAdmin/systemManager/role"
 
 export default {
     namespaced: true,
@@ -67,6 +67,34 @@ export default {
         roleDelete({dispatch},{url,data}={}){
             return new Promise((resolve,reject)=>{
                 RoleDelete(url,data).then(result=>{
+                    resolve(result)
+                }).catch(err=>{
+                    reject(err)
+                })
+            })
+        },
+        /**
+         * 获取角色权限
+         * @param {*} url 
+         * @param {*} data 
+         */
+        rolePermissionAll({dispatch},{url,data}={}){
+            return new Promise((resolve,reject)=>{
+                RolePermissionAll(url,data).then(result=>{
+                    resolve(result)
+                }).catch(err=>{
+                    reject(err)
+                })
+            })
+        },
+        /**
+         * 更新角色权限
+         * @param {*} url 
+         * @param {*} data 
+         */
+        rolePermissionSave({dispatch},{url,data}={}){
+            return new Promise((resolve,reject)=>{
+                RolePermissionSave(url,data).then(result=>{
                     resolve(result)
                 }).catch(err=>{
                     reject(err)

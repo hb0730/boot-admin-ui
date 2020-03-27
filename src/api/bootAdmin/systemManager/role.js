@@ -51,6 +51,25 @@ export function RoleDelete(url, data) {
     return httpGet(url, data)
 }
 
+/**
+ * 获取角色权限
+ * @param {*} url 
+ * @param {*} data 
+ */
+export function RolePermissionAll(url, data) {
+    url = baseUrl(url)
+    return httpGet(url, data)
+}
+
+/**
+ * 更新角色权限
+ * @param {*} url 
+ * @param {*} data 
+ */
+export function RolePermissionSave(url, data) {
+    url = baseUrl(url)
+    return httpPost(url, data)
+}
 
 function baseUrl(url) {
     if (url) {

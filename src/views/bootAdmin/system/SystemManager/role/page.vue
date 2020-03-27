@@ -118,7 +118,12 @@
                 ></el-button>
               </el-tooltip>
               <el-tooltip content="权限" placement="bottom" effect="light">
-                <el-button type="text" icon="fa fa-key" size="mini"></el-button>
+                <el-button
+                  type="text"
+                  @click="handlePermissionSave(scope.row)"
+                  icon="fa fa-key"
+                  size="mini"
+                ></el-button>
               </el-tooltip>
               <el-tooltip content="组织" placement="bottom" effect="light">
                 <el-button type="text" icon="fa fa-sitemap" size="mini"></el-button>
@@ -178,6 +183,82 @@
         <el-button size="medium" @click="handleDialogClose" plain>取 消</el-button>
       </div>
     </el-dialog>
+    <el-dialog
+      title="权限信息"
+      :before-close="handlePermissionDialogClose"
+      :visible.sync="dialogPermissionFormVisible"
+    >
+      <el-col :span="10">
+        <el-card shadow="never">
+          <el-tree
+            :data="menuTreeData"
+            show-checkbox
+            ref="tree"
+            node-key="id"
+            :props="treeProps"
+            check-strictly
+            :highlight-current="true"
+            default-expand-all
+            @current-change="handleNodeChangeEvent"
+            @check="handleNodeCheckClickEvent"
+          ></el-tree>
+        </el-card>
+      </el-col>
+      <el-col :span="14">
+        <el-table
+          :data="permissionList"
+          ref="permissionTable"
+          node-key="id"
+          :props="permissionProps"
+          check-strictly
+          :highlight-current="true"
+          default-expand-all
+          style="width: 100%;"
+          border
+          :fit="true"
+          @select="handleTableSelect"
+          @select-all="handleTableSelect"
+        >
+          <el-table-column
+            type="selection"
+            sortable
+            resizable
+            :show-overflow-tooltip="true"
+            align="center"
+          ></el-table-column>
+          <el-table-column
+            prop="name"
+            label="名称"
+            sortable
+            resizable
+            :show-overflow-tooltip="true"
+            align="center"
+          ></el-table-column>
+          <el-table-column
+            prop="mark"
+            label="标识"
+            sortable
+            resizable
+            :show-overflow-tooltip="true"
+            align="center"
+          ></el-table-column>
+        </el-table>
+        <el-pagination
+          align="left"
+          @size-change="handlePermissionSizeChange"
+          @current-change="handlePermissionCurrentChange"
+          :current-page="permissionPages.page"
+          :page-sizes="[10, 20, 50, 100]"
+          :page-size="permissionPages.pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="permissionPages.total"
+        ></el-pagination>
+      </el-col>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="handlerPermissionSave">更新</el-button>
+        <el-button @click="handlePermissionDialogClose">取 消</el-button>
+      </div>
+    </el-dialog>
   </d2-container>
 </template>
 <script>
@@ -186,7 +267,11 @@ import {
   roleAllPagePath,
   roleSavePath,
   roleUpdatePath,
-  roleDeletePath
+  roleDeletePath,
+  menuTreePath,
+  permissionPagePath,
+  rolePermissionSavePath,
+  rolePermissionAllPath
 } from "@/api/baseUrl";
 import { MessageBox } from "element-ui";
 export default {
@@ -211,6 +296,12 @@ export default {
         pageSize: 10,
         total: 0
       },
+      // 分页
+      permissionPages: {
+        page: 1,
+        pageSize: 10,
+        total: 0
+      },
       isUpdate: false,
       dialogTableVisible: false,
       roleRules: {
@@ -225,20 +316,40 @@ export default {
         description: "",
         isEnabled: 1
       },
-      isView: false
+      isView: false,
+      dialogPermissionFormVisible: false,
+      treeProps: {
+        children: "children",
+        label: "name"
+      },
+      menuTreeData: [],
+      i: 0,
+      permissionList: [],
+      permissionProps: {
+        value: "id",
+        label: "name"
+      },
+      currentMenuInfo: {},
+      currentPermissionMap: new Map(),
+      rolePermission: [],
+      currentData: {}
     };
   },
   mounted() {
     let _self = this;
     _self.getPageAll();
+    _self.getMenuTree();
   },
   methods: {
     ...mapActions("bootAdmin/role", [
       "roleAllPage",
       "roleSave",
       "roleUpdate",
-      "roleDelete"
+      "roleDelete",
+      "rolePermissionAll",
+      "rolePermissionSave"
     ]),
+    ...mapActions("bootAdmin/menu", ["menuTree", "permissionPageList"]),
     handleSizeChange(val) {
       this.pages.pageSize = val;
       this.getPageAll();
@@ -246,6 +357,12 @@ export default {
     handleCurrentChange(Page) {
       this.pages.page = Page;
       this.getPageAll();
+    },
+    handlePermissionSizeChange(val) {
+      this.permissionPages.pageSize = val;
+    },
+    handlePermissionCurrentChange(Page) {
+      this.permissionPages.page = Page;
     },
     /**
      * 获取分页后的角色
@@ -353,7 +470,6 @@ export default {
     RoleUpdate() {
       let _self = this;
       let params = JSON.parse(JSON.stringify(_self.roleInfo));
-      console.info(params);
       let url = roleUpdatePath + "/" + params.id;
       _self.roleUpdate({ url: url, data: params }).then(result => {
         _self.handleDialogClose();
@@ -377,6 +493,156 @@ export default {
       let url = roleDeletePath + "/" + id;
       _self.roleDelete({ url: url, data: null }).then(result => {
         _self.handleDialogClose();
+      });
+    },
+    /**
+     * 获取当前角色权限
+     */
+    handlePermissionSave(row) {
+      let _self = this;
+      _self.dialogPermissionFormVisible = true;
+      _self.currentData = row;
+      _self.GetRolePermission();
+    },
+    /**
+     * 关闭权限弹窗
+     */
+    handlePermissionDialogClose() {
+      let _self = this;
+      _self.dialogPermissionFormVisible = false;
+      _self.currentMenuInfo = {};
+      _self.currentPermissionMap.clear();
+      _self.$refs.permissionTable.clearSelection();
+    },
+    /**
+     * node选中
+     */
+    handleNodeChangeEvent(data, node) {
+      let _self = this;
+      _self.currentMenuInfo = data;
+      _self.getPermissionPageList(data.id);
+    },
+    /**
+     * check选中
+     * @param data
+     * @param node
+     */
+    handleNodeCheckClickEvent(data, node) {
+      let _self = this;
+      _self.currentMenuInfo = data;
+      _self.getPermissionPageList(data.id);
+    },
+    /**
+     * 获取树形菜单
+     */
+    getMenuTree() {
+      let _self = this;
+      let url = menuTreePath;
+      _self.menuTree({ url: url, data: null }).then(result => {
+        _self.menuTreeData = result;
+      });
+    },
+    /**
+     * 获取分页的权限信息
+     */
+    getPermissionPageList(id) {
+      let _self = this;
+      let url =
+        permissionPagePath +
+        "/" +
+        id +
+        "/" +
+        _self.permissionPages.page +
+        "/" +
+        _self.permissionPages.pageSize;
+      _self.permissionPageList({ url: url, data: null }).then(result => {
+        _self.permissionList = result.list;
+        _self.permissionPages.total = Number(result.total);
+        // 切换 菜单后重新选择表格权限
+        this.$nextTick(() => {
+          // let infos = _self.currentPermissionMap.get(_self.currentMenuInfo.id);
+          // if (infos) {
+          //   let list = _self.permissionList;
+          //   if (list) {
+          //     for (let index = 0; index < infos.length; index++) {
+          //       list.filter(function(v) {
+          //         if (v.id == infos[index]) {
+          //           _self.$refs.permissionTable.toggleRowSelection(v, true);
+          //         }
+          //       });
+          //     }
+          //   }
+          // }
+          let permissionMap = _self.currentPermissionMap;
+          let permissionList = _self.permissionList;
+          permissionMap.forEach(value => {
+            value.forEach(v => {
+              permissionList.forEach(permission => {
+                if (permission.id == v) {
+                  _self.$refs.permissionTable.toggleRowSelection(
+                    permission,
+                    true
+                  );
+                }
+              });
+            });
+          });
+        });
+      });
+    },
+    /**
+     * 表格选中
+     */
+    handleTableSelect(selection) {
+      let _self = this;
+      let array = [];
+      if (selection.length > 0) {
+        selection.forEach(value => {
+          array.push(value.id);
+        });
+      }
+      _self.currentPermissionMap.set(_self.currentMenuInfo.id, array);
+    },
+
+    /**
+     * 保存权限
+     */
+    handlerPermissionSave() {
+      let _self = this;
+      let permissionMap = _self.currentPermissionMap;
+      let permissionId = [];
+      permissionMap.set("all", []);
+      permissionMap.forEach(v => {
+        v.forEach(v1 => {
+          permissionId.push(v1);
+        });
+      });
+      _self.rolePermission = permissionId;
+      _self.RolePermissionSave();
+    },
+    /**
+     * 角色权限保存
+     */
+    RolePermissionSave() {
+      let _self = this;
+      let params = _self.rolePermission;
+      let url = rolePermissionSavePath + "/" + _self.currentData.id;
+      if (params||params.length>0) {
+        _self.rolePermissionSave({ url: url, data: params }).then(result => {
+          _self.handlePermissionDialogClose();
+        });
+      }else{
+         _self.handlePermissionDialogClose();
+      }
+    },
+    /**
+     * 获取角色权限
+     */
+    GetRolePermission() {
+      let _self = this;
+      let url = rolePermissionAllPath + "/" + _self.currentData.id;
+      _self.rolePermissionAll({ url: url, data: null }).then(result => {
+        _self.currentPermissionMap.set("all", result);
       });
     }
   }
