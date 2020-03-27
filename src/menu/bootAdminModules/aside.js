@@ -6,7 +6,8 @@ export default [
     children: [
       {
         title: '菜单管理',
-        path: `/bootAdmin/systemManager/menu`
+        path: `/bootAdmin/systemManager/menu`,
+        icon: ''
       },
       {
         title: '组织管理',

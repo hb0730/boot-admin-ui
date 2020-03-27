@@ -95,7 +95,7 @@ export const roleAllPath = '/all'
 /**
  * 分页后的全部角色
  */
-export const roleAllPathPath = '/all/page'
+export const roleAllPagePath = '/all/page'
 /**
  * 保存角色
  */
