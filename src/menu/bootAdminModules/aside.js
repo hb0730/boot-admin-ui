@@ -7,6 +7,16 @@ export default [
       {
         title: '菜单管理',
         path: `/bootAdmin/systemManager/menu`
+      },
+      {
+        title: '组织管理',
+        path: '/bootAdmin/systemManager/org',
+        icon: ''
+      },
+      {
+        title: '角色管理',
+        path: '/bootAdmin/systemManager/role',
+        icon: ''
       }
     ]
   },
@@ -14,11 +24,6 @@ export default [
     title: '用户中心',
     icon: '',
     children: [
-      {
-        title: '组织管理',
-        path: '/bootAdmin/userManager/org',
-        icon: ''
-      },
       {
         title: '用户管理',
         path: `/bootAdmin/userManager/userList`,

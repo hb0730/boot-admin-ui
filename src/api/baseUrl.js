@@ -87,3 +87,25 @@ export const orgUpdatePath = '/update'
  */
 export const orgDeletePath = '/delete'
 /*************组织操作 end*******************/
+/*************角色操作 start*****************/
+/**
+ * 全部角色
+ */
+export const roleAllPath = '/all'
+/**
+ * 分页后的全部角色
+ */
+export const roleAllPathPath = '/all/page'
+/**
+ * 保存角色
+ */
+export const roleSavePath = '/save'
+/**
+ * 修改角色
+ */
+export const roleUpdatePath = '/update'
+/**
+ * 删除角色
+ */
+export const roleDeletePath = '/delete'
+/*************角色操作 end*******************/

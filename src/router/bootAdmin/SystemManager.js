@@ -25,6 +25,24 @@ export default {
               title: '菜单管理'
             }
           },
+          {
+            path: 'org',
+            name: `${pre}org`,
+            component: _import('bootAdmin/system/systemManager/org/index'),
+            meta: {
+              ...meta,
+              title: '组织管理'
+            }
+          },
+          {
+            path:'role',
+            name:`${pre}role`,
+            component:_import('bootAdmin/system/systemManager/role/index'),
+            meta:{
+              ...meta,
+              title:'角色管理'
+            }
+          }
     ])('systemManager-')
 
 }

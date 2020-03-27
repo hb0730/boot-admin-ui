@@ -1,4 +1,4 @@
-import { OrgSave, OrgTreeAll, OrgUpdate, OrgDelete } from "@/api/bootAdmin/userManager/org"
+import { OrgSave, OrgTreeAll, OrgUpdate, OrgDelete } from "@/api/bootAdmin/systemManager/org"
 
 export default {
     namespaced: true,

@@ -14,3 +14,8 @@ export const menuServer = '/api/v1/menu'
  * 组织服务
  */
 export const orgServer = "/api/v1/org"
+
+/**
+ * 角色
+ */
+export const roleServer="/api/v1/role"
