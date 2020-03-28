@@ -81,6 +81,16 @@ export function PermissionDelete(url,data){
     return httpGet(url,data)
 }
 
+/**
+ * 获取全部菜单的权限
+ * @param {*} url 
+ * @param {*} data 
+ */
+export function PermissionIdsAll(url,data){
+    url = baseUrl(url)
+    return httpGet(url,data)
+}
+
 function baseUrl(url) {
     if (url) {
         url = menuServer + url

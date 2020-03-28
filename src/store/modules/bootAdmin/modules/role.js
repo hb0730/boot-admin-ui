@@ -1,4 +1,4 @@
-import { RoleAll, RolePageAll, RoleSave, RoleUpdate, RoleDelete, RolePermissionAll, RolePermissionSave } from "@/api/bootAdmin/systemManager/role"
+import { RoleAll, RolePageAll, RoleSave, RoleUpdate, RoleDelete, RolePermissionAll, RolePermissionSave, RolePermissionMap } from "@/api/bootAdmin/systemManager/role"
 
 export default {
     namespaced: true,
@@ -95,6 +95,20 @@ export default {
         rolePermissionSave({dispatch},{url,data}={}){
             return new Promise((resolve,reject)=>{
                 RolePermissionSave(url,data).then(result=>{
+                    resolve(result)
+                }).catch(err=>{
+                    reject(err)
+                })
+            })
+        },
+        /**
+         * 获取键值对方式的权限
+         * @param {*} url 
+         * @param {*} data 
+         */
+        rolePermissionMap({dispatch},{url,data}){
+            return new Promise((resolve,reject)=>{
+                RolePermissionMap(url,data).then(result=>{
                     resolve(result)
                 }).catch(err=>{
                     reject(err)

@@ -1,4 +1,4 @@
-import { MenuTree, MenuSave, MenuUpdate, MenuDelete, PermissionSave, PermissionList,PermissionUpdate,PermissionDelete } from '@/api/bootAdmin/systemManager/menu'
+import { MenuTree, MenuSave, MenuUpdate, MenuDelete, PermissionSave, PermissionList,PermissionUpdate,PermissionDelete, PermissionIdsAll } from '@/api/bootAdmin/systemManager/menu'
 export default {
     namespaced: true,
     actions: {
@@ -108,6 +108,20 @@ export default {
         permissionDelete({dispatch},{url,data}={}){
             return new Promise((resolve, reject) => {
                 PermissionDelete(url, data).then(result => {
+                    resolve(result)
+                }).catch(error => {
+                    reject(error)
+                })
+            })
+        },
+        /**
+         * 获取菜单的权限权限键值对 方式
+         * @param {*} url 
+         * @param {*} data 
+         */
+        permissionIdsAll({dispatch},{url,data}={}){
+            return new Promise((resolve, reject) => {
+                PermissionIdsAll(url, data).then(result => {
                     resolve(result)
                 }).catch(error => {
                     reject(error)

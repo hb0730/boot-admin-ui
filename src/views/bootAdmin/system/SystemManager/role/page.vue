@@ -271,7 +271,8 @@ import {
   menuTreePath,
   permissionPagePath,
   rolePermissionSavePath,
-  rolePermissionAllPath
+  rolePermissionAllPath,
+  rolePermissionMapAllPath
 } from "@/api/baseUrl";
 import { MessageBox } from "element-ui";
 export default {
@@ -329,9 +330,13 @@ export default {
         value: "id",
         label: "name"
       },
+      /*当前选中的菜单 */
       currentMenuInfo: {},
+      /**当前已选权限表格 */
       currentPermissionMap: new Map(),
+      /**角色权限 */
       rolePermission: [],
+      /**当前选中的表格权限更新 */
       currentData: {}
     };
   },
@@ -347,7 +352,8 @@ export default {
       "roleUpdate",
       "roleDelete",
       "rolePermissionAll",
-      "rolePermissionSave"
+      "rolePermissionSave",
+      "rolePermissionMap"
     ]),
     ...mapActions("bootAdmin/menu", ["menuTree", "permissionPageList"]),
     handleSizeChange(val) {
@@ -560,19 +566,6 @@ export default {
         _self.permissionPages.total = Number(result.total);
         // 切换 菜单后重新选择表格权限
         this.$nextTick(() => {
-          // let infos = _self.currentPermissionMap.get(_self.currentMenuInfo.id);
-          // if (infos) {
-          //   let list = _self.permissionList;
-          //   if (list) {
-          //     for (let index = 0; index < infos.length; index++) {
-          //       list.filter(function(v) {
-          //         if (v.id == infos[index]) {
-          //           _self.$refs.permissionTable.toggleRowSelection(v, true);
-          //         }
-          //       });
-          //     }
-          //   }
-          // }
           let permissionMap = _self.currentPermissionMap;
           let permissionList = _self.permissionList;
           permissionMap.forEach(value => {
@@ -627,12 +620,12 @@ export default {
       let _self = this;
       let params = _self.rolePermission;
       let url = rolePermissionSavePath + "/" + _self.currentData.id;
-      if (params||params.length>0) {
+      if (params || params.length > 0) {
         _self.rolePermissionSave({ url: url, data: params }).then(result => {
           _self.handlePermissionDialogClose();
         });
-      }else{
-         _self.handlePermissionDialogClose();
+      } else {
+        _self.handlePermissionDialogClose();
       }
     },
     /**
@@ -640,9 +633,12 @@ export default {
      */
     GetRolePermission() {
       let _self = this;
-      let url = rolePermissionAllPath + "/" + _self.currentData.id;
-      _self.rolePermissionAll({ url: url, data: null }).then(result => {
-        _self.currentPermissionMap.set("all", result);
+      let url = rolePermissionMapAllPath + "/" + _self.currentData.id;
+      _self.rolePermissionMap({ url: url, data: null }).then(result => {
+        // _self.currentPermissionMap=result
+        for (let key in result) {
+         _self.currentPermissionMap.set(key, result[key]); //注意这里取的是下标0和1
+        }
       });
     }
   }

@@ -64,6 +64,11 @@ export const permissionUpdatePath='/permission/update'
  * 删除
  */
 export const permissionDeletePath='/permission/delete'
+
+/**
+ * 获取权限id(角色赋权)
+ */
+export const permissionIdsAllPath = '/permission/menu/all'
 /*************菜单操作 end*******************/
 
 /*************组织操作 start*****************/
@@ -113,6 +118,10 @@ export const roleDeletePath = '/delete'
  * 获取角色权限
  */
 export const rolePermissionAllPath= '/permission/id'
+/**
+ * 获取键值对方式的权限
+ */
+export const rolePermissionMapAllPath= '/permission/map'
 /**
  * 更新角色权限
  */
