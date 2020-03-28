@@ -23,6 +23,11 @@ export const userUpdateInfoPath='/update/info'
  * 修改用户密码
  */
 export const userUpdatePasswordPath = '/update/password'
+
+/***
+ * 分页后的用户
+ */
+export const userAllPagePath ='/all'
 /*************用户操作 end**********************/
 
 /*************菜单操作 start*******************/

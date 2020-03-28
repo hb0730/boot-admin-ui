@@ -18,7 +18,7 @@ export default {
             })
         },
         /**
-        * 分页后的岗位
+        * 岗位
         * @param {*} url 
         * @param {*} data 
         */

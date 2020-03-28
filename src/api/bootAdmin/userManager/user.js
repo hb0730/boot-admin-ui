@@ -33,6 +33,16 @@ export function UserUpdatePassword(url, data) {
     return httpPost(url, data)
 }
 
+/**
+ * 分页后的用户
+ * @param {*} url 
+ * @param {*} data 
+ */
+export function UserAllPage(url,data){
+    url = baseUrl(url);
+    return httpPost(url,data);
+}
+
 function baseUrl(url) {
     if (url) {
         url = userServer + url

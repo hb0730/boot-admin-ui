@@ -1,4 +1,4 @@
-import { UserInfo, UserUpdateInfo, UserUpdatePassword } from '@/api/bootAdmin/userManager/user'
+import { UserInfo, UserUpdateInfo, UserUpdatePassword, UserAllPage } from '@/api/bootAdmin/userManager/user'
 export default {
     namespaced: true,
     actions: {
@@ -38,6 +38,20 @@ export default {
         userUpdatePassword({ dispatch }, { url, data } = {}) {
             return new Promise((resolve, reject) => {
                 UserUpdatePassword(url, data).then(result => {
+                    resolve(result)
+                }).catch(error => {
+                    reject(error)
+                })
+            })
+        },
+        /**
+         * 分页后的用户
+         * @param {*} url 
+         * @param {*} data 
+         */
+        userAllPage({ dispatch }, { url, data } = {}) {
+            return new Promise((resolve, reject) => {
+                UserAllPage(url, data).then(result => {
                     resolve(result)
                 }).catch(error => {
                     reject(error)
