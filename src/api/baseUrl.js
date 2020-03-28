@@ -137,3 +137,28 @@ export const roleOrgSavePath='/org/role/save'
  */
 export const roleOrgAllPath ='/org/role'
 /*************角色操作 end*******************/
+/*************岗位操作 start*****************/
+/**
+ * 岗位分页
+ */
+export const postAllPagePath ='/all'
+/**
+ * 岗位
+ */
+export const postAllPath = '/all'
+
+/**
+ * 岗位保存
+ */
+export const postSavePath='/save'
+
+/**
+ * 岗位更新
+ */
+export const postUpdatePath ='/update'
+
+/**
+ * 岗位删除
+ */
+export const postDeletePath='/delete'
+/*************岗位操作 end*******************/

@@ -32,6 +32,15 @@ export default {
         ...meta,
         title: '用戶信息'
       }
+    },
+    {
+      path: 'post',
+      name: `${pre}post`,
+      component: _import('bootAdmin/system/userManager/post/index'),
+      meta: {
+        ...meta,
+        title: '岗位管理'
+      }
     }
   ])('userManager-')
 }

@@ -19,3 +19,8 @@ export const orgServer = "/api/v1/org"
  * 角色
  */
 export const roleServer="/api/v1/role"
+
+/**
+ * 岗位
+ */
+export const postServer='/api/v1/post'

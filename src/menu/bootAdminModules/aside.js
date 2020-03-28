@@ -27,7 +27,11 @@ export default [
     children: [
       {
         title: '用户管理',
-        path: `/bootAdmin/userManager/userList`,
+        path: '/bootAdmin/userManager/userList',
+        icon: ''
+      }, {
+        title: '岗位管理',
+        path: '/bootAdmin/userManager/post',
         icon: ''
       }
     ]
