@@ -81,6 +81,27 @@ export function RolePermissionMap(url,data){
     return httpGet(url,data)
 }
 
+/**
+ * 保存数据范围
+ * @param {*} url 
+ * @param {*} data 
+ */
+export function RoleOrgSave(url,data){
+    url =baseUrl(url)
+    return httpPost(url,data)
+}
+
+/**
+ * 获取数据范围
+ * @param {*} url 
+ * @param {*} data 
+ */
+export function RoleOrgAll(url,data){
+    url =baseUrl(url)
+    return httpGet(url,data)
+}
+
+
 function baseUrl(url) {
     if (url) {
         url = roleServer + url

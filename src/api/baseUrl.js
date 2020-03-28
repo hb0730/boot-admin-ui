@@ -126,4 +126,14 @@ export const rolePermissionMapAllPath= '/permission/map'
  * 更新角色权限
  */
 export const rolePermissionSavePath = '/permission/save'
+
+/**
+ * 保存数据范围
+ */
+export const roleOrgSavePath='/org/role/save'
+
+/**
+ * 获取数据范围
+ */
+export const roleOrgAllPath ='/org/role'
 /*************角色操作 end*******************/

@@ -125,8 +125,13 @@
                   size="mini"
                 ></el-button>
               </el-tooltip>
-              <el-tooltip content="组织" placement="bottom" effect="light">
-                <el-button type="text" icon="fa fa-sitemap" size="mini"></el-button>
+              <el-tooltip content="数据范围" placement="bottom" effect="light">
+                <el-button
+                  type="text"
+                  @click="handleOrgSave(scope.row)"
+                  icon="fa fa-sitemap"
+                  size="mini"
+                ></el-button>
               </el-tooltip>
             </template>
           </el-table-column>
@@ -259,6 +264,34 @@
         <el-button @click="handlePermissionDialogClose">取 消</el-button>
       </div>
     </el-dialog>
+    <el-dialog
+      title="数据范围信息"
+      :before-close="handleOrgDialogClose"
+      :visible.sync="dialogOrgFormVisible"
+    >
+      <el-tree
+        :data="OrgTreeData"
+        show-checkbox
+        ref="orgTree"
+        node-key="id"
+        :props="treeProps"
+        check-strictly
+        :highlight-current="true"
+        default-expand-all
+        @current-change="handleOrgNodeChangeEvent"
+        @check="handleOrgNodeCheckClickEvent"
+      ></el-tree>
+      <div slot="footer" v-if="!isView" class="dialog-footer">
+        <el-button
+          type="primary"
+          @click="handleOrgUpdate"
+          icon="fa fa-floppy-o"
+          size="medium"
+          plain
+        >保存</el-button>
+        <el-button size="medium" @click="handleOrgDialogClose" plain>取 消</el-button>
+      </div>
+    </el-dialog>
   </d2-container>
 </template>
 <script>
@@ -272,7 +305,10 @@ import {
   permissionPagePath,
   rolePermissionSavePath,
   rolePermissionAllPath,
-  rolePermissionMapAllPath
+  rolePermissionMapAllPath,
+  orgTreePath,
+  roleOrgAllPath,
+  roleOrgSavePath
 } from "@/api/baseUrl";
 import { MessageBox } from "element-ui";
 export default {
@@ -319,6 +355,7 @@ export default {
       },
       isView: false,
       dialogPermissionFormVisible: false,
+      dialogOrgFormVisible: false,
       treeProps: {
         children: "children",
         label: "name"
@@ -337,13 +374,17 @@ export default {
       /**角色权限 */
       rolePermission: [],
       /**当前选中的表格权限更新 */
-      currentData: {}
+      currentData: {},
+      /**数据范围 */
+      OrgTreeData: [],
+      currentOrgList: []
     };
   },
   mounted() {
     let _self = this;
     _self.getPageAll();
     _self.getMenuTree();
+    _self.getOrgTree();
   },
   methods: {
     ...mapActions("bootAdmin/role", [
@@ -353,9 +394,12 @@ export default {
       "roleDelete",
       "rolePermissionAll",
       "rolePermissionSave",
-      "rolePermissionMap"
+      "rolePermissionMap",
+      "roleOrgAll",
+      "roleOrgSave"
     ]),
     ...mapActions("bootAdmin/menu", ["menuTree", "permissionPageList"]),
+    ...mapActions("bootAdmin/org", ["orgTreeAll"]),
     handleSizeChange(val) {
       this.pages.pageSize = val;
       this.getPageAll();
@@ -637,8 +681,81 @@ export default {
       _self.rolePermissionMap({ url: url, data: null }).then(result => {
         // _self.currentPermissionMap=result
         for (let key in result) {
-         _self.currentPermissionMap.set(key, result[key]); //注意这里取的是下标0和1
+          _self.currentPermissionMap.set(key, result[key]); //注意这里取的是下标0和1
         }
+      });
+    },
+    /**
+     * 关闭数据范围弹窗
+     */
+    handleOrgDialogClose() {
+      let _self = this;
+      _self.dialogOrgFormVisible = false;
+      _self.currentData = {};
+      _self.currentOrgList = [];
+    },
+    /**
+     * 更新数据范围
+     */
+    handleOrgSave(row) {
+      let _self = this;
+      _self.currentData = row;
+      _self.dialogOrgFormVisible = true;
+      _self.getRoleOrg();
+    },
+    /**
+     * node选中
+     */
+    handleOrgNodeChangeEvent(data, node) {
+      let _self = this;
+    },
+    /**
+     * check选中
+     * @param data
+     * @param node
+     */
+    handleOrgNodeCheckClickEvent(data, node) {
+      let _self = this;
+    },
+    /**
+     * 获取组织树
+     */
+    getOrgTree() {
+      let _self = this;
+      let url = orgTreePath;
+      _self.orgTreeAll({ url: url, data: null }).then(result => {
+        _self.OrgTreeData = result;
+      });
+    },
+    /**
+     * 获取角色的数据范围
+     */
+    getRoleOrg() {
+      let _self = this;
+      let info = _self.currentData;
+      let url = roleOrgAllPath + "/" + info.id;
+      _self.roleOrgAll({ url: url, data: null }).then(result => {
+        _self.currentOrgList = result;
+        this.$nextTick(() => {
+          _self.$refs.orgTree.setCheckedKeys(_self.currentOrgList, false);
+        });
+      });
+    },
+
+    /**
+     * 保存数据范围
+     */
+    handleOrgUpdate() {
+      let _self = this;
+      _self.currentOrgList = _self.$refs.orgTree.getCheckedKeys(false);
+      _self.OrgSave();
+    },
+    OrgSave() {
+      let _self = this;
+      let url = roleOrgSavePath + "/" + _self.currentData.id;
+      let params = JSON.parse(JSON.stringify(_self.currentOrgList));
+      _self.roleOrgSave({ url: url, data: params }).then(result => {
+        _self.handleOrgDialogClose();
       });
     }
   }
