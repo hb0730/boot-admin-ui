@@ -377,7 +377,8 @@ export default {
       currentData: {},
       /**数据范围 */
       OrgTreeData: [],
-      currentOrgList: []
+      currentOrgList: [],
+      isAll: 1
     };
   },
   mounted() {
@@ -587,7 +588,7 @@ export default {
      */
     getMenuTree() {
       let _self = this;
-      let url = menuTreePath;
+      let url = menuTreePath+'/'+_self.isAll;
       _self.menuTree({ url: url, data: null }).then(result => {
         _self.menuTreeData = result;
       });
@@ -722,7 +723,7 @@ export default {
      */
     getOrgTree() {
       let _self = this;
-      let url = orgTreePath;
+      let url = orgTreePath+'/'+_self.isAll;
       _self.orgTreeAll({ url: url, data: null }).then(result => {
         _self.OrgTreeData = result;
       });

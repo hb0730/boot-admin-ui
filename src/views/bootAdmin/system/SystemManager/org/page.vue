@@ -129,7 +129,7 @@ import {
   orgUpdatePath,
   orgDeletePath
 } from "@/api/baseUrl";
-import { MessageBox } from 'element-ui';
+import { MessageBox } from "element-ui";
 export default {
   data() {
     return {
@@ -160,7 +160,8 @@ export default {
         leader: [{ required: true, message: "请输入负责人", trigger: "blur" }]
       },
       isUpdate: false,
-      currentInfo: {}
+      currentInfo: {},
+      isAll: -1
     };
   },
   mounted() {
@@ -219,7 +220,7 @@ export default {
      */
     GetOrgTreeAll() {
       let _self = this;
-      let url = orgTreePath;
+      let url = orgTreePath + "/"+_self.isAll;
       _self.orgTreeAll({ url: url, data: null }).then(result => {
         _self.treeData = result;
       });
@@ -327,9 +328,9 @@ export default {
      */
     handleDelete() {
       let _self = this;
-      let info= JSON.parse(JSON.stringify(_self.currentInfo));
-      if(info.id){
-       MessageBox.confirm("是否删除该数据", "删除", {
+      let info = JSON.parse(JSON.stringify(_self.currentInfo));
+      if (info.id) {
+        MessageBox.confirm("是否删除该数据", "删除", {
           type: "warning"
         }).then(() => {
           _self.OrgDelete(info.id);

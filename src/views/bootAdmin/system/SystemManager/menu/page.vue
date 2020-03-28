@@ -332,7 +332,8 @@ export default {
         page: 1,
         pageSize: 10,
         total: 0
-      }
+      },
+      isAll: -1
     };
   },
   mounted() {
@@ -393,7 +394,7 @@ export default {
      */
     getMenuTree() {
       let _self = this;
-      let url = menuTreePath;
+      let url = menuTreePath+'/'+_self.isAll;
       _self.menuTree({ url: url, data: null }).then(result => {
         _self.treeData = result;
       });
