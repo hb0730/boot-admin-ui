@@ -1,7 +1,23 @@
-import { MenuTree, MenuSave, MenuUpdate, MenuDelete, PermissionSave, PermissionList,PermissionUpdate,PermissionDelete, PermissionIdsAll } from '@/api/bootAdmin/systemManager/menu'
+import { MenuTree, MenuSave, MenuUpdate, MenuDelete, PermissionSave, PermissionList, PermissionUpdate, PermissionDelete, PermissionIdsAll, CurrentMenu } from '@/api/bootAdmin/systemManager/menu'
+import util from '@/libs/util.js'
 export default {
     namespaced: true,
     actions: {
+        /**
+         * 获取当前用户菜单
+         * @param {*} url 
+         * @param {*} data 
+         */
+        currentMenu({ dispatch }, { url, data }) {
+            return new Promise(async (resolve, reject) => {
+                await CurrentMenu(url, data).then(result => {
+                    dispatch('d2admin/menu/set', result, { root: true })
+                    resolve()
+                }).catch(error => {
+                    reject(error)
+                })
+            })
+        },
         /**
          * 获取树形菜单
          * @param {*} url 
@@ -77,7 +93,7 @@ export default {
          * @param {*} url 
          * @param {*} data 
          */
-        permissionPageList({ dispatch }, { url, data }={}) {
+        permissionPageList({ dispatch }, { url, data } = {}) {
             return new Promise((resolve, reject) => {
                 PermissionList(url, data).then(result => {
                     resolve(result)
@@ -91,7 +107,7 @@ export default {
          * @param {*} url 
          * @param {*} data 
          */
-        permissionUpdate({dispatch},{url,data}={}){
+        permissionUpdate({ dispatch }, { url, data } = {}) {
             return new Promise((resolve, reject) => {
                 PermissionUpdate(url, data).then(result => {
                     resolve(result)
@@ -105,7 +121,7 @@ export default {
          * @param {*} url 
          * @param {*} data 
          */
-        permissionDelete({dispatch},{url,data}={}){
+        permissionDelete({ dispatch }, { url, data } = {}) {
             return new Promise((resolve, reject) => {
                 PermissionDelete(url, data).then(result => {
                     resolve(result)
@@ -119,7 +135,7 @@ export default {
          * @param {*} url 
          * @param {*} data 
          */
-        permissionIdsAll({dispatch},{url,data}={}){
+        permissionIdsAll({ dispatch }, { url, data } = {}) {
             return new Promise((resolve, reject) => {
                 PermissionIdsAll(url, data).then(result => {
                     resolve(result)

@@ -91,6 +91,16 @@ export function PermissionIdsAll(url,data){
     return httpGet(url,data)
 }
 
+/**
+ * 获取当前用户所有菜单
+ * @param {*} url 
+ * @param {*} data 
+ */
+export function CurrentMenu(url,data){
+    url =baseUrl(url)
+    return httpGet(url,data)
+}
+
 function baseUrl(url) {
     if (url) {
         url = menuServer + url

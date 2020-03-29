@@ -66,6 +66,11 @@ export const menuUpdatePath = '/update'
 export const menuDeletePath = '/delete'
 
 /**
+ * 当前用户菜单
+ */
+export const currentMenuPath='/current'
+
+/**
  * 获取权限
  */
 export const permissionSavePath= '/permission/save'
