@@ -29,43 +29,6 @@ export default {
   },
   actions: {
     /**
-     * 设置当前用户菜单
-     * @param {*} param0 
-     * @param {*} aisde 
-     */
-    set({ state, dispatch }, aisde) {
-      return new Promise(async resolve => {
-        // store 赋值
-        state.aside = aisde
-        // 持久化
-        await dispatch('d2admin/db/set', {
-          dbName: 'aisde',
-          path: 'menu.aisde',
-          value: info,
-          user: true
-        }, { root: true })
-        // end
-        resolve()
-      })
-
-    },
-    /**
-     * 获取当前用户菜单
-     * @param {*} param0 
-     */
-    get({ state, dispatch }) {
-      return new Promise(async resolve => {
-        state.aisde = await dispatch('d2admin/db/get', {
-          dbName: 'aisde',
-          path: 'menu.aisde',
-          defaultValue: {},
-          user: true
-        }, { root: true })
-        // end
-        resolve()
-      })
-    },
-    /**
      * 设置侧边栏展开或者收缩
      * @param {Object} context
      * @param {Boolean} collapse is collapse
@@ -117,6 +80,45 @@ export default {
           defaultValue: setting.menu.asideCollapse,
           user: true
         }, { root: true })
+        // end
+        resolve()
+      })
+    },
+    /**
+     * 设置当前用户菜单
+     * @param {*} param0 
+     * @param {*} aisde 
+     */
+    set({ state, dispatch }, aisde) {
+      return new Promise(async resolve => {
+        // store 赋值
+        state.aside = aisde
+        // 持久化
+        await dispatch('d2admin/db/set', {
+          dbName: 'sys',
+          path: 'menu.aisde',
+          value: aisde,
+          user: true
+        }, { root: true })
+        // end
+        resolve()
+      })
+
+    },
+    /**
+     * 获取当前用户菜单
+     * @param {*} param0 
+     */
+    get({ state, dispatch,commit}) {
+      return new Promise(async resolve => {
+        state.aisde = await dispatch('d2admin/db/get', {
+          dbName: 'sys',
+          path: 'menu.aisde',
+          defaultValue: [],
+          user: true
+        }, { root: true })
+        // 应用
+        commit('asideSet', state.aisde)
         // end
         resolve()
       })
