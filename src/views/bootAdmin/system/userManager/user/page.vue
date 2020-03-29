@@ -163,13 +163,13 @@
         :rules="userRules"
         center
       >
-        <el-form-item required label="用户账号" prop="usernanme">
-          <el-input v-model="userInfo.usernanme" clearable></el-input>
+        <el-form-item required label="用户账号" prop="username">
+          <el-input :disabled="isUpdate" v-model="userInfo.username" clearable></el-input>
         </el-form-item>
         <el-form-item required label="用户昵称" prop="nickName">
           <el-input v-model="userInfo.nickName" clearable></el-input>
         </el-form-item>
-        <el-form-item required label="用户密码" prop="password">
+        <el-form-item v-if="!isUpdate" required label="用户密码" prop="password">
           <el-input type="password" v-model="userInfo.password" clearable></el-input>
         </el-form-item>
         <el-form-item required label="所属组织" prop="deptId">
@@ -177,9 +177,19 @@
             v-model="userInfo.deptId"
             style="width:100%;"
             :options="orgTreeData"
-            :props="{ children:'children',label:'name',checkStrictly: true }"
+            :props="orgProps"
             clearable
           ></el-cascader>
+        </el-form-item>
+        <el-form-item label="性别" prop="sex">
+          <el-select style="width:100%;" v-model="userInfo.sex" placeholder="请选择">
+            <el-option
+              v-for="item in sexOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="手机号" prop="phone">
           <el-input v-model="userInfo.phone" clearable></el-input>
@@ -187,17 +197,17 @@
         <el-form-item label="邮箱" prop="email">
           <el-input v-model="userInfo.email" clearable></el-input>
         </el-form-item>
-        <el-form-item label="岗位" prop="post">
-          <el-select style="width:100%" v-model="userInfo.post" multiple placeholder="请选择">
+        <el-form-item label="岗位" prop="postId">
+          <el-select style="width:100%" v-model="userInfo.postId" multiple placeholder="请选择">
             <el-option v-for="item in postList" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="角色" prop="role">
-          <el-select style="width:100%" v-model="userInfo.role" multiple placeholder="请选择">
+        <el-form-item label="角色" prop="roleId">
+          <el-select style="width:100%" v-model="userInfo.roleId" multiple placeholder="请选择">
             <el-option v-for="item in roleList" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
-         <el-form-item label="排序" prop="sort">
+        <el-form-item label="排序" prop="sort">
           <el-input-number
             style="width: 100%"
             controls-position="right"
@@ -217,15 +227,23 @@
         </el-form-item>
       </el-form>
       <div slot="footer" v-if="!isView" class="dialog-footer">
-        <el-button type="primary" icon="fa fa-floppy-o"  size="medium" plain>保存</el-button>
-        <el-button size="medium"  plain>取 消</el-button>
+        <el-button type="primary" @click="handleSave" icon="fa fa-floppy-o" size="medium" plain>保存</el-button>
+        <el-button size="medium" @click="handleDialogClose" plain>取 消</el-button>
       </div>
     </el-dialog>
   </d2-container>
 </template>
 <script>
 import { mapActions } from "vuex";
-import { orgTreePath, userAllPagePath, postAllPath, roleAllPath } from "@/api/baseUrl";
+import {
+  orgTreePath,
+  userAllPagePath,
+  postAllPath,
+  roleAllPath,
+  userSavePath,
+  userInfoAllPath,
+  userUpdatePath
+} from "@/api/baseUrl";
 export default {
   data() {
     return {
@@ -235,6 +253,13 @@ export default {
       orgTreeProps: {
         children: "children",
         label: "name"
+      },
+      orgProps: {
+        children: "children",
+        value: "id",
+        label: "name",
+        checkStrictly: true,
+        emitPath: false
       },
       filterText: "",
       currentTreeData: {},
@@ -255,6 +280,20 @@ export default {
           label: "禁用"
         }
       ],
+      sexOptions: [
+        {
+          value: 1,
+          label: "男"
+        },
+        {
+          value: 0,
+          label: "女"
+        },
+        {
+          value: -1,
+          label: "未知"
+        }
+      ],
       userList: [],
       // 分页
       pages: {
@@ -264,11 +303,36 @@ export default {
       },
       dialogTableVisible: false,
       isUpdate: false,
-      userInfo: {},
+      userInfo: {
+        username: "",
+        nickName: "",
+        password: 123456,
+        deptId: "",
+        sex: 1,
+        phone: "",
+        email: "",
+        postId: [],
+        roleId: [],
+        sort: 0,
+        isEnabled: 1,
+        description: ""
+      },
       roleList: [],
       postList: [],
-      userRules: {},
-      orgTreeOptions: []
+      userRules: {
+        username: [
+          { required: true, message: "请输入用户账号", trigger: "blur" }
+        ],
+        nickName: [
+          { required: true, message: "请输入用户昵称", trigger: "blur" }
+        ],
+        password: [
+          { required: true, message: "请输入用户密码", trigger: "blur" }
+        ],
+        deptId: [{ required: true, message: "请选择用户组织", trigger: "blur" }]
+      },
+      orgTreeOptions: [],
+      isView: false
     };
   },
   mounted() {
@@ -276,7 +340,7 @@ export default {
     _self.getOrgTree();
     _self.getUserPage();
     _self.getPostAll();
-    _self.getRoleAll()
+    _self.getRoleAll();
   },
   watch: {
     filterText(val) {
@@ -285,9 +349,14 @@ export default {
   },
   methods: {
     ...mapActions("bootAdmin/org", ["orgTreeAll"]),
-    ...mapActions("bootAdmin/user", ["userAllPage"]),
+    ...mapActions("bootAdmin/user", [
+      "userAllPage",
+      "userSave",
+      "userUpdate",
+      "userInfoAll"
+    ]),
     ...mapActions("bootAdmin/post", ["postAll"]),
-    ...mapActions('bootAdmin/role',['roleAll']),
+    ...mapActions("bootAdmin/role", ["roleAll"]),
     /**
      * 获取用户
      */
@@ -329,16 +398,16 @@ export default {
     /**
      * 获取全部角色
      */
-    getRoleAll(){
-      let _self =this
-      let url=roleAllPath
-      let s= {
+    getRoleAll() {
+      let _self = this;
+      let url = roleAllPath;
+      let s = {
         isAll: 1
-      }
-       let params = JSON.parse(JSON.stringify(s));
-       _self.roleAll({url:url,data:params}).then(result=>{
-         _self.roleList=result
-       })
+      };
+      let params = JSON.parse(JSON.stringify(s));
+      _self.roleAll({ url: url, data: params }).then(result => {
+        _self.roleList = result;
+      });
     },
     treeFilterNode(value, data) {
       if (!value) return true;
@@ -380,13 +449,27 @@ export default {
       let _self = this;
       _self.dialogTableVisible = false;
       _self.init();
+      _self.initUser();
     },
     /**
      * 初始化用户
      */
     initUser() {
       let _self = this;
-      _self.userInfo = {};
+      _self.userInfo = {
+        username: "",
+        nickName: "",
+        password: 123456,
+        deptId: "",
+        sex: 1,
+        phone: "",
+        email: "",
+        postId: [],
+        roleId: [],
+        sort: 0,
+        isEnabled: 1,
+        description: ""
+      };
     },
     /**
      * 用户新增
@@ -394,15 +477,67 @@ export default {
     handleAddNew() {
       let _self = this;
       _self.isUpdate = false;
+      _self.isView = false;
       _self.initUser();
       _self.dialogTableVisible = true;
+    },
+    /**
+     * 保存用户
+     */
+    handleSave() {
+      let _self = this;
+      _self.$refs.userFormRef.validate(valid => {
+        if (valid) {
+          if (_self.isUpdate) {
+            _self.update();
+          } else {
+            _self.save();
+          }
+        } else {
+          this.$message.error("表单校验失败，请检查");
+        }
+      });
+    },
+    save() {
+      let _self = this;
+      let params = JSON.parse(JSON.stringify(_self.userInfo));
+      let url = userSavePath;
+      _self.userSave({ url: url, data: params }).then(result => {
+        _self.handleDialogClose();
+      });
+    },
+    /**
+     * 更新
+     */
+    update() {
+      let _self = this;
+      let params = JSON.parse(JSON.stringify(_self.userInfo));
+      params.password = null;
+      console.info(params);
+      let url = userUpdatePath + "/" + params.id;
+      _self.userUpdate({ url: url, data: params }).then(result => {
+          _self.handleDialogClose();
+      });
     },
     /**
      * 修改用户
      */
     handleUpdate(row) {
       let _self = this;
-      _self.dialogTableVisible = true;
+      _self.isUpdate = true;
+      _self.isView = false;
+      _self.getUserInfoAll(row.id);
+    },
+    /** */
+    getUserInfoAll(id) {
+      let _self = this;
+      if (id) {
+        let url = userInfoAllPath + "/" + id;
+        _self.userInfoAll({ url: url, data: null }).then(result => {
+          _self.userInfo = result;
+          _self.dialogTableVisible = true;
+        });
+      }
     }
   }
 };

@@ -28,6 +28,20 @@ export const userUpdatePasswordPath = '/update/password'
  * 分页后的用户
  */
 export const userAllPagePath ='/all'
+
+/**
+ * 用户保存
+ */
+export const userSavePath = '/save'
+
+/**
+ *用户修改
+ */
+export const userUpdatePath ='/update/user'
+/**
+ * 获取用户详情(用户角色岗位等)
+ */
+export const userInfoAllPath='/user/info'
 /*************用户操作 end**********************/
 
 /*************菜单操作 start*******************/

@@ -1,4 +1,4 @@
-import { UserInfo, UserUpdateInfo, UserUpdatePassword, UserAllPage } from '@/api/bootAdmin/userManager/user'
+import { UserInfo, UserUpdateInfo, UserUpdatePassword, UserAllPage, UserSave, UserUpdate, UserInfoAll } from '@/api/bootAdmin/userManager/user'
 export default {
     namespaced: true,
     actions: {
@@ -52,6 +52,48 @@ export default {
         userAllPage({ dispatch }, { url, data } = {}) {
             return new Promise((resolve, reject) => {
                 UserAllPage(url, data).then(result => {
+                    resolve(result)
+                }).catch(error => {
+                    reject(error)
+                })
+            })
+        },
+        /**
+         * 用户保存
+         * @param {*} url 
+         * @param {*} data 
+         */
+        userSave({ dispatch }, { url, data } = {}) {
+            return new Promise((resolve, reject) => {
+                UserSave(url, data).then(result => {
+                    resolve(result)
+                }).catch(error => {
+                    reject(error)
+                })
+            })
+        },
+        /**
+         * 用户更新
+         * @param {*} url 
+         * @param {*} data 
+         */
+        userUpdate({ dispatch }, { url, data } = {}) {
+            return new Promise((resolve, reject) => {
+                UserUpdate(url, data).then(result => {
+                    resolve(result)
+                }).catch(error => {
+                    reject(error)
+                })
+            })
+        },
+        /**
+         * 用户详情
+         * @param {*} url 
+         * @param {*} data 
+         */
+        userInfoAll({ dispatch }, { url, data } = {}) {
+            return new Promise((resolve, reject) => {
+                UserInfoAll(url, data).then(result => {
                     resolve(result)
                 }).catch(error => {
                     reject(error)
