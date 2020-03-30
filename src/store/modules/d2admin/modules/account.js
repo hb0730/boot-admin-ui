@@ -2,7 +2,7 @@ import { Message, MessageBox } from 'element-ui'
 import util from '@/libs/util.js'
 import router from '@/router'
 import { Login, Logout } from '@api/sys.login'
-import {currentMenuPath} from '@/api/baseUrl'
+import { currentMenuPath } from '@/api/baseUrl'
 export default {
   namespaced: true,
   actions: {
@@ -13,7 +13,7 @@ export default {
      * @param {Object} payload password {String} 密码
      * @param {Object} payload route {Object} 登录成功后定向的路由对象 任何 vue-router 支持的格式
      */
-    login ({ dispatch }, {
+    login({ dispatch }, {
       username = '',
       password = ''
     } = {}) {
@@ -29,11 +29,11 @@ export default {
           // 设置 vuex 用户信息
           dispatch('d2admin/user/set', {
             name: result.loginUser.nickName,
-            userInfo: result.loginUser
+            user: result.loginUser
           }, { root: true })
           // 用户登录后从持久化数据加载一系列的设置
           dispatch('load')
-          dispatch('bootAdmin/menu/currentMenu', {url:currentMenuPath,data:null}, { root: true })
+          dispatch('bootAdmin/menu/currentMenu', { url: currentMenuPath, data: null }, { root: true })
           // 结束
           resolve()
         }).catch(err => {
@@ -46,18 +46,19 @@ export default {
      * @param {Object} context
      * @param {Object} payload confirm {Boolean} 是否需要确认
      */
-    logout ({ commit, dispatch }, { confirm = false } = {}) {
+    logout({ commit, dispatch }, { confirm = false } = {}) {
       /**
        * @description 注销
        */
-      async function logout () {
+      async function logout() {
         return new Promise((resolve, reject) => {
           Logout().then(result => {
             // 删除cookie
             util.cookies.remove('token')
             util.cookies.remove('uuid')
             // 清空 vuex 用户信息
-            dispatch('d2admin/user/set', {}, { root: true })
+            // dispatch('d2admin/user/set', {}, { root: true })
+            dispatch('clean')
             // 跳转路由
             router.push({
               name: 'login'
@@ -93,7 +94,7 @@ export default {
      * @description 用户登录后从持久化数据加载一系列的设置
      * @param {Object} context
      */
-    load ({ dispatch }) {
+    load({ dispatch }) {
       return new Promise(async resolve => {
         // DB -> store 加载用户名
         await dispatch('d2admin/user/load', null, { root: true })
@@ -109,6 +110,25 @@ export default {
         await dispatch('d2admin/size/load', null, { root: true })
         // DB -> store 持久化数据加载颜色设置
         await dispatch('d2admin/color/load', null, { root: true })
+        // end
+        resolve()
+      })
+    },
+    /**
+     * 清空缓存
+     * @param {*} param0 
+     */
+    clean({ dispatch }) {
+      return new Promise(async resolve => {
+        //  清空页面快照
+        await dispatch('d2admin/db/pageClear', {}, { root: true })
+        // 清空页面缓存设置
+        await dispatch('d2admin/page/closeAll', {}, { root: true })
+        // 清空 vuex 用户信息
+        await dispatch('d2admin/user/set', {name:"",user: ""}, { root: true })
+        // 清空日志
+        // await dispatch('d2admin/log/clean', {}, { root: true })
+        //
         // end
         resolve()
       })

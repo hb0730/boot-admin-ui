@@ -196,6 +196,7 @@
       <el-col :span="10">
         <el-card shadow="never">
           <el-tree
+            class="dialog-main-tree"
             :data="menuTreeData"
             show-checkbox
             ref="tree"
@@ -588,7 +589,7 @@ export default {
      */
     getMenuTree() {
       let _self = this;
-      let url = menuTreePath+'/'+_self.isAll;
+      let url = menuTreePath + "/" + _self.isAll;
       _self.menuTree({ url: url, data: null }).then(result => {
         _self.menuTreeData = result;
       });
@@ -723,7 +724,7 @@ export default {
      */
     getOrgTree() {
       let _self = this;
-      let url = orgTreePath+'/'+_self.isAll;
+      let url = orgTreePath + "/" + _self.isAll;
       _self.orgTreeAll({ url: url, data: null }).then(result => {
         _self.OrgTreeData = result;
       });
@@ -763,4 +764,11 @@ export default {
 };
 </script>
 <style>
+.el-dialog__body {
+  overflow: auto;
+}
+.dialog-main-tree{
+    max-height: 400px;
+    overflow-y: auto;
+}
 </style>

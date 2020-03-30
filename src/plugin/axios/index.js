@@ -1,17 +1,18 @@
 import store from '@/store'
 import axios from 'axios'
-import { Message } from 'element-ui'
+import { Message, MessageBox } from 'element-ui'
 import util from '@/libs/util'
 
+
 // 创建一个错误
-function errorCreate (msg) {
+function errorCreate(msg) {
   const error = new Error(msg)
   errorLog(error)
   throw error
 }
 
 // 记录和显示错误
-function errorLog (error) {
+function errorLog(error) {
   // 添加到日志
   store.dispatch('d2admin/log/push', {
     message: '数据请求异常',
@@ -71,10 +72,26 @@ service.interceptors.response.use(
       switch (code) {
         case 'BA20000':
           // [ 示例 ] code === 0 代表没有错误
-          return dataAxios.data
+          return dataAxios.data // 授权异常
+        case 'BA20005':
+          MessageBox.confirm(
+            '登录状态已过期，您可以继续留在该页面，或者重新登录',
+            '系统提示',
+            {
+              confirmButtonText: '重新登录',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }
+          ).then(() => {
+            store.dispatch('d2admin/account/logout', {}, { root: true }).then(() => {
+
+              location.reload() // 为了重新实例化vue-router对象 避免bug
+            })
+          })
+          break
         default:
           // 不是正确的 code
-          errorCreate(`${dataAxios.message}:${dataAxios.data}: ${response.config.url}`)
+          errorCreate(`${dataAxios.message}:${dataAxios.data}`)
           break
       }
     }
