@@ -173,13 +173,18 @@
           <el-input type="password" v-model="userInfo.password" clearable></el-input>
         </el-form-item>
         <el-form-item required label="所属组织" prop="deptId">
-          <el-cascader
+          <!-- <el-cascader
             v-model="userInfo.deptId"
             style="width:100%;"
             :options="orgTreeData"
             :props="orgProps"
             clearable
-          ></el-cascader>
+          ></el-cascader> -->
+            <treeselect
+                  v-model="userInfo.deptId"
+                  :normalizer="normalizer"
+                  :options="orgTreeData"
+                />
         </el-form-item>
         <el-form-item label="性别" prop="sex">
           <el-select style="width:100%;" v-model="userInfo.sex" placeholder="请选择">
@@ -216,7 +221,7 @@
             clearable
           ></el-input-number>
         </el-form-item>
-        <el-form-item required label="岗位状态" prop="isEnabled">
+        <el-form-item required label="用户状态" prop="isEnabled">
           <el-radio-group v-model="userInfo.isEnabled">
             <el-radio :label="1">启用</el-radio>
             <el-radio :label="0">禁用</el-radio>
@@ -244,7 +249,10 @@ import {
   userInfoAllPath,
   userUpdatePath
 } from "@/api/baseUrl";
+import Treeselect from "@riophae/vue-treeselect";
+import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 export default {
+  components: { Treeselect },
   data() {
     return {
       isAll: 1,
@@ -307,7 +315,7 @@ export default {
         username: "",
         nickName: "",
         password: 123456,
-        deptId: "",
+        deptId: null,
         sex: 1,
         phone: "",
         email: "",
@@ -460,7 +468,7 @@ export default {
         username: "",
         nickName: "",
         password: 123456,
-        deptId: "",
+        deptId:null,
         sex: 1,
         phone: "",
         email: "",
@@ -516,7 +524,7 @@ export default {
       console.info(params);
       let url = userUpdatePath + "/" + params.id;
       _self.userUpdate({ url: url, data: params }).then(result => {
-          _self.handleDialogClose();
+        _self.handleDialogClose();
       });
     },
     /**
@@ -538,6 +546,20 @@ export default {
           _self.dialogTableVisible = true;
         });
       }
+    },
+    /**
+     * 树形
+     */
+    normalizer(node) {
+      // 去掉children=[]的children属性
+      if (node.children && !node.children.length) {
+        delete node.children;
+      }
+      return {
+        id: node.id,
+        label: node.name,
+        children: node.children
+      };
     }
   }
 };

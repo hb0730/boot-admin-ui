@@ -53,13 +53,17 @@
               required-asterisk
             >
               <el-form-item label="上级菜单">
-                <el-input
+                <!-- <el-input
                   v-model="menuInfo.parentName"
                   effect="dark"
                   placeholder="-1顶级菜单"
                   placement="top"
-                  :disabled="true"
-                ></el-input>
+                ></el-input>-->
+                <treeselect
+                  v-model="menuInfo.parentId"
+                  :normalizer="normalizer"
+                  :options="treeData"
+                />
               </el-form-item>
               <el-form-item required label="名称" prop="name">
                 <el-input v-model="menuInfo.name" clearable></el-input>
@@ -274,8 +278,11 @@ import {
   permissionUpdatePath,
   permissionDeletePath
 } from "@/api/baseUrl";
+import Treeselect from "@riophae/vue-treeselect";
+import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 import { MessageBox } from "element-ui";
 export default {
+  components: { Treeselect },
   data() {
     return {
       position: "left",
@@ -287,8 +294,7 @@ export default {
       i: 0,
       isUpdate: false,
       menuInfo: {
-        parentId: "",
-        parentName: "",
+        parentId: null,
         id: "",
         name: "",
         enname: "",
@@ -376,7 +382,6 @@ export default {
       let _self = this;
       _self.menuInfo = {
         parentId: data.parentId,
-        parentName: data.parentName,
         id: data.id,
         name: data.name,
         enname: data.enname,
@@ -394,7 +399,7 @@ export default {
      */
     getMenuTree() {
       let _self = this;
-      let url = menuTreePath+'/'+_self.isAll;
+      let url = menuTreePath + "/" + _self.isAll;
       _self.menuTree({ url: url, data: null }).then(result => {
         _self.treeData = result;
       });
@@ -423,7 +428,6 @@ export default {
         let currentNode = currentNodes[0];
         _self.menuInfo = {
           parentId: currentNode.id,
-          parentName: currentNode.name,
           id: "",
           name: "",
           enname: "",
@@ -435,8 +439,7 @@ export default {
         };
       } else {
         _self.menuInfo = {
-          parentId: "",
-          parentName: "",
+          parentId: null,
           id: "",
           name: "",
           enname: "",
@@ -458,8 +461,7 @@ export default {
       _self.menuSave({ url: url, data: params }).then(reuslt => {
         _self.getMenuTree();
         _self.menuInfo = {
-          parentId: "",
-          parentName: "",
+          parentId: null,
           id: "",
           name: "",
           enname: "",
@@ -494,8 +496,7 @@ export default {
       _self.menuUpdate({ url: url, data: params }).then(result => {
         _self.getMenuTree();
         _self.menuInfo = {
-          parentId: "",
-          parentName: "",
+          parentId: null,
           id: "",
           name: "",
           enname: "",
@@ -676,6 +677,20 @@ export default {
       _self.permissionDelete({ url: url, data: null }).then(result => {
         _self.handleDialogClose();
       });
+    },
+    /**
+     * 树形
+     */
+    normalizer(node) {
+      // 去掉children=[]的children属性
+      if (node.children && !node.children.length) {
+        delete node.children;
+      }
+      return {
+        id: node.id,
+        label: node.name,
+        children: node.children
+      };
     }
   }
 };

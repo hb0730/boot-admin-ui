@@ -53,12 +53,16 @@
               required-asterisk
             >
               <el-form-item label="上级组织" prop="parentName">
-                <el-input
-                  disabled
+                <!-- <el-input
                   v-model="orgInfo.parentName"
                   clearable
                   placeholder="-1为顶级组织(非修改)"
-                ></el-input>
+                ></el-input> -->
+                 <treeselect
+                  v-model="orgInfo.parentId"
+                  :normalizer="normalizer"
+                  :options="treeData"
+                />
               </el-form-item>
               <el-form-item required label="组织编码" prop="number">
                 <el-input v-model="orgInfo.number" clearable></el-input>
@@ -129,8 +133,13 @@ import {
   orgUpdatePath,
   orgDeletePath
 } from "@/api/baseUrl";
+
+import Treeselect from "@riophae/vue-treeselect";
+import "@riophae/vue-treeselect/dist/vue-treeselect.css";
+
 import { MessageBox } from "element-ui";
 export default {
+  components: { Treeselect },
   data() {
     return {
       treeData: [],
@@ -141,8 +150,7 @@ export default {
       i: 0,
       orgInfo: {
         id: "",
-        parentId: "",
-        parentName: "",
+        parentId: null,
         number: "",
         name: "",
         enname: "",
@@ -202,7 +210,6 @@ export default {
       _self.orgInfo = {
         id: data.id,
         parentId: data.parentId,
-        parentName: data.parentName,
         number: data.number,
         name: data.name,
         enname: data.enname,
@@ -249,8 +256,7 @@ export default {
         _self.GetOrgTreeAll();
         _self.orgInfo = {
           id: "",
-          parentId: "",
-          parentName: "",
+          parentId:null,
           number: "",
           name: "",
           enname: "",
@@ -272,7 +278,6 @@ export default {
       _self.orgInfo = {
         id: "",
         parentId: info.id,
-        parentName: info.name,
         number: "",
         name: "",
         enname: "",
@@ -309,8 +314,7 @@ export default {
         _self.GetOrgTreeAll();
         _self.orgInfo = {
           id: "",
-          parentId: "",
-          parentName: "",
+          parentId: null,
           number: "",
           name: "",
           enname: "",
@@ -348,6 +352,20 @@ export default {
           _self.GetOrgTreeAll();
         });
       }
+    },
+    /**
+     * 树形
+     */
+    normalizer(node) {
+      // 去掉children=[]的children属性
+      if (node.children && !node.children.length) {
+        delete node.children;
+      }
+      return {
+        id: node.id,
+        label: node.name,
+        children: node.children
+      };
     }
   }
 };
