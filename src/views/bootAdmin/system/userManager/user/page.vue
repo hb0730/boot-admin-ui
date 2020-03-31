@@ -173,26 +173,15 @@
           <el-input type="password" v-model="userInfo.password" clearable></el-input>
         </el-form-item>
         <el-form-item required label="所属组织" prop="deptId">
-          <!-- <el-cascader
-            v-model="userInfo.deptId"
-            style="width:100%;"
-            :options="orgTreeData"
-            :props="orgProps"
-            clearable
-          ></el-cascader> -->
-            <treeselect
-                  v-model="userInfo.deptId"
-                  :normalizer="normalizer"
-                  :options="orgTreeData"
-                />
+          <treeselect v-model="userInfo.deptId" :normalizer="normalizer" :options="orgTreeData" />
         </el-form-item>
         <el-form-item label="性别" prop="sex">
           <el-select style="width:100%;" v-model="userInfo.sex" placeholder="请选择">
             <el-option
               v-for="item in sexOptions"
-              :key="item.value"
+              :key="Number(item.value)"
+              :value="Number(item.value)"
               :label="item.label"
-              :value="item.value"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -251,6 +240,7 @@ import {
 } from "@/api/baseUrl";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
+import util from "@/libs/util";
 export default {
   components: { Treeselect },
   data() {
@@ -288,20 +278,7 @@ export default {
           label: "禁用"
         }
       ],
-      sexOptions: [
-        {
-          value: 1,
-          label: "男"
-        },
-        {
-          value: 0,
-          label: "女"
-        },
-        {
-          value: -1,
-          label: "未知"
-        }
-      ],
+      sexOptions: [],
       userList: [],
       // 分页
       pages: {
@@ -316,7 +293,7 @@ export default {
         nickName: "",
         password: 123456,
         deptId: null,
-        sex: 1,
+        sex: "1",
         phone: "",
         email: "",
         postId: [],
@@ -340,11 +317,13 @@ export default {
         deptId: [{ required: true, message: "请选择用户组织", trigger: "blur" }]
       },
       orgTreeOptions: [],
-      isView: false
+      isView: false,
+      mapInfo: new Map()
     };
   },
   mounted() {
     let _self = this;
+    _self.getMap();
     _self.getOrgTree();
     _self.getUserPage();
     _self.getPostAll();
@@ -365,6 +344,7 @@ export default {
     ]),
     ...mapActions("bootAdmin/post", ["postAll"]),
     ...mapActions("bootAdmin/role", ["roleAll"]),
+    ...mapActions("d2admin/dict", ["getDictMap"]),
     /**
      * 获取用户
      */
@@ -468,8 +448,8 @@ export default {
         username: "",
         nickName: "",
         password: 123456,
-        deptId:null,
-        sex: 1,
+        deptId: null,
+        sex: "1",
         phone: "",
         email: "",
         postId: [],
@@ -560,6 +540,21 @@ export default {
         label: node.name,
         children: node.children
       };
+    },
+    /**
+     * 获取数据字典类型
+     */
+    getMap() {
+      let _self = this;
+      _self.getDictMap().then(result => {
+        _self.mapInfo = util.objToMap(result);
+        _self.getMapValue("gender");
+      });
+    },
+    /**获取map值 */
+    getMapValue(type) {
+      let _self = this;
+      _self.sexOptions = util.dicts.getMapType(_self.mapInfo, type);
     }
   }
 };

@@ -675,10 +675,7 @@ export default {
     /**获取map值 */
     getMapValue(type, value) {
       let _self = this;
-      let result = _self.mapInfo.get(type).filter(function(item, index, array) {
-        return item.value == value;
-      });
-      return result;
+      return util.dicts.getMapValue(_self.mapInfo,type,value)
     },
     /**
      * 数据项删除
