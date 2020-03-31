@@ -133,8 +133,8 @@
                       <el-button type="text" icon="fa fa-trash" size="mini"></el-button>
                     </el-tooltip>
                     <el-tooltip content="重置密码" placement="bottom" effect="light">
-                      <el-button type="text" icon="fa fa-key" size="mini"></el-button>
-                    </el-tooltip>
+                      <el-button @click="handleResetPassword(scope.row)"  type="text" icon="fa fa-key" size="mini"></el-button>
+                    </el-tooltip> 
                   </template>
                 </el-table-column>
               </el-table>
@@ -236,11 +236,13 @@ import {
   roleAllPath,
   userSavePath,
   userInfoAllPath,
-  userUpdatePath
+  userUpdatePath,
+  userResetPasswordPath
 } from "@/api/baseUrl";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 import util from "@/libs/util";
+import { MessageBox } from 'element-ui';
 export default {
   components: { Treeselect },
   data() {
@@ -340,7 +342,8 @@ export default {
       "userAllPage",
       "userSave",
       "userUpdate",
-      "userInfoAll"
+      "userInfoAll",
+      "userResetPassword"
     ]),
     ...mapActions("bootAdmin/post", ["postAll"]),
     ...mapActions("bootAdmin/role", ["roleAll"]),
@@ -555,6 +558,31 @@ export default {
     getMapValue(type) {
       let _self = this;
       _self.sexOptions = util.dicts.getMapType(_self.mapInfo, type);
+    },
+    /**
+     * 重置密碼
+     */
+    handleResetPassword(row){
+      let _self =this 
+      let info = JSON.parse(JSON.stringify(row))
+       MessageBox.confirm("是否重置该用户密码", "密码重置", {
+          type: "warning"
+        }).then(() => {
+          _self.resetPassword(info.id)
+        });
+    },
+    /**
+     * 重置密碼
+     */
+    resetPassword(id) {
+      let _self = this;
+      if (id) {
+        let url = userResetPasswordPath + "/" + id;
+        _self.userResetPassword({ url: url, data: null }).then(result => {
+         _self.$message.success("请立即修改密码")
+         _self.getUserPage()
+        });
+      }
     }
   }
 };

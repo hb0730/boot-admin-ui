@@ -42,6 +42,11 @@ export const userUpdatePath ='/update/user'
  * 获取用户详情(用户角色岗位等)
  */
 export const userInfoAllPath='/user/info'
+
+/**
+ * 重置密碼
+ */
+export const userResetPasswordPath='/update/reset/password'
 /*************用户操作 end**********************/
 
 /*************菜单操作 start*******************/

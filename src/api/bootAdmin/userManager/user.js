@@ -73,6 +73,16 @@ export function UserInfoAll(url,data){
     return httpGet(url,data)
 }
 
+/**
+ * 重置密碼
+ * @param {*} url 
+ * @param {*} data 
+ */
+export function UserResetPassword(url,data){
+    url =baseUrl(url,data)
+    return httpGet(url,data)
+}
+
 function baseUrl(url) {
     if (url) {
         url = userServer + url
