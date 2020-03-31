@@ -42,6 +42,15 @@ export default {
               ...meta,
               title:'角色管理'
             }
+          },
+          {
+            path:'dict',
+            name:`${pre}dict`,
+            component:_import('bootAdmin/system/systemManager/dict/index'),
+            meta:{
+              ...meta,
+              title:'字典管理'
+            }
           }
     ])('systemManager-')
 

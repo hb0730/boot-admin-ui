@@ -186,3 +186,26 @@ export const postUpdatePath ='/update'
  */
 export const postDeletePath='/delete'
 /*************岗位操作 end*******************/
+/*************数据字典操作 start*************/
+/**
+ * 保存
+ */
+export const dictSavePath='/save'
+/**
+ * 修改
+ */
+export const dictUpdatePath='/update'
+/**
+ * 分页
+ */
+export const dictPageAllPath='/page/all'
+/**
+ * 分页项
+ */
+export const dictDataPageAllPath = '/page/all/data'
+
+/**
+ * 删除
+ */
+export const dictDeletePath = '/delete'
+/*************数据字典操作 end***************/

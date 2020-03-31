@@ -24,3 +24,8 @@ export const roleServer="/api/v1/role"
  * 岗位
  */
 export const postServer='/api/v1/post'
+
+/**
+ * 数据字典
+ */
+export const dictServer='/api/v1/dict'

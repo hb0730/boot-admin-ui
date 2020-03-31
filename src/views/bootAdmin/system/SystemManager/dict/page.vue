@@ -1,0 +1,640 @@
+<template>
+  <d2-container class="page">
+    <el-form ref="searchForm" :model="searchInfo" :inline="true" :label-position="position">
+      <el-form-item>
+        <el-select v-model="searchInfo.isEnabled" placeholder="状态" clearable>
+          <el-option
+            v-for="item in isEnabledOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-button plain size="medium" icon="fa fa-search">查询</el-button>
+        <el-button plain type="primary" size="medium" @click="handleAddNew" icon="el-icon-plus">新增</el-button>
+      </el-form-item>
+    </el-form>
+    <el-row :gutter="2">
+      <el-col :xs="10">
+        <el-table
+          :data="dictList"
+          style="width: 100%;"
+          border
+          :fit="true"
+          :header-cell-style="{'text-align':'center'}"
+        >
+          <el-table-column type="selection"></el-table-column>
+          <el-table-column
+            prop="number"
+            label="编码"
+            sortable
+            resizable
+            :show-overflow-tooltip="true"
+            align="center"
+          ></el-table-column>
+          <el-table-column
+            prop="name"
+            label="名称"
+            sortable
+            resizable
+            :show-overflow-tooltip="true"
+            align="center"
+          ></el-table-column>
+          <el-table-column
+            prop="dictType"
+            label="类型"
+            sortable
+            resizable
+            :show-overflow-tooltip="true"
+            align="center"
+          ></el-table-column>
+          <el-table-column
+            prop="isEnabled"
+            label="状态"
+            sortable
+            resizable
+            :show-overflow-tooltip="true"
+            align="center"
+          >
+            <template slot-scope="scope">
+              <el-tag
+                :type="scope.row.isEnabled === 1 ? 'success' : 'danger'"
+                disable-transitions
+              >{{scope.row.isEnabled==1?'启动':'禁用'}}</el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="description"
+            label="备注"
+            sortable
+            resizable
+            :show-overflow-tooltip="true"
+            align="center"
+          ></el-table-column>
+          <el-table-column
+            prop="createTime"
+            label="创建时间"
+            sortable
+            resizable
+            :show-overflow-tooltip="true"
+            align="center"
+          ></el-table-column>
+          <el-table-column
+            label="操作"
+            sortable
+            resizable
+            :show-overflow-tooltip="true"
+            align="center"
+          >
+            <template slot-scope="scope">
+              <el-tooltip content="修改" placement="bottom" effect="light">
+                <el-button
+                  type="text"
+                  @click="handleUpdate(scope.row)"
+                  icon="fa fa-pencil"
+                  size="mini"
+                ></el-button>
+              </el-tooltip>
+              <el-tooltip content="删除" placement="bottom" effect="light">
+                <el-button type="text" icon="fa fa-trash" size="mini"></el-button>
+              </el-tooltip>
+              <el-tooltip content="字典项" placement="bottom" effect="light">
+                <el-button
+                  @click="handleDataShow(scope.row)"
+                  type="text"
+                  icon="fa fa-plus-square"
+                  size="mini"
+                ></el-button>
+              </el-tooltip>
+            </template>
+          </el-table-column>
+        </el-table>
+        <el-pagination
+          align="left"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="pages.page"
+          :page-sizes="[10, 20, 50, 100]"
+          :page-size="pages.pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="pages.total"
+        ></el-pagination>
+      </el-col>
+    </el-row>
+    <el-dialog title="字典信息" :before-close="handleDialogClose" :visible.sync="dialogTableVisible">
+      <el-form
+        label-width="auto"
+        :model="dictInfo"
+        :label-position="position"
+        ref="dictParentForm"
+        required-asterisk
+        :rules="dictParentRules"
+        center
+      >
+        <el-form-item required label="编码" prop="number">
+          <el-input v-model="dictInfo.number" clearable></el-input>
+        </el-form-item>
+        <el-form-item required label="名称" prop="name">
+          <el-input v-model="dictInfo.name" clearable></el-input>
+        </el-form-item>
+        <el-form-item required label="类型" prop="dictType">
+          <el-input v-model="dictInfo.dictType" clearable></el-input>
+        </el-form-item>
+        <el-form-item required label="状态" prop="isEnabled">
+          <el-radio-group v-model="dictInfo.isEnabled">
+            <el-radio :label="1">启用</el-radio>
+            <el-radio :label="0">禁用</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="备注" prop="description">
+          <el-input type="textarea" v-model="dictInfo.description" placeholder="备注" clearable></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" v-if="!isParentView" class="dialog-footer">
+        <el-button type="primary" icon="fa fa-floppy-o" @click="handleSave" size="medium" plain>保存</el-button>
+        <el-button size="medium" @click="handleDialogClose" plain>取 消</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog title="字典项信息" :visible.sync="dialogDataTableVisible">
+      <el-form ref="searchForm" :model="searchInfo" :inline="true" :label-position="position">
+        <el-form-item>
+          <el-button
+            @click="handleDataAddNew"
+            plain
+            type="primary"
+            size="medium"
+            icon="el-icon-plus"
+          >新增</el-button>
+        </el-form-item>
+      </el-form>
+      <el-row :gutter="2">
+        <el-col :xs="10">
+          <el-table
+            :data="dataDictList"
+            style="width: 100%;"
+            border
+            :fit="true"
+            :header-cell-style="{'text-align':'center'}"
+          >
+            <el-table-column
+              prop="dictType"
+              label="字典类型"
+              sortable
+              resizable
+              :show-overflow-tooltip="true"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              prop="dictLabel"
+              label="标签"
+              sortable
+              resizable
+              :show-overflow-tooltip="true"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              prop="dictValue"
+              label="数据值"
+              sortable
+              resizable
+              :show-overflow-tooltip="true"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              prop="description"
+              label="备注"
+              sortable
+              resizable
+              :show-overflow-tooltip="true"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              prop="sort"
+              label="排序"
+              sortable
+              resizable
+              :show-overflow-tooltip="true"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              prop="createTime"
+              label="创建时间"
+              sortable
+              resizable
+              :show-overflow-tooltip="true"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              label="操作"
+              sortable
+              resizable
+              :show-overflow-tooltip="true"
+              align="center"
+            >
+              <template slot-scope="scope">
+                <el-tooltip content="修改" placement="bottom" effect="light">
+                  <el-button
+                    type="text"
+                    icon="fa fa-pencil"
+                    @click="handleDataUpdate(scope.row)"
+                    size="mini"
+                  ></el-button>
+                </el-tooltip>
+                <el-tooltip content="删除" placement="bottom" effect="light">
+                  <el-button type="text" icon="fa fa-trash" size="mini"></el-button>
+                </el-tooltip>
+              </template>
+            </el-table-column>
+          </el-table>
+          <el-pagination
+            align="right"
+            :current-page="dataPages.page"
+            :page-sizes="[10, 20, 50, 100]"
+            :page-size="dataPages.pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="dataPages.total"
+          ></el-pagination>
+        </el-col>
+      </el-row>
+    </el-dialog>
+    <el-dialog title="字典项信息" :visible.sync="dialogDataFormTableVisible">
+      <el-form
+        label-width="auto"
+        :model="dictInfo"
+        :label-position="position"
+        ref="dataDictForm"
+        required-asterisk
+        :rules="dataDictRules"
+        center
+      >
+        <el-form-item label="类型" prop="dictType">
+          <el-input disabled v-model="dictInfo.dictType" clearable></el-input>
+        </el-form-item>
+        <el-form-item required label="标签" prop="dictLabel">
+          <el-input v-model="dictInfo.dictLabel" clearable></el-input>
+        </el-form-item>
+        <el-form-item required label="数据值" prop="dictValue">
+          <el-input v-model="dictInfo.dictValue" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="排序" prop="sort">
+          <el-input-number
+            style="width: 100%"
+            controls-position="right"
+            v-model="dictInfo.sort"
+            placeholder="排序"
+            clearable
+          ></el-input-number>
+        </el-form-item>
+        <el-form-item label="备注" prop="description">
+          <el-input type="textarea" v-model="dictInfo.description" placeholder="备注" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="是否默认" prop="isDefeult">
+          <el-radio-group v-model="dictInfo.isDefeult">
+            <el-radio :label="1">是</el-radio>
+            <el-radio :label="0">否</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="状态" prop="isEnabled">
+          <el-radio-group v-model="dictInfo.isEnabled">
+            <el-radio :label="1">启用</el-radio>
+            <el-radio :label="0">禁用</el-radio>
+          </el-radio-group>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="handleDataSave" type="primary" plain>保存</el-button>
+        <el-button plain>取 消</el-button>
+      </div>
+    </el-dialog>
+  </d2-container>
+</template>
+<script>
+import { mapActions } from "vuex";
+import {
+  dictPageAllPath,
+  dictSavePath,
+  dictUpdatePath,
+  dictDataPageAllPath,
+  dictDeletePath
+} from "@/api/baseUrl";
+export default {
+  data() {
+    return {
+      searchInfo: {},
+      isEnabledOptions: [
+        {
+          value: 1,
+          label: "启用"
+        },
+        {
+          value: 0,
+          label: "禁用"
+        }
+      ],
+      // 分页
+      pages: {
+        page: 1,
+        pageSize: 10,
+        total: 0
+      },
+      dataPages: {
+        page: 1,
+        pageSize: 10,
+        total: 0
+      },
+      dictList: [],
+      dialogTableVisible: false,
+      isParentUpdate: false,
+      isParentView: false,
+      dictParentRules: {
+        number: [{ required: true, message: "请输入编码", trigger: "blur" }],
+        name: [{ required: true, message: "请输入名称", trigger: "blur" }],
+        dictType: [{ required: true, message: "请输入类型", trigger: "blur" }]
+      },
+      position: "left",
+      dictInfo: {
+        id: "",
+        name: "",
+        enname: "",
+        number: "",
+        parentId: "",
+        dictType: "",
+        dictValue: "",
+        dictLabel: "",
+        isDefeult: "",
+        params: "",
+        sort: 0,
+        isEnabled: 1,
+        description: ""
+      },
+      dialogDataTableVisible: false,
+      dataSearchInfo: {
+        isAll: -1
+      },
+      dataDictList: [],
+      currentDictInfo: {},
+      currentDataDictInfo: {},
+      dialogDataFormTableVisible: false,
+      dataDictRules: {
+        dictLabel: [{ required: true, message: "请输入编码", trigger: "blur" }],
+        dictValue: [{ required: true, message: "请输入名称", trigger: "blur" }]
+      },
+      isDataUpdate: false
+    };
+  },
+  mounted() {
+    let _self = this;
+    _self.getDictPageAll();
+  },
+  methods: {
+    ...mapActions("bootAdmin/dict", [
+      "dictSave",
+      "dictPageAll",
+      "dictDataPageAll",
+      "dictUpdate",
+      "dictDelete"
+    ]),
+    handleSizeChange(val) {
+      this.pages.pageSize = val;
+      _self.getDictPageAll();
+    },
+    handleCurrentChange(Page) {
+      this.pages.page = Page;
+      _self.getDictPageAll();
+    },
+    getDictPageAll() {
+      let _self = this;
+      let url =
+        dictPageAllPath + "/" + _self.pages.page + "/" + _self.pages.pageSize;
+      let params = JSON.parse(JSON.stringify(_self.searchInfo));
+      _self.dictPageAll({ url: url, data: params }).then(result => {
+        _self.dictList = result.list;
+        _self.pages.total = Number(result.total);
+      });
+    },
+    initInfo() {
+      let _self = this;
+      _self.dictInfo = {
+        id: "",
+        name: "",
+        enname: "",
+        number: "",
+        parentId: "",
+        dictType: "",
+        dictValue: "",
+        dictLabel: "",
+        isDefeult: "",
+        params: "",
+        sort: 0,
+        isEnabled: 1,
+        description: ""
+      };
+    },
+    /**
+     * 新增
+     */
+    handleAddNew() {
+      let _self = this;
+      _self.isParentView = false;
+      _self.isParentUpdate = false;
+      _self.initInfo();
+      _self.dialogTableVisible = true;
+    },
+    /**
+     * 关闭父弹窗
+     */
+    handleDialogClose() {
+      let _self = this;
+      _self.initInfo();
+      _self.searchInfo = {};
+      _self.getDictPageAll();
+      _self.dialogTableVisible = false;
+    },
+    /**
+     * 保存
+     */
+    handleSave() {
+      let _self = this;
+      _self.$refs.dictParentForm.validate(valid => {
+        if (valid) {
+          if (_self.isParentUpdate) {
+            _self.update();
+          } else {
+            _self.save();
+          }
+        } else {
+          this.$message.error("表单校验失败，请检查");
+        }
+      });
+    },
+    /**
+     * 保存
+     */
+    save() {
+      let _self = this;
+      let url = dictSavePath;
+      let parmas = JSON.parse(JSON.stringify(_self.dictInfo));
+      _self.dictSave({ url: url, data: parmas }).then(result => {
+        _self.handleDialogClose();
+      });
+    },
+    /**
+     * 修改
+     */
+    update() {
+      let _self = this;
+      let params = JSON.parse(JSON.stringify(_self.dictInfo));
+      let url = dictUpdatePath + "/" + params.id;
+      _self.dictUpdate({ url: url, data: params }).then(result => {
+        _self.handleDialogClose();
+      });
+    },
+    /**
+     * 修改
+     */
+    handleUpdate(row) {
+      let _self = this;
+      _self.dictInfo = JSON.parse(JSON.stringify(row));
+      _self.currentDictInfo = _self.dictInfo;
+      _self.isParentUpdate = true;
+      _self.isParentView = false;
+      _self.dialogTableVisible = true;
+    },
+    /**
+     * 获取字典项
+     */
+    handleDataShow(row) {
+      let _self = this;
+      let info = JSON.parse(JSON.stringify(row));
+      _self.currentDictInfo = info;
+      _self.getDataDict(info.id);
+      _self.dialogDataTableVisible = true;
+    },
+    /**获取字典项值 */
+    getDataDict(id) {
+      let _self = this;
+      if (id) {
+        let url =
+          dictDataPageAllPath +
+          "/" +
+          id +
+          "/" +
+          _self.dataPages.page +
+          "/" +
+          _self.dataPages.pageSize;
+        let params = JSON.parse(JSON.stringify(_self.dataSearchInfo));
+        _self.dictDataPageAll({ url: url, data: params }).then(result => {
+          _self.dataDictList = result.list;
+          _self.dataPages.total = Number(result.total);
+        });
+      }
+    },
+    initDataDict() {
+      let _self = this;
+      _self.isDataUpdate = false;
+      let currentDict = _self.currentDictInfo;
+      _self.dictInfo = {
+        id: "",
+        name: "",
+        enname: "",
+        number: "",
+        parentId: currentDict.id,
+        dictType: currentDict.number,
+        dictValue: "",
+        dictLabel: "",
+        isDefeult: 1,
+        params: "",
+        sort: 0,
+        isEnabled: 1,
+        description: ""
+      };
+    },
+    /**
+     * 字典项新增
+     */
+    handleDataAddNew() {
+      let _self = this;
+      _self.initDataDict();
+      _self.dialogDataFormTableVisible = true;
+    },
+    /**
+     * 关闭数据项表单弹窗
+     */
+    handleDataDialogClose() {
+      let _self = this;
+      _self.initDataDict();
+      _self.searchInfo = {};
+      let info = _self.currentDictInfo;
+      _self.getDataDict(info.id);
+      _self.dialogDataFormTableVisible = false;
+    },
+    /**
+     * 保存数据项
+     */
+    handleDataSave() {
+      let _self = this;
+      _self.$refs.dataDictForm.validate(valid => {
+        if (valid) {
+          if (_self.isDataUpdate) {
+            _self.dataUpdate();
+          } else {
+            _self.dataSave();
+          }
+        } else {
+          this.$message.error("表单校验失败，请检查");
+        }
+      });
+    },
+    /**
+     * 保存数据项
+     */
+    dataSave() {
+      let _self = this;
+      let params = JSON.parse(JSON.stringify(_self.dictInfo));
+      let url = dictSavePath;
+      _self.dictSave({ url: url, data: params }).then(result => {
+        _self.handleDataDialogClose();
+      });
+    },
+    /**
+     * 修改数据类型
+     */
+    dataUpdate() {
+      let _self = this;
+      let params = JSON.parse(JSON.stringify(_self.dictInfo));
+      console.info(params);
+      let url = dictUpdatePath + "/" + params.id;
+      _self.dictUpdate({ url: url, data: params }).then(result => {
+        _self.handleDataDialogClose();
+      });
+    },
+    /**
+     * 修改数据项
+     */
+    handleDataUpdate(row) {
+      let _self = this;
+      let info = JSON.parse(JSON.stringify(row));
+      _self.currentDataDictInfo = info;
+      _self.isDataUpdate = true;
+      _self.dictInfo = info;
+      _self.dialogDataFormTableVisible = true;
+    },
+    /**
+     * 删除
+     */
+    delete(id) {
+      let _self = this;
+      if (id) {
+        let url = dictDeletePath + "/" + id;
+        _self.dictDelete({ url: url, data: null }).then(result => {
+          
+        });
+      }
+    }
+  }
+};
+</script>
+<style >
+</style>
