@@ -100,7 +100,7 @@
                 ></el-button>
               </el-tooltip>
               <el-tooltip content="删除" placement="bottom" effect="light">
-                <el-button type="text" icon="fa fa-trash" size="mini"></el-button>
+                <el-button @click="handleDelete(scope.row)" type="text" icon="fa fa-trash" size="mini"></el-button>
               </el-tooltip>
               <el-tooltip content="字典项" placement="bottom" effect="light">
                 <el-button
@@ -253,7 +253,12 @@
                   ></el-button>
                 </el-tooltip>
                 <el-tooltip content="删除" placement="bottom" effect="light">
-                  <el-button type="text" icon="fa fa-trash" size="mini"></el-button>
+                  <el-button
+                    type="text"
+                    @click="handleDataDelete(scope.row)"
+                    icon="fa fa-trash"
+                    size="mini"
+                  ></el-button>
                 </el-tooltip>
               </template>
             </el-table-column>
@@ -269,7 +274,11 @@
         </el-col>
       </el-row>
     </el-dialog>
-    <el-dialog title="字典项信息" :before-close="handleDataDialogClose" :visible.sync="dialogDataFormTableVisible">
+    <el-dialog
+      title="字典项信息"
+      :before-close="handleDataDialogClose"
+      :visible.sync="dialogDataFormTableVisible"
+    >
       <el-form
         label-width="auto"
         :model="dictInfo"
@@ -330,6 +339,7 @@ import {
   dictDeletePath
 } from "@/api/baseUrl";
 import util from "@/libs/util";
+import { MessageBox } from "element-ui";
 export default {
   data() {
     return {
@@ -393,7 +403,8 @@ export default {
         dictValue: [{ required: true, message: "请输入名称", trigger: "blur" }]
       },
       isDataUpdate: false,
-      mapInfo: new Map()
+      mapInfo: new Map(),
+      isParent: false
     };
   },
   mounted() {
@@ -642,7 +653,14 @@ export default {
       let _self = this;
       if (id) {
         let url = dictDeletePath + "/" + id;
-        _self.dictDelete({ url: url, data: null }).then(result => {});
+        _self.dictDelete({ url: url, data: null }).then(result => {
+          if (_self.isParent) {
+            _self.getDictPageAll();
+          } else {
+            let info = _self.currentDictInfo;
+            _self.getDataDict(info.id);
+          }
+        });
       }
     },
     /**
@@ -661,6 +679,29 @@ export default {
         return item.value == value;
       });
       return result;
+    },
+    /**
+     * 数据项删除
+     */
+    handleDataDelete(row) {
+      let _self = this;
+      _self.isParent = false;
+      let info = JSON.parse(JSON.stringify(row));
+      MessageBox.confirm("是否删除该数据", "删除", {
+        type: "warning"
+      }).then(() => {
+        _self.delete(info.id);
+      });
+    },
+    handleDelete(row){
+      let _self =this 
+      _self.isParent=true;
+       let info = JSON.parse(JSON.stringify(row));
+      MessageBox.confirm("是否删除该数据", "删除", {
+        type: "warning"
+      }).then(() => {
+        _self.delete(info.id);
+      });
     }
   }
 };

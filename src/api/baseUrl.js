@@ -207,7 +207,7 @@ export const dictDataPageAllPath = '/page/all/data'
 /**
  * 删除
  */
-export const dictDeletePath = '/delete'
+export const dictDeletePath = '/delete/id'
 
 /**
  * 字典类型

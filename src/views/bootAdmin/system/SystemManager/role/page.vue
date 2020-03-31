@@ -552,7 +552,6 @@ export default {
      */
     handlePermissionSave(row) {
       let _self = this;
-      _self.dialogPermissionFormVisible = true;
       _self.currentData = row;
       _self.GetRolePermission();
     },
@@ -565,6 +564,7 @@ export default {
       _self.currentMenuInfo = {};
       _self.currentPermissionMap.clear();
       _self.$refs.permissionTable.clearSelection();
+      _self.getPageAll();
     },
     /**
      * node选中
@@ -681,10 +681,10 @@ export default {
       let _self = this;
       let url = rolePermissionMapAllPath + "/" + _self.currentData.id;
       _self.rolePermissionMap({ url: url, data: null }).then(result => {
-        // _self.currentPermissionMap=result
         for (let key in result) {
           _self.currentPermissionMap.set(key, result[key]); //注意这里取的是下标0和1
         }
+        _self.dialogPermissionFormVisible = true;
       });
     },
     /**
@@ -767,8 +767,8 @@ export default {
 .el-dialog__body {
   overflow: auto;
 }
-.dialog-main-tree{
-    max-height: 400px;
-    overflow-y: auto;
+.dialog-main-tree {
+  max-height: 400px;
+  overflow-y: auto;
 }
 </style>
