@@ -48,6 +48,16 @@ export function DictDelete(url,data){
     url =baseUrl(url)
     return httpGet(url,data)
 }
+
+/**
+ * 字典类型
+ * @param {*} url 
+ * @param {*} data 
+ */
+export function DictMap(url,data){
+    url = baseUrl(url)
+    return httpGet(url,data)
+}
 function baseUrl(url) {
     if (url) {
         url = dictServer + url

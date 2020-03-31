@@ -49,7 +49,9 @@
             resizable
             :show-overflow-tooltip="true"
             align="center"
-          ></el-table-column>
+          >
+            <template scope="scope">{{getMapValue('dict_type',scope.row.dictType)[0].label}}</template>
+          </el-table-column>
           <el-table-column
             prop="isEnabled"
             label="状态"
@@ -140,7 +142,15 @@
           <el-input v-model="dictInfo.name" clearable></el-input>
         </el-form-item>
         <el-form-item required label="类型" prop="dictType">
-          <el-input v-model="dictInfo.dictType" clearable></el-input>
+          <el-select style="width:100%;" v-model="dictInfo.dictType" placeholder="请选择">
+            <el-option
+              v-for="item in mapInfo.get('dict_type')"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+          <!-- <el-input v-model="dictInfo.dictType" clearable></el-input> -->
         </el-form-item>
         <el-form-item required label="状态" prop="isEnabled">
           <el-radio-group v-model="dictInfo.isEnabled">
@@ -259,7 +269,7 @@
         </el-col>
       </el-row>
     </el-dialog>
-    <el-dialog title="字典项信息" :visible.sync="dialogDataFormTableVisible">
+    <el-dialog title="字典项信息" :before-close="handleDataDialogClose" :visible.sync="dialogDataFormTableVisible">
       <el-form
         label-width="auto"
         :model="dictInfo"
@@ -305,7 +315,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="handleDataSave" type="primary" plain>保存</el-button>
-        <el-button plain>取 消</el-button>
+        <el-button @click="handleDataDialogClose" plain>取 消</el-button>
       </div>
     </el-dialog>
   </d2-container>
@@ -319,6 +329,7 @@ import {
   dictDataPageAllPath,
   dictDeletePath
 } from "@/api/baseUrl";
+import util from "@/libs/util";
 export default {
   data() {
     return {
@@ -381,11 +392,13 @@ export default {
         dictLabel: [{ required: true, message: "请输入编码", trigger: "blur" }],
         dictValue: [{ required: true, message: "请输入名称", trigger: "blur" }]
       },
-      isDataUpdate: false
+      isDataUpdate: false,
+      mapInfo: new Map()
     };
   },
   mounted() {
     let _self = this;
+    _self.getMap();
     _self.getDictPageAll();
   },
   methods: {
@@ -396,6 +409,7 @@ export default {
       "dictUpdate",
       "dictDelete"
     ]),
+    ...mapActions("d2admin/dict", ["getDictMap"]),
     handleSizeChange(val) {
       this.pages.pageSize = val;
       _self.getDictPageAll();
@@ -628,10 +642,25 @@ export default {
       let _self = this;
       if (id) {
         let url = dictDeletePath + "/" + id;
-        _self.dictDelete({ url: url, data: null }).then(result => {
-          
-        });
+        _self.dictDelete({ url: url, data: null }).then(result => {});
       }
+    },
+    /**
+     * 获取数据字典类型
+     */
+    getMap() {
+      let _self = this;
+      _self.getDictMap().then(result => {
+        _self.mapInfo = util.objToMap(result);
+      });
+    },
+    /**获取map值 */
+    getMapValue(type, value) {
+      let _self = this;
+      let result = _self.mapInfo.get(type).filter(function(item, index, array) {
+        return item.value == value;
+      });
+      return result;
     }
   }
 };

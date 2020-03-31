@@ -30,5 +30,15 @@ util.open = function (url) {
   a.click()
   document.body.removeChild(document.getElementById('d2admin-link-temp'))
 }
+/**
+ * 将json对象转为 map
+ */
+util.objToMap = function (obj) {
+  let strMap = new Map();
+  for (let k of Object.keys(obj)) {
+    strMap.set(k, obj[k]);
+  }
+  return strMap;
+}
 
 export default util

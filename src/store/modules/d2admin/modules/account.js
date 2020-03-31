@@ -2,7 +2,7 @@ import { Message, MessageBox } from 'element-ui'
 import util from '@/libs/util.js'
 import router from '@/router'
 import { Login, Logout } from '@api/sys.login'
-import { currentMenuPath } from '@/api/baseUrl'
+import { currentMenuPath, dictMapPath } from '@/api/baseUrl'
 export default {
   namespaced: true,
   actions: {
@@ -33,7 +33,10 @@ export default {
           }, { root: true })
           // 用户登录后从持久化数据加载一系列的设置
           dispatch('load')
+          // 加载菜单
           dispatch('bootAdmin/menu/currentMenu', { url: currentMenuPath, data: null }, { root: true })
+          // 加载数据字典
+          dispatch('bootAdmin/dict/dictMap',{url:dictMapPath},{ root: true })
           // 结束
           resolve()
         }).catch(err => {
@@ -125,7 +128,7 @@ export default {
         // 清空页面缓存设置
         await dispatch('d2admin/page/closeAll', {}, { root: true })
         // 清空 vuex 用户信息
-        await dispatch('d2admin/user/set', {name:"",user: ""}, { root: true })
+        await dispatch('d2admin/user/set', { name: "", user: "" }, { root: true })
         // 清空日志
         // await dispatch('d2admin/log/clean', {}, { root: true })
         //

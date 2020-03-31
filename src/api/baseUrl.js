@@ -208,4 +208,9 @@ export const dictDataPageAllPath = '/page/all/data'
  * 删除
  */
 export const dictDeletePath = '/delete'
+
+/**
+ * 字典类型
+ */
+export const dictMapPath='/map'
 /*************数据字典操作 end***************/
