@@ -29,3 +29,8 @@ export const postServer='/api/v1/post'
  * 数据字典
  */
 export const dictServer='/api/v1/dict'
+
+/**
+ * 访问日志
+ */
+export const loginInfoServer='/api/v1/logininfo'
