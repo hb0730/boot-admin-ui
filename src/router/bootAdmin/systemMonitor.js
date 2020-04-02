@@ -19,7 +19,7 @@ export default {
         {
             path: '/bootAdmin/systemMonitor/logManager/logininfo',
             name: `logininfo`,
-            component: _import('bootAdmin/system/monitor/loginMonitor/logininfo/index'),
+            component: _import('bootAdmin/system/monitor/logMonitor/logininfo/index'),
             meta: {
                 ...meta,
                 title: '登录日志'
@@ -28,10 +28,19 @@ export default {
         {
             path: '/bootAdmin/systemMonitor/operlog',
             name: `logininfo`,
-            component: _import('bootAdmin/system/monitor/loginMonitor/operlog/index'),
+            component: _import('bootAdmin/system/monitor/logMonitor/operlog/index'),
             meta: {
                 ...meta,
                 title: '操作日志'
+            }
+        },
+        {
+            path: '/bootAdmin/systemMonitor/userOnline',
+            name: `userOnline`,
+            component: _import('bootAdmin/system/monitor/userOnline/index'),
+            meta: {
+                ...meta,
+                title: '在线日志'
             }
         },
     ])('systemMonitor-')
