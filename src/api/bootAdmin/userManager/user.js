@@ -28,8 +28,8 @@ export function UserUpdateInfo(url, data) {
  */
 export function UserUpdatePassword(url, data) {
     url = baseUrl(url);
-    url+='?oldPassword='+data.oldPassword+'&newPassword='+data.newPassword+'&newPassword2='+data.newPassword2
-    data=null
+    url += '?oldPassword=' + data.oldPassword + '&newPassword=' + data.newPassword + '&newPassword2=' + data.newPassword2
+    data = null
     return httpPost(url, data)
 }
 
@@ -38,9 +38,9 @@ export function UserUpdatePassword(url, data) {
  * @param {*} url 
  * @param {*} data 
  */
-export function UserAllPage(url,data){
+export function UserAllPage(url, data) {
     url = baseUrl(url);
-    return httpPost(url,data);
+    return httpPost(url, data);
 }
 
 /**
@@ -48,9 +48,9 @@ export function UserAllPage(url,data){
  * @param {*} url 
  * @param {*} data 
  */
-export function UserSave(url,data){
-    url =baseUrl(url)
-    return httpPost(url,data);
+export function UserSave(url, data) {
+    url = baseUrl(url)
+    return httpPost(url, data);
 }
 
 /**
@@ -58,9 +58,9 @@ export function UserSave(url,data){
  * @param {*} url 
  * @param {*} data 
  */
-export function UserUpdate(url,data){
-    url =baseUrl(url)
-    return httpPost(url,data)
+export function UserUpdate(url, data) {
+    url = baseUrl(url)
+    return httpPost(url, data)
 }
 
 /**
@@ -68,9 +68,9 @@ export function UserUpdate(url,data){
  * @param {*} url 
  * @param {*} data 
  */
-export function UserInfoAll(url,data){
+export function UserInfoAll(url, data) {
     url = baseUrl(url);
-    return httpGet(url,data)
+    return httpGet(url, data)
 }
 
 /**
@@ -78,9 +78,19 @@ export function UserInfoAll(url,data){
  * @param {*} url 
  * @param {*} data 
  */
-export function UserResetPassword(url,data){
-    url =baseUrl(url,data)
-    return httpGet(url,data)
+export function UserResetPassword(url, data) {
+    url = baseUrl(url, data)
+    return httpGet(url, data)
+}
+
+/**
+ * 用户删除
+ * @param {*} url 
+ * @param {*} data 
+ */
+export function UserDelete(url, data) {
+    url = baseUrl(url, data)
+    return httpPost(url, data)
 }
 
 function baseUrl(url) {

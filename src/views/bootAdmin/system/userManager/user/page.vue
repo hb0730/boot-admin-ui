@@ -34,17 +34,17 @@
               <el-input v-model="searchInfo.username" placeholder="用户账号"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-select v-model="searchInfo.isEnabled" placeholder="岗位状态" clearable>
+              <el-select v-model="searchInfo.isEnabled" placeholder="用户状态" clearable>
                 <el-option
                   v-for="item in isEnabledOptions"
-                  :key="item.value"
+                  :key="Number(item.value)"
                   :label="item.label"
-                  :value="item.value"
+                  :value="Number(item.value)"
                 ></el-option>
               </el-select>
             </el-form-item>
             <el-form-item>
-              <el-button plain size="medium" icon="fa fa-search">查询</el-button>
+              <el-button plain @click="handleSearch" size="medium" icon="fa fa-search">查询</el-button>
               <el-button
                 plain
                 type="primary"
@@ -57,10 +57,40 @@
         </el-row>
         <el-row>
           <el-row :gutter="2">
+            <div class="avue-crud__menu">
+              <div class="avue-crud__left">
+                <button
+                  type="button"
+                  @click="handleDeleteIds"
+                  class="el-button filter-item el-button--danger el-button--mini"
+                >
+                  <i class="fa fa-remove"></i>
+                  <span>删除</span>
+                </button>
+                <button
+                  type="button"
+                  class="el-button filter-item el-button--warning el-button--mini"
+                >
+                  <i class="fa fa-download"></i>
+                  <span>导出</span>
+                </button>
+              </div>
+              <div class="avue-crud__right">
+                <button
+                  type="button"
+                  class="el-button el-tooltip el-button--default el-button--small is-circle"
+                  aria-describedby="el-tooltip-2497"
+                  tabindex="0"
+                >
+                  <i class="el-icon-refresh"></i>
+                </button>
+              </div>
+            </div>
             <el-col :xs="10">
               <el-table
                 :data="userList"
                 style="width: 100%;"
+                ref="userListRef"
                 border
                 :fit="true"
                 :header-cell-style="{'text-align':'center'}"
@@ -83,7 +113,7 @@
                   align="center"
                 ></el-table-column>
                 <el-table-column
-                  prop="phone"
+                  prop="phonenumber"
                   label="手机号"
                   sortable
                   resizable
@@ -130,11 +160,21 @@
                       ></el-button>
                     </el-tooltip>
                     <el-tooltip content="删除" placement="bottom" effect="light">
-                      <el-button type="text" icon="fa fa-trash" size="mini"></el-button>
+                      <el-button
+                        @click="handleDelete(scope.row)"
+                        type="text"
+                        icon="fa fa-trash"
+                        size="mini"
+                      ></el-button>
                     </el-tooltip>
                     <el-tooltip content="重置密码" placement="bottom" effect="light">
-                      <el-button @click="handleResetPassword(scope.row)"  type="text" icon="fa fa-key" size="mini"></el-button>
-                    </el-tooltip> 
+                      <el-button
+                        @click="handleResetPassword(scope.row)"
+                        type="text"
+                        icon="fa fa-key"
+                        size="mini"
+                      ></el-button>
+                    </el-tooltip>
                   </template>
                 </el-table-column>
               </el-table>
@@ -186,7 +226,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="手机号" prop="phone">
-          <el-input v-model="userInfo.phone" clearable></el-input>
+          <el-input v-model="userInfo.phonenumber" clearable></el-input>
         </el-form-item>
         <el-form-item label="邮箱" prop="email">
           <el-input v-model="userInfo.email" clearable></el-input>
@@ -212,8 +252,11 @@
         </el-form-item>
         <el-form-item required label="用户状态" prop="isEnabled">
           <el-radio-group v-model="userInfo.isEnabled">
-            <el-radio :label="1">启用</el-radio>
-            <el-radio :label="0">禁用</el-radio>
+            <el-radio
+              v-for="item in isEnabledOptions "
+              :key="Number(item.value)"
+              :label="Number(item.value)"
+            >{{item.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="备注" prop="description">
@@ -237,12 +280,13 @@ import {
   userSavePath,
   userInfoAllPath,
   userUpdatePath,
-  userResetPasswordPath
+  userResetPasswordPath,
+  userDeletePath
 } from "@/api/baseUrl";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 import util from "@/libs/util";
-import { MessageBox } from 'element-ui';
+import { MessageBox } from "element-ui";
 export default {
   components: { Treeselect },
   data() {
@@ -264,22 +308,12 @@ export default {
       filterText: "",
       currentTreeData: {},
       searchInfo: {
-        isAll: -1,
         deptId: "",
         nickName: "",
         username: "",
-        isEnabled: 0
+        isEnabled: ""
       },
-      isEnabledOptions: [
-        {
-          value: 1,
-          label: "启用"
-        },
-        {
-          value: 0,
-          label: "禁用"
-        }
-      ],
+      isEnabledOptions: [],
       sexOptions: [],
       userList: [],
       // 分页
@@ -343,7 +377,8 @@ export default {
       "userSave",
       "userUpdate",
       "userInfoAll",
-      "userResetPassword"
+      "userResetPassword",
+      'userDelete'
     ]),
     ...mapActions("bootAdmin/post", ["postAll"]),
     ...mapActions("bootAdmin/role", ["roleAll"]),
@@ -441,6 +476,7 @@ export default {
       _self.dialogTableVisible = false;
       _self.init();
       _self.initUser();
+      _self.getUserPage()
     },
     /**
      * 初始化用户
@@ -551,25 +587,30 @@ export default {
       let _self = this;
       _self.getDictMap().then(result => {
         _self.mapInfo = util.objToMap(result);
-        _self.getMapValue("gender");
+        _self.sexOptions = _self.getMapType("gender");
+        _self.isEnabledOptions = _self.getMapType("system_enabled");
       });
     },
     /**获取map值 */
-    getMapValue(type) {
+    getMapValue(type, value) {
       let _self = this;
-      _self.sexOptions = util.dicts.getMapType(_self.mapInfo, type);
+      return util.dicts.getMapValue(_self.mapInfo, type, value);
+    },
+    getMapType(type) {
+      let _self = this;
+      return util.dicts.getMapType(_self.mapInfo, type);
     },
     /**
      * 重置密碼
      */
-    handleResetPassword(row){
-      let _self =this 
-      let info = JSON.parse(JSON.stringify(row))
-       MessageBox.confirm("是否重置该用户密码", "密码重置", {
-          type: "warning"
-        }).then(() => {
-          _self.resetPassword(info.id)
-        });
+    handleResetPassword(row) {
+      let _self = this;
+      let info = JSON.parse(JSON.stringify(row));
+      MessageBox.confirm("是否重置该用户密码", "密码重置", {
+        type: "warning"
+      }).then(() => {
+        _self.resetPassword(info.id);
+      });
     },
     /**
      * 重置密碼
@@ -579,10 +620,61 @@ export default {
       if (id) {
         let url = userResetPasswordPath + "/" + id;
         _self.userResetPassword({ url: url, data: null }).then(result => {
-         _self.$message.success("请立即修改密码")
-         _self.getUserPage()
+          _self.$message.success("请立即修改密码");
+          _self.getUserPage();
         });
       }
+    },
+    /**
+     * 检索
+     */
+    handleSearch() {
+      let _self = this;
+      _self.getUserPage();
+    },
+    /**
+     * 删除
+     */
+    handleDelete(row){
+      let _self =this 
+       let info = JSON.parse(JSON.stringify(row));
+      MessageBox.confirm("是否删除该数据", "删除", {
+        type: "warning"
+      }).then(() => {
+        let ids = [];
+        ids.push(row.id);
+        _self.delete(ids);
+      });
+    },
+    /**
+     * 删除
+     */
+    handleDeleteIds() {
+       let _self = this;
+      let info = _self.$refs.userListRef.selection;
+      if (info.length > 0) {
+        MessageBox.confirm("是否删除该数据", "删除", {
+          type: "warning"
+        }).then(() => {
+          let ids = [];
+          info.forEach(item => {
+            ids.push(item.id);
+          });
+          _self.isParent = true;
+          _self.delete(ids);
+        });
+      }
+    },
+    /**
+     * 删除
+     */
+    delete(id){
+      let _self =this 
+      let url =userDeletePath
+      let params=JSON.parse(JSON.stringify(id))
+      _self.userDelete({url:url,data:params}).then(result=>{
+        _self.getUserPage();
+      })
     }
   }
 };

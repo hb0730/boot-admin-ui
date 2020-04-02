@@ -47,6 +47,11 @@ export const userInfoAllPath='/user/info'
  * 重置密碼
  */
 export const userResetPasswordPath='/update/reset/password'
+
+/**
+ * 用户删除
+ */
+export const userDeletePath="/delete"
 /*************用户操作 end**********************/
 
 /*************菜单操作 start*******************/

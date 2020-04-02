@@ -1,4 +1,4 @@
-import { UserInfo, UserUpdateInfo, UserUpdatePassword, UserAllPage, UserSave, UserUpdate, UserInfoAll, UserResetPassword } from '@/api/bootAdmin/userManager/user'
+import { UserInfo, UserUpdateInfo, UserUpdatePassword, UserAllPage, UserSave, UserUpdate, UserInfoAll, UserResetPassword, UserDelete } from '@/api/bootAdmin/userManager/user'
 export default {
     namespaced: true,
     actions: {
@@ -106,11 +106,25 @@ export default {
          * @param {*} param0 
          * @param {*} param1 
          */
-        userResetPassword({dispatch},{url,data}){
-            return new Promise((resolve,reject)=>{
-                UserResetPassword(url,data).then(result=>{
+        userResetPassword({ dispatch }, { url, data }) {
+            return new Promise((resolve, reject) => {
+                UserResetPassword(url, data).then(result => {
                     resolve(result)
-                }).catch(err=>{
+                }).catch(err => {
+                    reject(err)
+                })
+            })
+        },
+        /**
+         * 用户删除
+         * @param {*} param0 
+         * @param {*} param1 
+         */
+        userDelete({ dispatch }, { url, data }) {
+            return new Promise((resolve, reject) => {
+                UserDelete(url, data).then(result => {
+                    resolve(result)
+                }).catch(err => {
                     reject(err)
                 })
             })
