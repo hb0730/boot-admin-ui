@@ -48,7 +48,7 @@ export function RoleUpdate(url, data) {
  */
 export function RoleDelete(url, data) {
     url = baseUrl(url)
-    return httpGet(url, data)
+    return httpPost(url, data)
 }
 
 /**

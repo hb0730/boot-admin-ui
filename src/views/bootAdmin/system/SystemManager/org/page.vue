@@ -53,12 +53,7 @@
               required-asterisk
             >
               <el-form-item label="上级组织" prop="parentName">
-                <!-- <el-input
-                  v-model="orgInfo.parentName"
-                  clearable
-                  placeholder="-1为顶级组织(非修改)"
-                ></el-input> -->
-                 <treeselect
+                <treeselect
                   v-model="orgInfo.parentId"
                   :normalizer="normalizer"
                   :options="treeData"
@@ -96,8 +91,11 @@
               </el-form-item>
               <el-form-item label="是否启用" prop="isEnabled">
                 <el-radio-group v-model="orgInfo.isEnabled">
-                  <el-radio :label="1">启用</el-radio>
-                  <el-radio :label="0">禁用</el-radio>
+                  <el-radio
+                    v-for="item in isEnabledOptions "
+                    :key="Number(item.value)"
+                    :label="Number(item.value)"
+                  >{{item.label}}</el-radio>
                 </el-radio-group>
               </el-form-item>
             </el-form>
@@ -138,6 +136,7 @@ import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
 import { MessageBox } from "element-ui";
+import util from '@/libs/util';
 export default {
   components: { Treeselect },
   data() {
@@ -169,12 +168,15 @@ export default {
       },
       isUpdate: false,
       currentInfo: {},
-      isAll: -1
+      isAll: -1,
+      mapInfo: {},
+      isEnabledOptions: []
     };
   },
   mounted() {
     let _self = this;
     _self.GetOrgTreeAll();
+     _self.getMap();
   },
   methods: {
     ...mapActions("bootAdmin/org", [
@@ -183,6 +185,7 @@ export default {
       "orgUpdate",
       "orgDelete"
     ]),
+    ...mapActions("d2admin/dict", ["getDictMap"]),
     /**
      * 选中change(单选)
      */
@@ -227,7 +230,7 @@ export default {
      */
     GetOrgTreeAll() {
       let _self = this;
-      let url = orgTreePath + "/"+_self.isAll;
+      let url = orgTreePath + "/" + _self.isAll;
       _self.orgTreeAll({ url: url, data: null }).then(result => {
         _self.treeData = result;
       });
@@ -256,7 +259,7 @@ export default {
         _self.GetOrgTreeAll();
         _self.orgInfo = {
           id: "",
-          parentId:null,
+          parentId: null,
           number: "",
           name: "",
           enname: "",
@@ -366,6 +369,25 @@ export default {
         label: node.name,
         children: node.children
       };
+    },
+    /**
+     * 获取数据字典类型
+     */
+    getMap() {
+      let _self = this;
+      _self.getDictMap().then(result => {
+        _self.mapInfo = util.objToMap(result);
+        _self.isEnabledOptions = _self.getMapType("system_enabled");
+      });
+    },
+    /**获取map值 */
+    getMapValue(type, value) {
+      let _self = this;
+      return util.dicts.getMapValue(_self.mapInfo, type, value);
+    },
+    getMapType(type) {
+      let _self = this;
+      return util.dicts.getMapType(_self.mapInfo, type);
     }
   }
 };

@@ -53,12 +53,6 @@
               required-asterisk
             >
               <el-form-item label="上级菜单">
-                <!-- <el-input
-                  v-model="menuInfo.parentName"
-                  effect="dark"
-                  placeholder="-1顶级菜单"
-                  placement="top"
-                ></el-input>-->
                 <treeselect
                   v-model="menuInfo.parentId"
                   :normalizer="normalizer"
@@ -91,8 +85,11 @@
               </el-form-item>
               <el-form-item label="是否启用" prop="isEnabled">
                 <el-radio-group v-model="menuInfo.isEnabled">
-                  <el-radio :label="1">启用</el-radio>
-                  <el-radio :label="0">禁用</el-radio>
+                  <el-radio
+                    v-for="item in isEnabledOptions "
+                    :key="Number(item.value)"
+                    :label="Number(item.value)"
+                  >{{item.label}}</el-radio>
                 </el-radio-group>
               </el-form-item>
             </el-form>
@@ -124,13 +121,18 @@
           <el-col>
             <el-form :inline="true" size="mini" :model="searchPermission">
               <el-form-item label="标识">
-                <el-input v-model="searchPermission.mark" placeholder="标识"></el-input>
+                <el-input v-model="searchPermission.mark" clearable placeholder="标识"></el-input>
               </el-form-item>
               <el-form-item label="名称">
-                <el-input v-model="searchPermission.name" placeholder="名称"></el-input>
+                <el-input v-model="searchPermission.name" clearable placeholder="名称"></el-input>
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" plain icon="fa fa-search">搜索</el-button>
+                <el-button
+                  type="primary"
+                  @click="handleSearchPermission"
+                  plain
+                  icon="fa fa-search"
+                >搜索</el-button>
                 <el-dropdown size="small" @command="handlerPermissionAddNew" class="filter-item">
                   <el-button plain type="primary">
                     更多
@@ -254,14 +256,17 @@
         </el-form-item>
         <el-form-item label="是否启用" prop="isEnabled">
           <el-radio-group v-model="permissionInfo.isEnabled">
-            <el-radio :label="1">启用</el-radio>
-            <el-radio :label="0">禁用</el-radio>
+            <el-radio
+              v-for="item in isEnabledOptions "
+              :key="Number(item.value)"
+              :label="Number(item.value)"
+            >{{item.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="handlePermissionSave" plain>保存</el-button>
-        <el-button @click="handleDialogClose" plain>取 消</el-button>
+        <el-button type="primary" size="medium" @click="handlePermissionSave" plain>保存</el-button>
+        <el-button  size="medium" @click="handleDialogClose" plain>取 消</el-button>
       </div>
     </el-dialog>
   </d2-container>
@@ -281,6 +286,7 @@ import {
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 import { MessageBox } from "element-ui";
+import util from "@/libs/util";
 export default {
   components: { Treeselect },
   data() {
@@ -339,12 +345,15 @@ export default {
         pageSize: 10,
         total: 0
       },
-      isAll: -1
+      isAll: -1,
+      mapInfo: {},
+      isEnabledOptions: []
     };
   },
   mounted() {
     let _self = this;
     _self.getMenuTree();
+    _self.getMap();
   },
   methods: {
     ...mapActions("bootAdmin/menu", [
@@ -357,6 +366,7 @@ export default {
       "permissionUpdate",
       "permissionDelete"
     ]),
+    ...mapActions("d2admin/dict", ["getDictMap"]),
     /**
      * 选中change(单选)
      */
@@ -550,7 +560,8 @@ export default {
         _self.pages.page +
         "/" +
         _self.pages.pageSize;
-      _self.permissionPageList({ url: url, data: null }).then(result => {
+      let params = JSON.parse(JSON.stringify(_self.searchPermission));
+      _self.permissionPageList({ url: url, data: params }).then(result => {
         _self.permissionList = result.list;
         _self.pages.total = Number(result.total);
       });
@@ -691,6 +702,36 @@ export default {
         label: node.name,
         children: node.children
       };
+    },
+    /**
+     * 权限检索
+     */
+    handleSearchPermission() {
+      let _self = this;
+      let currentNodes = _self.$refs.tree.getCheckedNodes(false);
+      if (currentNodes.length > 0) {
+        let currentNode = currentNodes[0];
+        _self.getPermissionPageList(currentNode.id);
+      }
+    },
+    /**
+     * 获取数据字典类型
+     */
+    getMap() {
+      let _self = this;
+      _self.getDictMap().then(result => {
+        _self.mapInfo = util.objToMap(result);
+        _self.isEnabledOptions = _self.getMapType("system_enabled");
+      });
+    },
+    /**获取map值 */
+    getMapValue(type, value) {
+      let _self = this;
+      return util.dicts.getMapValue(_self.mapInfo, type, value);
+    },
+    getMapType(type) {
+      let _self = this;
+      return util.dicts.getMapType(_self.mapInfo, type);
     }
   }
 };

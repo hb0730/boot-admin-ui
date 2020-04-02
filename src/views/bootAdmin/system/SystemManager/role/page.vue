@@ -8,9 +8,6 @@
         <el-input v-model="searchInfo.enname" placeholder="角色英文名称" clearable></el-input>
       </el-form-item>
       <el-form-item>
-        <el-input v-model="searchInfo.enname" placeholder="角色英文名称" clearable></el-input>
-      </el-form-item>
-      <el-form-item>
         <el-select v-model="searchInfo.isEnabled" placeholder="是否启用" clearable>
           <el-option
             v-for="item in isEnabledOptions"
@@ -21,15 +18,42 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button plain size="medium" icon="fa fa-search">查询</el-button>
+        <el-button plain size="medium" @click="handlerSearchRole" icon="fa fa-search">查询</el-button>
         <el-button plain type="primary" @click="handleAddNew" size="medium" icon="el-icon-plus">新增</el-button>
       </el-form-item>
     </el-form>
     <el-row :gutter="2">
+      <div class="avue-crud__menu">
+        <div class="avue-crud__left">
+          <button
+            type="button"
+            @click="handleDeleteIds"
+            class="el-button filter-item el-button--danger el-button--mini"
+          >
+            <i class="fa fa-remove"></i>
+            <span>删除</span>
+          </button>
+          <button type="button" class="el-button filter-item el-button--warning el-button--mini">
+            <i class="fa fa-download"></i>
+            <span>导出</span>
+          </button>
+        </div>
+        <div class="avue-crud__right">
+          <button
+            type="button"
+            class="el-button el-tooltip el-button--default el-button--small is-circle"
+            aria-describedby="el-tooltip-2497"
+            tabindex="0"
+          >
+            <i class="el-icon-refresh"></i>
+          </button>
+        </div>
+      </div>
       <el-col :xs="10">
         <el-table
           :data="roleList"
           style="width: 100%;"
+          ref="roleTree"
           border
           :fit="true"
           :header-cell-style="{'text-align':'center'}"
@@ -178,8 +202,11 @@
         </el-form-item>
         <el-form-item required label="角色状态" prop="isEnabled">
           <el-radio-group v-model="roleInfo.isEnabled">
-            <el-radio :label="1">启用</el-radio>
-            <el-radio :label="0">禁用</el-radio>
+            <el-radio
+              v-for="item in isEnabledOptions "
+              :key="Number(item.value)"
+              :label="Number(item.value)"
+            >{{item.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
       </el-form>
@@ -312,19 +339,10 @@ import {
   roleOrgSavePath
 } from "@/api/baseUrl";
 import { MessageBox } from "element-ui";
+import util from "@/libs/util";
 export default {
   data() {
     return {
-      isEnabledOptions: [
-        {
-          value: 1,
-          label: "启用"
-        },
-        {
-          value: 0,
-          label: "禁用"
-        }
-      ],
       position: "left",
       searchInfo: {},
       roleList: [],
@@ -379,7 +397,9 @@ export default {
       /**数据范围 */
       OrgTreeData: [],
       currentOrgList: [],
-      isAll: 1
+      isAll: 1,
+      mapInfo: {},
+      isEnabledOptions: []
     };
   },
   mounted() {
@@ -387,6 +407,7 @@ export default {
     _self.getPageAll();
     _self.getMenuTree();
     _self.getOrgTree();
+    _self.getMap();
   },
   methods: {
     ...mapActions("bootAdmin/role", [
@@ -402,6 +423,7 @@ export default {
     ]),
     ...mapActions("bootAdmin/menu", ["menuTree", "permissionPageList"]),
     ...mapActions("bootAdmin/org", ["orgTreeAll"]),
+    ...mapActions("d2admin/dict", ["getDictMap"]),
     handleSizeChange(val) {
       this.pages.pageSize = val;
       this.getPageAll();
@@ -536,14 +558,18 @@ export default {
         MessageBox.confirm("是否删除该数据", "删除", {
           type: "warning"
         }).then(() => {
-          _self.RoleDelete(row.id);
+          let info =[];
+          info.push(row.id)
+          _self.RoleDelete(info);
         });
       }
     },
     RoleDelete(id) {
       let _self = this;
-      let url = roleDeletePath + "/" + id;
-      _self.roleDelete({ url: url, data: null }).then(result => {
+      let url = roleDeletePath;
+      let params= JSON.parse(JSON.stringify(id))
+      console.info(params)
+      _self.roleDelete({ url: url, data: params }).then(result => {
         _self.handleDialogClose();
       });
     },
@@ -607,7 +633,8 @@ export default {
         _self.permissionPages.page +
         "/" +
         _self.permissionPages.pageSize;
-      _self.permissionPageList({ url: url, data: null }).then(result => {
+      let params = {};
+      _self.permissionPageList({ url: url, data: params }).then(result => {
         _self.permissionList = result.list;
         _self.permissionPages.total = Number(result.total);
         // 切换 菜单后重新选择表格权限
@@ -759,6 +786,47 @@ export default {
       _self.roleOrgSave({ url: url, data: params }).then(result => {
         _self.handleOrgDialogClose();
       });
+    },
+    /**
+     * 获取数据字典类型
+     */
+    getMap() {
+      let _self = this;
+      _self.getDictMap().then(result => {
+        _self.mapInfo = util.objToMap(result);
+        _self.isEnabledOptions = _self.getMapType("system_enabled");
+      });
+    },
+    /**获取map值 */
+    getMapValue(type, value) {
+      let _self = this;
+      return util.dicts.getMapValue(_self.mapInfo, type, value);
+    },
+    getMapType(type) {
+      let _self = this;
+      return util.dicts.getMapType(_self.mapInfo, type);
+    },
+    handlerSearchRole() {
+      let _self = this;
+      _self.getPageAll();
+    },
+    /**
+     * 删除
+     */
+    handleDeleteIds() {
+      let _self = this;
+      let info = _self.$refs.roleTree.selection;
+      if (info.length > 0) {
+        MessageBox.confirm("是否删除该数据", "删除", {
+          type: "warning"
+        }).then(() => {
+          let ids = [];
+          info.forEach(item => {
+            ids.push(item.id);
+          });
+          _self.RoleDelete(ids);
+        });
+      }
     }
   }
 };
@@ -770,5 +838,24 @@ export default {
 .dialog-main-tree {
   max-height: 400px;
   overflow-y: auto;
+}
+.el-table th {
+  word-break: break-word;
+  color: rgba(0, 0, 0, 0.85);
+  background-color: #fafafa;
+}
+.avue-crud__menu {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  position: relative;
+  width: 100%;
+  min-height: 40px;
+  height: auto;
+  overflow: hidden;
+  margin-bottom: 5px;
 }
 </style>

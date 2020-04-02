@@ -58,7 +58,7 @@ export function PermissionSave(url, data) {
  */
 export function PermissionList(url, data) {
     url = baseUrl(url)
-    return httpGet(url, data)
+    return httpPost(url, data)
 }
 
 /**
