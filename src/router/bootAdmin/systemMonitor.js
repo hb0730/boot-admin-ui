@@ -25,5 +25,14 @@ export default {
                 title: '登录日志'
             }
         },
+        {
+            path: '/bootAdmin/systemMonitor/operlog',
+            name: `logininfo`,
+            component: _import('bootAdmin/system/monitor/loginMonitor/operlog/index'),
+            meta: {
+                ...meta,
+                title: '操作日志'
+            }
+        },
     ])('systemMonitor-')
 }

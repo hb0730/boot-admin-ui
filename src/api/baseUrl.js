@@ -222,3 +222,6 @@ export const dictMapPath='/map'
 /*************访问日志操作 starter***********/
 export const loginInfoAllPagePath='/all/page'
 /*************访问日志操作 end***************/
+/*************操作日志操作 start*************/
+export const operLogAllPagePath="/all/page"
+/*************操作日志操作 end***************/

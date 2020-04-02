@@ -34,3 +34,8 @@ export const dictServer='/api/v1/dict'
  * 访问日志
  */
 export const loginInfoServer='/api/v1/logininfo'
+
+/**
+ * 操作日志
+ */
+export const operLogServer='/api/v1/monitor/operLog'

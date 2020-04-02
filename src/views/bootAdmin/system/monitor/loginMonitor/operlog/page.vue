@@ -34,11 +34,11 @@
     <el-row :gutter="2">
       <div class="avue-crud__menu">
         <div class="avue-crud__left">
-          <button type="button" class="el-button filter-item el-button--danger  el-button--mini">
+          <button type="button" class="el-button filter-item el-button--danger el-button--mini">
             <i class="fa fa-remove"></i>
             <span>删除</span>
           </button>
-           <button type="button" class="el-button filter-item el-button--danger el-button--mini">
+          <button type="button" class="el-button filter-item el-button--danger el-button--mini">
             <i class="fa fa-trash"></i>
             <span>清除</span>
           </button>
@@ -69,47 +69,73 @@
           <el-table-column type="selection"></el-table-column>
           <el-table-column
             prop="id"
-            label="登录编号"
+            label="日志编号"
             sortable
             resizable
             :show-overflow-tooltip="true"
             align="center"
           ></el-table-column>
+          <el-table-column
+            prop="module"
+            label="操作模块"
+            sortable
+            resizable
+            :show-overflow-tooltip="true"
+            align="center"
+          ></el-table-column>
+          <el-table-column
+            prop="title"
+            label="操作内容"
+            sortable
+            resizable
+            :show-overflow-tooltip="true"
+            align="center"
+          ></el-table-column>
+          <el-table-column
+            prop="businessType"
+            label="操作类型"
+            sortable
+            resizable
+            :show-overflow-tooltip="true"
+            align="center"
+          >
+            <template scope="scope">
+              <el-tag
+                v-if="scope.row.businessType==0||scope.row.businessType==1||scope.row.businessType==2||scope.row.businessType==4"
+                type="success"
+                disable-transitions
+              >{{getMapValue("system_oper_type",scope.row.businessType)[0].label}}</el-tag>
+              <el-tag
+                v-if="scope.row.businessType==3||scope.row.businessType==7||scope.row.businessType==9"
+                type="danger"
+                disable-transitions
+              >{{getMapValue("system_oper_type",scope.row.businessType)[0].label}}</el-tag>
+              <el-tag
+                v-if="scope.row.businessType==5||scope.row.businessType==6||scope.row.businessType==8"
+                type="warning"
+                disable-transitions
+              >{{getMapValue("system_oper_type",scope.row.businessType)[0].label}}</el-tag>
+            </template>
+          </el-table-column>
           <el-table-column
             prop="username"
-            label="登录账号"
+            label="操作人员"
             sortable
             resizable
             :show-overflow-tooltip="true"
             align="center"
           ></el-table-column>
           <el-table-column
-            prop="ipaddr"
-            label="登录ip"
+            prop="operIp"
+            label="主机"
             sortable
             resizable
             :show-overflow-tooltip="true"
             align="center"
           ></el-table-column>
           <el-table-column
-            prop="loginLocation"
-            label="登录地址"
-            sortable
-            resizable
-            :show-overflow-tooltip="true"
-            align="center"
-          ></el-table-column>
-          <el-table-column
-            prop="browser"
-            label="浏览器"
-            sortable
-            resizable
-            :show-overflow-tooltip="true"
-            align="center"
-          ></el-table-column>
-          <el-table-column
-            prop="os"
-            label="操作系统"
+            prop="operLocation"
+            label="操作地点"
             sortable
             resizable
             :show-overflow-tooltip="true"
@@ -117,7 +143,7 @@
           ></el-table-column>
           <el-table-column
             prop="status"
-            label="登录状态"
+            label="操作状态"
             sortable
             resizable
             :show-overflow-tooltip="true"
@@ -131,21 +157,30 @@
             </template>
           </el-table-column>
           <el-table-column
-            prop="message"
-            label="登录信息"
+            prop="createTime"
+            label="操作时间"
             sortable
             resizable
             :show-overflow-tooltip="true"
             align="center"
           ></el-table-column>
           <el-table-column
-            prop="createTime"
-            label="登录时间"
+            label="操作"
             sortable
             resizable
             :show-overflow-tooltip="true"
             align="center"
-          ></el-table-column>
+          >
+            <template scope="scope">
+              <el-button
+                type="warning"
+                @click="handleInfo(scope.row)"
+                size="medium"
+                plain
+                icon="fa fa-search"
+              >详情</el-button>
+            </template>
+          </el-table-column>
         </el-table>
         <el-pagination
           align="left"
@@ -159,6 +194,47 @@
         ></el-pagination>
       </el-col>
     </el-row>
+    <el-dialog title="操作详情" :visible.sync="dialogVisible">
+      <el-form label-width="auto" disabled :model="operLogInfo" :label-position="position" center>
+        <el-form-item label="操作模块">
+          <el-input v-model="operLogInfo.module" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="操作信息">
+          <el-input v-model="operLogInfo.title" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="操作类型">
+          <el-select style="width:100%;" v-model="operLogInfo.businessType" placeholder="请选择">
+            <el-option
+              v-for="item in type"
+              :key="Number(item.value)"
+              :value="Number(item.value)"
+              :label="item.label"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="请求地址">
+          <el-input v-model="operLogInfo.operUrl" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="请求方式">
+          <el-input v-model="operLogInfo.requestMethod" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="请求方法">
+          <el-input v-model="operLogInfo.method" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="请求参数">
+          <el-input v-model="operLogInfo.operParam" type="textarea">
+          </el-input>
+        </el-form-item>
+        <el-form-item label="返回参数">
+          <el-input v-model="operLogInfo.jsonResult" type="textarea">
+          </el-input>
+        </el-form-item>
+         <el-form-item v-if="operLogInfo.status==0" label="错误信息">
+          <el-input v-model="operLogInfo.errorMsg" type="textarea">
+          </el-input>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </d2-container>
 </template>
 <script>
@@ -178,7 +254,11 @@ export default {
         total: 0
       },
       mapInfo: new Map(),
-      status: []
+      status: [],
+      type: [],
+      operLogInfo: {},
+      dialogVisible: false,
+      position: "left"
     };
   },
   mounted() {
@@ -187,7 +267,7 @@ export default {
     _self.getPageAll();
   },
   methods: {
-    ...mapActions("bootAdmin/loginInfo", ["loginInfoAllPage"]),
+    ...mapActions("bootAdmin/operLog", ["operLogAllPage"]),
     ...mapActions("d2admin/dict", ["getDictMap"]),
     handleSizeChange(val) {
       this.pages.pageSize = val;
@@ -209,7 +289,7 @@ export default {
         "/" +
         _self.pages.pageSize;
       let info = JSON.parse(JSON.stringify(_self.searchInfo));
-      _self.loginInfoAllPage({ url: url, data: info }).then(result => {
+      _self.operLogAllPage({ url: url, data: info }).then(result => {
         _self.loginInfoList = result.list;
         _self.pages.total = Number(result.total);
       });
@@ -221,7 +301,8 @@ export default {
       let _self = this;
       _self.getDictMap().then(result => {
         _self.mapInfo = util.objToMap(result);
-        _self.getMapType("system_status");
+        _self.status = _self.getMapType("system_status");
+        _self.type = _self.getMapType("system_oper_type");
       });
     },
     /**获取map值 */
@@ -231,7 +312,15 @@ export default {
     },
     getMapType(type) {
       let _self = this;
-      _self.status = util.dicts.getMapType(_self.mapInfo, type);
+      return util.dicts.getMapType(_self.mapInfo, type);
+    },
+    /**
+     * 详情
+     */
+    handleInfo(row) {
+      let _self = this;
+      _self.operLogInfo = JSON.parse(JSON.stringify(row));
+      _self.dialogVisible = true;
     }
   }
 };
