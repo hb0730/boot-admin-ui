@@ -11,22 +11,49 @@
         <el-select v-model="searchInfo.isEnabled" placeholder="岗位状态" clearable>
           <el-option
             v-for="item in isEnabledOptions"
-            :key="item.value"
+            :key="Number(item.value)"
             :label="item.label"
-            :value="item.value"
+            :value="Number(item.value)"
           ></el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button plain size="medium" icon="fa fa-search">查询</el-button>
+        <el-button plain size="medium" @click="handleSearch" icon="fa fa-search">查询</el-button>
         <el-button plain type="primary" size="medium" @click="handleAddNew" icon="el-icon-plus">新增</el-button>
       </el-form-item>
     </el-form>
     <el-row :gutter="2">
+      <div class="avue-crud__menu">
+        <div class="avue-crud__left">
+          <button
+            type="button"
+            @click="handleDeleteIds"
+            class="el-button filter-item el-button--danger el-button--mini"
+          >
+            <i class="fa fa-remove"></i>
+            <span>删除</span>
+          </button>
+          <button type="button" class="el-button filter-item el-button--warning el-button--mini">
+            <i class="fa fa-download"></i>
+            <span>导出</span>
+          </button>
+        </div>
+        <div class="avue-crud__right">
+          <button
+            type="button"
+            class="el-button el-tooltip el-button--default el-button--small is-circle"
+            aria-describedby="el-tooltip-2497"
+            tabindex="0"
+          >
+            <i class="el-icon-refresh"></i>
+          </button>
+        </div>
+      </div>
       <el-col :xs="10">
         <el-table
           :data="postList"
           style="width: 100%;"
+          ref="postListRef"
           border
           :fit="true"
           :header-cell-style="{'text-align':'center'}"
@@ -159,8 +186,11 @@
         </el-form-item>
         <el-form-item required label="岗位状态" prop="isEnabled">
           <el-radio-group v-model="postInfo.isEnabled">
-            <el-radio :label="1">启用</el-radio>
-            <el-radio :label="0">禁用</el-radio>
+            <el-radio
+              v-for="item in isEnabledOptions "
+              :key="Number(item.value)"
+              :label="Number(item.value)"
+            >{{item.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="备注" prop="description">
@@ -182,21 +212,13 @@ import {
   postDeletePath
 } from "@/api/baseUrl";
 import { mapActions } from "vuex";
-import { MessageBox } from 'element-ui';
+import { MessageBox } from "element-ui";
+import util from "@/libs/util";
 export default {
   data() {
     return {
       searchInfo: {},
-      isEnabledOptions: [
-        {
-          value: 1,
-          label: "启用"
-        },
-        {
-          value: 0,
-          label: "禁用"
-        }
-      ],
+      isEnabledOptions: [],
       postList: [],
       dialogTableVisible: false,
       postInfo: {
@@ -229,6 +251,7 @@ export default {
   mounted() {
     let _self = this;
     _self.getPostPage();
+    _self.getMap();
   },
   methods: {
     ...mapActions("bootAdmin/post", [
@@ -237,6 +260,7 @@ export default {
       "postUpdate",
       "postDelete"
     ]),
+    ...mapActions("d2admin/dict", ["getDictMap"]),
     /*关闭弹出 */
     handleDialogClose() {
       let _self = this;
@@ -340,18 +364,66 @@ export default {
      */
     handleDelete(row) {
       let _self = this;
-       MessageBox.confirm("是否删除该数据", "删除", {
-          type: "warning"
-        }).then(() => {
-          _self.delete(row.id);
-        });
+      MessageBox.confirm("是否删除该数据", "删除", {
+        type: "warning"
+      }).then(() => {
+        const ids = [];
+        ids.push(row.id);
+        _self.delete(ids);
+      });
     },
     delete(id) {
       let _self = this;
-      let url = postDeletePath + "/" + id;
-      _self.postDelete({ url: url, data: null }).then(reuslt => {
+      let url = postDeletePath;
+      let params = JSON.parse(JSON.stringify(id));
+      _self.postDelete({ url: url, data: params }).then(reuslt => {
         _self.getPostPage();
       });
+    },
+    /**
+     * 获取数据字典类型
+     */
+    getMap() {
+      let _self = this;
+      _self.getDictMap().then(result => {
+        _self.mapInfo = util.objToMap(result);
+        _self.isEnabledOptions = _self.getMapType("system_enabled");
+      });
+    },
+    /**获取map值 */
+    getMapValue(type, value) {
+      let _self = this;
+      return util.dicts.getMapValue(_self.mapInfo, type, value);
+    },
+    getMapType(type) {
+      let _self = this;
+      return util.dicts.getMapType(_self.mapInfo, type);
+    },
+    /**
+     * 检索
+     */
+    handleSearch() {
+      let _self = this;
+      _self.getPostPage();
+    },
+    /**
+     * 删除
+     */
+    handleDeleteIds() {
+      let _self = this;
+      let info = _self.$refs.postListRef.selection;
+      if (info.length > 0) {
+        MessageBox.confirm("是否删除该数据", "删除", {
+          type: "warning"
+        }).then(() => {
+          let ids = [];
+          info.forEach(item => {
+            ids.push(item.id);
+          });
+          _self.isParent = true;
+          _self.delete(ids);
+        });
+      }
     }
   }
 };

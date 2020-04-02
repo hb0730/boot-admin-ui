@@ -47,7 +47,7 @@ export function PostUpdate(url,data){
  */
 export function PostDelete(url,data){
     url =baseUrl(url)
-    return httpGet(url,data)
+    return httpPost(url,data)
 }
 
 
