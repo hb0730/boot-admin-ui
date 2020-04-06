@@ -40,8 +40,17 @@ export default {
             component: _import('bootAdmin/system/monitor/userOnline/index'),
             meta: {
                 ...meta,
-                title: '在线日志'
+                title: '在线用户'
             }
         },
+        {
+            path:'/bootAdmin/systemMonitor/jobManager',
+            name: 'jobManager',
+            component: _import('bootAdmin/system/monitor/jobManager/index'),
+            meta:{
+                ...meta,
+                title:'定时任务'
+            }
+        }
     ])('systemMonitor-')
 }

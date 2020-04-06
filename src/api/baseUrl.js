@@ -233,3 +233,23 @@ export const operLogAllPagePath="/all/page"
 /*************操作日志操作 start*************/
 export const userOnlineAllPagePath="/all/page"
 /*************操作日志操作 end***************/
+/*************定时任务操作 start*************/
+/**
+ * 分页
+ */
+export const jobAllPagePath="/all/page"
+export const jobAllPath ='/all'
+/**
+ * 保存
+ */
+export const jobSavePath='/save'
+/**
+ * 更新
+ */
+export const jobUpdatePath='/update'
+
+/**
+ * 删除
+ */
+export const jobDeletePath='/delele'
+/*************操作日志操作 end***************/
