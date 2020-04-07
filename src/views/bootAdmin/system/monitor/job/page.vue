@@ -2,13 +2,23 @@
   <d2-container class="page">
     <el-form ref="searchForm" :model="searchInfo" :inline="true" :label-position="position">
       <el-form-item>
-        <el-input v-model="searchInfo.username" placeholder="登录账号" clearable></el-input>
+        <el-input v-model="searchInfo.number" placeholder="任务编码" clearable></el-input>
       </el-form-item>
       <el-form-item>
-        <el-input v-model="searchInfo.ipaddr" placeholder="登录ip" clearable></el-input>
+        <el-input v-model="searchInfo.name" placeholder="任务名称" clearable></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button plain size="medium" icon="fa fa-search">查询</el-button>
+        <el-select v-model="searchInfo.enabled" placeholder="请选择" clearable>
+          <el-option
+            v-for="item in isEnabledOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-button @click="handleSearch" plain size="medium" icon="fa fa-search">查询</el-button>
       </el-form-item>
     </el-form>
     <el-row :gutter="2">
@@ -17,15 +27,31 @@
           <button
             @click="handleAddNew"
             type="button"
-            class="el-button filter-item el-button--primary el-button--mini"
+            class="el-button filter-item el-button--success el-button--mini"
           >
             <i class="fa fa-plus"></i>
             <span>新增</span>
           </button>
-          <!-- <button type="button" class="el-button filter-item el-button--danger el-button--mini">
-            <i class="fa fa-sign-out"></i>
-            <span>强退</span>
-          </button>-->
+          <button
+            @click="handleEdit"
+            type="button"
+            class="el-button filter-item el-button--primary el-button--mini"
+          >
+            <i class="fa fa-edit"></i>
+            <span>修改</span>
+          </button>
+          <button
+            @click="handleRemove"
+            type="button"
+            class="el-button filter-item el-button--danger el-button--mini"
+          >
+            <i class="fa fa-remove"></i>
+            <span>刪除</span>
+          </button>
+          <button type="button" class="el-button filter-item el-button--warning el-button--mini">
+            <i class="fa fa-download"></i>
+            <span>导出</span>
+          </button>
         </div>
         <div class="avue-crud__right">
           <button
@@ -42,6 +68,7 @@
         <el-table
           :data="jobList"
           style="width: 100%;"
+          ref="jobTableRef"
           border
           :fit="true"
           :header-cell-style="{'text-align':'center'}"
@@ -128,6 +155,7 @@
               </el-tooltip>
               <el-tooltip content="删除" placement="bottom" effect="light">
                 <el-button
+                  @click="handleDelete(scope.row)"
                   type="text"
                   icon="fa fa-remove"
                   size="mini"
@@ -137,7 +165,7 @@
                 <el-button
                   type="text"
                   icon="fa fa-list"
-                  size="mini" 
+                  size="mini"
                   @click="handleLogList(scope.row)"
                 ></el-button>
               </el-tooltip>
@@ -209,10 +237,16 @@
   </d2-container>
 </template>
 <script>
-import router from '@/router'
+import router from "@/router";
 import { mapActions } from "vuex";
-import { jobAllPagePath, jobSavePath, jobUpdatePath } from "@/api/baseUrl";
+import {
+  jobAllPagePath,
+  jobSavePath,
+  jobUpdatePath,
+  jobDeletePath
+} from "@/api/baseUrl";
 import util from "@/libs/util";
+import { MessageBox } from "element-ui";
 export default {
   data() {
     return {
@@ -251,7 +285,12 @@ export default {
     _self.getMap();
   },
   methods: {
-    ...mapActions("bootAdmin/job", ["jobAllPage", "jobSave", "jobUpdate"]),
+    ...mapActions("bootAdmin/job", [
+      "jobAllPage",
+      "jobSave",
+      "jobUpdate",
+      "jobDeleteIds"
+    ]),
     ...mapActions("d2admin/dict", ["getDictMap"]),
     getPage() {
       let _self = this;
@@ -302,6 +341,13 @@ export default {
         id: "",
         isEnabled: 1
       };
+    },
+    /**
+     * 检索
+     */
+    handleSearch() {
+      let _self = this;
+      _self.getPage();
     },
     /**
      * 新增
@@ -356,16 +402,86 @@ export default {
       _self.isView = false;
       _self.dialogDataTableVisible = true;
     },
-    handleLogList(row){
-      let _self=this 
-      let jobInfo=JSON.parse(JSON.stringify(row))
+    /**
+     * 修改
+     */
+    handleEdit() {
+      let _self = this;
+      const lists = _self.$refs.jobTableRef.selection;
+      if (lists.length <= 0) {
+        _self.$message({
+          message: "请选择",
+          type: "warning"
+        });
+      } else if (lists.length >= 2) {
+        _self.$message({
+          message: "请选择(有且只有一个)",
+          type: "warning"
+        });
+      } else {
+        _self.jobInfo = lists[0];
+        _self.isUpdate = true;
+        _self.isView = false;
+        _self.dialogDataTableVisible = true;
+      }
+    },
+    /**
+     * 删除
+     */
+    handleDelete(row) {
+      let _self = this;
+      let info = JSON.parse(JSON.stringify(row));
+      MessageBox.confirm("是否删除选中数据", "删除", {
+        type: "warning"
+      }).then(() => {
+        const array = [];
+        array.push(row.id);
+        _self.delete(array);
+      });
+    },
+    /**
+     * 删除
+     */
+    handleRemove() {
+      let _self = this;
+      const lists = _self.$refs.jobTableRef.selection;
+      if (lists.length <= 0) {
+        _self.$message({
+          message: "请选择",
+          type: "warning"
+        });
+      } else {
+        const array = [];
+        lists.forEach(element => {
+          array.push(element.id);
+        });
+        MessageBox.confirm("是否删除选中数据", "删除", {
+          type: "warning"
+        }).then(() => {
+          _self.delete(array);
+        });
+      }
+    },
+    /**
+     * 删除
+     */
+    delete(ids) {
+      let _self = this;
+      let url = jobDeletePath;
+      let params = JSON.parse(JSON.stringify(ids));
+      _self.jobDeleteIds({ url: url, data: params }).then(result => {
+        _self.getPage();
+      });
+    },
+    handleLogList(row) {
+      let _self = this;
+      let jobInfo = JSON.parse(JSON.stringify(row));
       router.push({
-        path:'/bootAdmin/systemMonitor/jobLog',
-        query:{
-          d:encodeURIComponent(jobInfo.id)
+        path: "/bootAdmin/systemMonitor/jobLog",
+        query: {
+          d: encodeURIComponent(jobInfo.id)
         }
-      })
-
+      });
     }
   }
 };

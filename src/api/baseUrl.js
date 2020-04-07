@@ -251,7 +251,7 @@ export const jobUpdatePath = '/update'
 /**
  * 删除
  */
-export const jobDeletePath = '/delele'
+export const jobDeletePath = '/delete'
 /*************操作日志操作 end***************/
 /*************调度日志操作 start*************/
 /**
