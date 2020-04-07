@@ -19,12 +19,27 @@
       </el-form-item>
       <el-form-item>
         <el-button plain size="medium" @click="handleSearch" icon="fa fa-search">查询</el-button>
-        <el-button plain type="primary" size="medium" @click="handleAddNew" icon="el-icon-plus">新增</el-button>
       </el-form-item>
     </el-form>
     <el-row :gutter="2">
       <div class="avue-crud__menu">
         <div class="avue-crud__left">
+          <button
+            type="primary"
+            class="el-button filter-item el-button--success el-button--mini"
+            @click="handleAddNew"
+          >
+            <i class="fa fa-plus"></i>
+            <span>新增</span>
+          </button>
+          <button
+            @click="handleEdit"
+            type="primary"
+            class="el-button filter-item el-button--primary el-button--mini"
+          >
+            <i class="fa fa-edit"></i>
+            <span>修改</span>
+          </button>
           <button
             type="button"
             @click="handleDeleteIds"
@@ -58,7 +73,13 @@
           :fit="true"
           :header-cell-style="{'text-align':'center'}"
         >
-          <el-table-column type="selection"></el-table-column>
+          <el-table-column
+            sortable
+            resizable
+            :show-overflow-tooltip="true"
+            align="center"
+            type="selection"
+          ></el-table-column>
           <el-table-column
             prop="number"
             label="岗位编码"
@@ -360,6 +381,29 @@ export default {
       _self.dialogTableVisible = true;
     },
     /**
+     * 修改
+     */
+    handleEdit() {
+      let _self = this;
+      let info = _self.$refs.postListRef.selection;
+      if (info.length <= 0) {
+        _self.$message({
+          message: "请选择",
+          type: "warning"
+        });
+      } else if (info.length > 1) {
+        _self.$message({
+          message: "请选择(有且只有一个)",
+          type: "warning"
+        });
+      } else {
+        _self.postInfo = info[0];
+        _self.isView = false;
+        _self.isUpdate = true;
+        _self.dialogTableVisible = true;
+      }
+    },
+    /**
      * 删除
      */
     handleDelete(row) {
@@ -412,7 +456,12 @@ export default {
     handleDeleteIds() {
       let _self = this;
       let info = _self.$refs.postListRef.selection;
-      if (info.length > 0) {
+      if (info.length <= 0) {
+        _self.$message({
+          message: "请选择",
+          type: "warning"
+        });
+      } else if (info.length > 0) {
         MessageBox.confirm("是否删除该数据", "删除", {
           type: "warning"
         }).then(() => {
