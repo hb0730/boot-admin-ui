@@ -19,12 +19,28 @@
       </el-form-item>
       <el-form-item>
         <el-button plain size="medium" @click="handlerSearchRole" icon="fa fa-search">查询</el-button>
-        <el-button plain type="primary" @click="handleAddNew" size="medium" icon="el-icon-plus">新增</el-button>
+        <!-- <el-button plain type="primary" @click="handleAddNew" size="medium" icon="el-icon-plus">新增</el-button> -->
       </el-form-item>
     </el-form>
     <el-row :gutter="2">
       <div class="avue-crud__menu">
         <div class="avue-crud__left">
+          <button
+            type="button"
+            @click="handleAddNew"
+            class="el-button filter-item el-button--success el-button--mini"
+          >
+            <i class="fa fa-plus"></i>
+            <span>新增</span>
+          </button>
+          <button
+            @click="handleEdit"
+            type="button"
+            class="el-button filter-item el-button--primary el-button--mini"
+          >
+            <i class="fa fa-edit"></i>
+            <span>修改</span>
+          </button>
           <button
             type="button"
             @click="handleDeleteIds"
@@ -53,12 +69,18 @@
         <el-table
           :data="roleList"
           style="width: 100%;"
-          ref="roleTree"
+          ref="roleListRef"
           border
           :fit="true"
           :header-cell-style="{'text-align':'center'}"
         >
-          <el-table-column type="selection"></el-table-column>
+          <el-table-column
+            sortable
+            resizable
+            :show-overflow-tooltip="true"
+            align="center"
+            type="selection"
+          ></el-table-column>
           <el-table-column
             prop="name"
             label="角色名称"
@@ -539,6 +561,37 @@ export default {
       _self.dialogTableVisible = true;
     },
     /**
+     * 修改
+     */
+    handleEdit() {
+      let _self = this;
+      let info = _self.$refs.roleListRef.selection;
+      if (info.length <= 0) {
+        _self.$message({
+          message: "请选择",
+          type: "warning"
+        });
+      } else if (info.length > 1) {
+        _self.$message({
+          message: "请选择(有且只有一个)",
+          type: "warning"
+        });
+      } else {
+        let row = info[0];
+        _self.isView = false;
+        _self.isUpdate = true;
+        _self.roleInfo = {
+          id: row.id,
+          name: row.name,
+          enname: row.enname,
+          sort: row.sort,
+          description: row.description,
+          isEnabled: row.isEnabled
+        };
+        _self.dialogTableVisible = true;
+      }
+    },
+    /**
      * 修改后保存
      */
     RoleUpdate() {
@@ -558,8 +611,8 @@ export default {
         MessageBox.confirm("是否删除该数据", "删除", {
           type: "warning"
         }).then(() => {
-          let info =[];
-          info.push(row.id)
+          let info = [];
+          info.push(row.id);
           _self.RoleDelete(info);
         });
       }
@@ -567,8 +620,8 @@ export default {
     RoleDelete(id) {
       let _self = this;
       let url = roleDeletePath;
-      let params= JSON.parse(JSON.stringify(id))
-      console.info(params)
+      let params = JSON.parse(JSON.stringify(id));
+      console.info(params);
       _self.roleDelete({ url: url, data: params }).then(result => {
         _self.handleDialogClose();
       });
@@ -815,8 +868,13 @@ export default {
      */
     handleDeleteIds() {
       let _self = this;
-      let info = _self.$refs.roleTree.selection;
-      if (info.length > 0) {
+      let info = _self.$refs.roleListRef.selection;
+      if (info.length <= 0) {
+        _self.$message({
+          message: "请选择",
+          type: "warning"
+        });
+      } else if (info.length > 0) {
         MessageBox.confirm("是否删除该数据", "删除", {
           type: "warning"
         }).then(() => {
