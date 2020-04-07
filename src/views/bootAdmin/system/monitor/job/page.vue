@@ -126,6 +126,21 @@
                   size="mini"
                 ></el-button>
               </el-tooltip>
+              <el-tooltip content="删除" placement="bottom" effect="light">
+                <el-button
+                  type="text"
+                  icon="fa fa-remove"
+                  size="mini"
+                ></el-button>
+              </el-tooltip>
+              <el-tooltip content="调度日志" placement="bottom" effect="light">
+                <el-button
+                  type="text"
+                  icon="fa fa-list"
+                  size="mini" 
+                  @click="handleLogList(scope.row)"
+                ></el-button>
+              </el-tooltip>
             </template>
           </el-table-column>
         </el-table>
@@ -194,6 +209,7 @@
   </d2-container>
 </template>
 <script>
+import router from '@/router'
 import { mapActions } from "vuex";
 import { jobAllPagePath, jobSavePath, jobUpdatePath } from "@/api/baseUrl";
 import util from "@/libs/util";
@@ -339,6 +355,17 @@ export default {
       _self.isUpdate = true;
       _self.isView = false;
       _self.dialogDataTableVisible = true;
+    },
+    handleLogList(row){
+      let _self=this 
+      let jobInfo=JSON.parse(JSON.stringify(row))
+      router.push({
+        path:'/bootAdmin/systemMonitor/jobLog',
+        query:{
+          d:encodeURIComponent(jobInfo.id)
+        }
+      })
+
     }
   }
 };

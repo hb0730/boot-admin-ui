@@ -1,4 +1,4 @@
-import { JobServer } from "@/api/baseServer"
+import { jobServer } from "@/api/baseServer"
 import { httpPost, httpGet } from "@/api/http"
 
 /**
@@ -57,9 +57,9 @@ export function JobDeleteIds(url, data) {
  */
 function baseUrl(url) {
     if (url) {
-        url = JobServer + url
+        url = jobServer + url
     } else {
-        url = JobServer
+        url = jobServer
     }
     return url
 }

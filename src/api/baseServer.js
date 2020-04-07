@@ -48,4 +48,9 @@ export const userOnlineServer='/api/v1/monitor/online'
 /**
  * 定时任务
  */
-export const JobServer='/api/v1/monitor/job'
+export const jobServer='/api/v1/monitor/job'
+
+/**
+ * 定时任务日志
+ */
+export const jobLogServer='/api/v1/monitor/joblog'

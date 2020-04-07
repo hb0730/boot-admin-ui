@@ -14,11 +14,11 @@ export const logoutPath = '/auth/logout'
 /**
  * 用户详情
  */
-export const userInfoPath='/info'
+export const userInfoPath = '/info'
 /**
  * 修改用户详情
  */
-export const userUpdateInfoPath='/update/info'
+export const userUpdateInfoPath = '/update/info'
 /**
  * 修改用户密码
  */
@@ -27,7 +27,7 @@ export const userUpdatePasswordPath = '/update/password'
 /***
  * 分页后的用户
  */
-export const userAllPagePath ='/all'
+export const userAllPagePath = '/all'
 
 /**
  * 用户保存
@@ -37,28 +37,28 @@ export const userSavePath = '/save'
 /**
  *用户修改
  */
-export const userUpdatePath ='/update/user'
+export const userUpdatePath = '/update/user'
 /**
  * 获取用户详情(用户角色岗位等)
  */
-export const userInfoAllPath='/user/info'
+export const userInfoAllPath = '/user/info'
 
 /**
  * 重置密碼
  */
-export const userResetPasswordPath='/update/reset/password'
+export const userResetPasswordPath = '/update/reset/password'
 
 /**
  * 用户删除
  */
-export const userDeletePath="/delete"
+export const userDeletePath = "/delete"
 /*************用户操作 end**********************/
 
 /*************菜单操作 start*******************/
 /**
  *树形菜单
  */
-export const menuTreePath ='/tree'
+export const menuTreePath = '/tree'
 
 /**
  * 菜单新增
@@ -78,12 +78,12 @@ export const menuDeletePath = '/delete'
 /**
  * 当前用户菜单
  */
-export const currentMenuPath='/current'
+export const currentMenuPath = '/current'
 
 /**
  * 获取权限
  */
-export const permissionSavePath= '/permission/save'
+export const permissionSavePath = '/permission/save'
 
 /**
  * 分页后的权限
@@ -93,11 +93,11 @@ export const permissionPagePath = '/permission'
 /**
  * 修改权限
  */
-export const permissionUpdatePath='/permission/update'
+export const permissionUpdatePath = '/permission/update'
 /**
  * 删除
  */
-export const permissionDeletePath='/permission/delete'
+export const permissionDeletePath = '/permission/delete'
 
 /**
  * 获取权限id(角色赋权)
@@ -109,12 +109,12 @@ export const permissionIdsAllPath = '/permission/menu/all'
 /**
  * 组织保存
  */
-export const orgSavePath='/save'
+export const orgSavePath = '/save'
 
 /**
  * 组织树
  */
-export const orgTreePath='/tree'
+export const orgTreePath = '/tree'
 
 /**
  * 修改组织信息
@@ -151,11 +151,11 @@ export const roleDeletePath = '/delete'
 /**
  * 获取角色权限
  */
-export const rolePermissionAllPath= '/permission/id'
+export const rolePermissionAllPath = '/permission/id'
 /**
  * 获取键值对方式的权限
  */
-export const rolePermissionMapAllPath= '/permission/map'
+export const rolePermissionMapAllPath = '/permission/map'
 /**
  * 更新角色权限
  */
@@ -164,18 +164,18 @@ export const rolePermissionSavePath = '/permission/save'
 /**
  * 保存数据范围
  */
-export const roleOrgSavePath='/org/role/save'
+export const roleOrgSavePath = '/org/role/save'
 
 /**
  * 获取数据范围
  */
-export const roleOrgAllPath ='/org/role'
+export const roleOrgAllPath = '/org/role'
 /*************角色操作 end*******************/
 /*************岗位操作 start*****************/
 /**
  * 岗位分页
  */
-export const postAllPagePath ='/all'
+export const postAllPagePath = '/all'
 /**
  * 岗位
  */
@@ -184,31 +184,31 @@ export const postAllPath = '/all'
 /**
  * 岗位保存
  */
-export const postSavePath='/save'
+export const postSavePath = '/save'
 
 /**
  * 岗位更新
  */
-export const postUpdatePath ='/update'
+export const postUpdatePath = '/update'
 
 /**
  * 岗位删除
  */
-export const postDeletePath='/delete'
+export const postDeletePath = '/delete'
 /*************岗位操作 end*******************/
 /*************数据字典操作 start*************/
 /**
  * 保存
  */
-export const dictSavePath='/save'
+export const dictSavePath = '/save'
 /**
  * 修改
  */
-export const dictUpdatePath='/update'
+export const dictUpdatePath = '/update'
 /**
  * 分页
  */
-export const dictPageAllPath='/page/all'
+export const dictPageAllPath = '/page/all'
 /**
  * 分页项
  */
@@ -222,34 +222,48 @@ export const dictDeletePath = '/delete/id'
 /**
  * 字典类型
  */
-export const dictMapPath='/map'
+export const dictMapPath = '/map'
 /*************数据字典操作 end***************/
 /*************访问日志操作 starter***********/
-export const loginInfoAllPagePath='/all/page'
+export const loginInfoAllPagePath = '/all/page'
 /*************访问日志操作 end***************/
 /*************操作日志操作 start*************/
-export const operLogAllPagePath="/all/page"
+export const operLogAllPagePath = "/all/page"
 /*************操作日志操作 end***************/
 /*************操作日志操作 start*************/
-export const userOnlineAllPagePath="/all/page"
+export const userOnlineAllPagePath = "/all/page"
 /*************操作日志操作 end***************/
 /*************定时任务操作 start*************/
 /**
  * 分页
  */
-export const jobAllPagePath="/all/page"
-export const jobAllPath ='/all'
+export const jobAllPagePath = "/all/page"
+export const jobAllPath = '/all'
 /**
  * 保存
  */
-export const jobSavePath='/save'
+export const jobSavePath = '/save'
 /**
  * 更新
  */
-export const jobUpdatePath='/update'
+export const jobUpdatePath = '/update'
 
 /**
  * 删除
  */
-export const jobDeletePath='/delele'
+export const jobDeletePath = '/delele'
 /*************操作日志操作 end***************/
+/*************调度日志操作 start*************/
+/**
+ * 分页
+ */
+export const jobLogAllPagePath = "/all/page"
+/**
+ * 删除
+ */
+export const jobLogDeletePath = '/delete'
+/**
+ * 清空
+ */
+export const jobLogCleanPath = '/clean/job'
+/*************调度日志操作 end***************/

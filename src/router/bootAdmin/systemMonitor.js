@@ -44,12 +44,21 @@ export default {
             }
         },
         {
-            path:'/bootAdmin/systemMonitor/jobManager',
-            name: 'jobManager',
-            component: _import('bootAdmin/system/monitor/jobManager/index'),
+            path:'/bootAdmin/systemMonitor/job',
+            name: 'job',
+            component: _import('bootAdmin/system/monitor/job/index'),
             meta:{
                 ...meta,
                 title:'定时任务'
+            }
+        },
+        {
+            path:'/bootAdmin/systemMonitor/jobLog',
+            name: 'jobLog',
+            component: _import('bootAdmin/system/monitor/jobLog/index'),
+            meta:{
+                ...meta,
+                title:'调度日志'
             }
         }
     ])('systemMonitor-')
