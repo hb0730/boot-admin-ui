@@ -2,10 +2,15 @@
   <d2-container class="page">
     <el-form ref="searchForm" :model="searchInfo" :inline="true" :label-position="position">
       <el-form-item>
-        <el-input v-model="searchInfo.username" placeholder="登录账号" clearable></el-input>
+        <el-input v-model="searchInfo.module" placeholder="操作模块" clearable></el-input>
       </el-form-item>
       <el-form-item>
-        <el-input v-model="searchInfo.ipaddr" placeholder="登录ip" clearable></el-input>
+        <el-select v-model="searchInfo.businessType" placeholder="操作类型" clearable>
+          <el-option v-for="item in type" :key="item.value" :label="item.label" :value="item.value"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-input v-model="searchInfo.username" placeholder="操作用户" clearable></el-input>
       </el-form-item>
       <el-form-item>
         <el-select v-model="searchInfo.status" placeholder="状态" clearable>
@@ -18,27 +23,31 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-time-picker
-          is-range
-          v-model="searchInfo.time"
-          range-separator="至"
-          start-placeholder="开始时间"
-          end-placeholder="结束时间"
-          placeholder="选择时间范围"
-        ></el-time-picker>
+        <el-form-item>
+          <el-date-picker v-model="searchInfo.startTime" type="date" placeholder="操作开始"></el-date-picker>-
+          <el-date-picker v-model="searchInfo.endTime" type="date" placeholder="操作结束"></el-date-picker>
+        </el-form-item>
       </el-form-item>
       <el-form-item>
-        <el-button plain size="medium" icon="fa fa-search">查询</el-button>
+        <el-button @click="handleSearch" plain size="medium" icon="fa fa-search">查询</el-button>
       </el-form-item>
     </el-form>
     <el-row :gutter="2">
       <div class="avue-crud__menu">
         <div class="avue-crud__left">
-          <button type="button" class="el-button filter-item el-button--danger el-button--mini">
+          <button
+            @click="handleRemove"
+            type="button"
+            class="el-button filter-item el-button--danger el-button--mini"
+          >
             <i class="fa fa-remove"></i>
             <span>删除</span>
           </button>
-          <button type="button" class="el-button filter-item el-button--danger el-button--mini">
+          <button
+            @click="handleClean"
+            type="button"
+            class="el-button filter-item el-button--danger el-button--mini"
+          >
             <i class="fa fa-trash"></i>
             <span>清除</span>
           </button>
@@ -60,13 +69,20 @@
       </div>
       <el-col :xs="10">
         <el-table
-          :data="loginInfoList"
+          :data="operLogList"
           style="width: 100%;"
+          ref="operLog"
           border
           :fit="true"
           :header-cell-style="{'text-align':'center'}"
         >
-          <el-table-column type="selection"></el-table-column>
+          <el-table-column
+            sortable
+            resizable
+            :show-overflow-tooltip="true"
+            align="center"
+            type="selection"
+          ></el-table-column>
           <el-table-column
             prop="id"
             label="日志编号"
@@ -222,16 +238,13 @@
           <el-input v-model="operLogInfo.method" clearable></el-input>
         </el-form-item>
         <el-form-item label="请求参数">
-          <el-input v-model="operLogInfo.operParam" type="textarea">
-          </el-input>
+          <el-input v-model="operLogInfo.operParam" type="textarea"></el-input>
         </el-form-item>
         <el-form-item label="返回参数">
-          <el-input v-model="operLogInfo.jsonResult" type="textarea">
-          </el-input>
+          <el-input v-model="operLogInfo.jsonResult" type="textarea"></el-input>
         </el-form-item>
-         <el-form-item v-if="operLogInfo.status==0" label="错误信息">
-          <el-input v-model="operLogInfo.errorMsg" type="textarea">
-          </el-input>
+        <el-form-item v-if="operLogInfo.status==0" label="错误信息">
+          <el-input v-model="operLogInfo.errorMsg" type="textarea"></el-input>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -239,13 +252,18 @@
 </template>
 <script>
 import { mapActions } from "vuex";
-import { loginInfoAllPagePath } from "@/api/baseUrl";
+import {
+  loginInfoAllPagePath,
+  operLogDeletePath,
+  operLogCleanPath
+} from "@/api/baseUrl";
 import util from "@/libs/util";
+import { MessageBox } from "element-ui";
 export default {
   data() {
     return {
       position: "left",
-      loginInfoList: [],
+      operLogList: [],
       searchInfo: {},
       // 分页
       pages: {
@@ -267,7 +285,11 @@ export default {
     _self.getPageAll();
   },
   methods: {
-    ...mapActions("bootAdmin/operLog", ["operLogAllPage"]),
+    ...mapActions("bootAdmin/operLog", [
+      "operLogAllPage",
+      "operLogDelete",
+      "operLogClean"
+    ]),
     ...mapActions("d2admin/dict", ["getDictMap"]),
     handleSizeChange(val) {
       this.pages.pageSize = val;
@@ -290,7 +312,7 @@ export default {
         _self.pages.pageSize;
       let info = JSON.parse(JSON.stringify(_self.searchInfo));
       _self.operLogAllPage({ url: url, data: info }).then(result => {
-        _self.loginInfoList = result.list;
+        _self.operLogList = result.list;
         _self.pages.total = Number(result.total);
       });
     },
@@ -321,6 +343,64 @@ export default {
       let _self = this;
       _self.operLogInfo = JSON.parse(JSON.stringify(row));
       _self.dialogVisible = true;
+    },
+    /**
+     * 检索
+     */
+    handleSearch() {
+      let _self = this;
+      _self.getPageAll();
+    },
+    /**
+     * 删除
+     */
+    handleRemove() {
+      let _self = this;
+      const lists = _self.$refs.operLog.selection;
+      if (lists.length <= 0) {
+        _self.$message({
+          message: "请选择",
+          type: "warning"
+        });
+      } else {
+        const array = [];
+        lists.forEach(element => {
+          array.push(element.id);
+        });
+        MessageBox.confirm("是否删除选中数据", "删除", {
+          type: "warning"
+        }).then(() => {
+          _self.delete(array);
+        });
+      }
+    },
+    delete(ids) {
+      let _self = this;
+      if (ids.length > 0) {
+        let url = operLogDeletePath;
+        let params = JSON.parse(JSON.stringify(ids));
+        _self.operLogDelete({ url: url, data: params }).then(result => {
+          _self.getPageAll();
+        });
+      }
+    },
+    /**
+     * 清空
+     */
+    handleClean() {
+      let _self = this;
+      MessageBox.confirm("是否删除选中数据", "删除", {
+        type: "warning"
+      }).then(() => {
+        _self.clean();
+      });
+    },
+    clean() {
+      let _self = this;
+      let url = operLogCleanPath;
+      _self.operLogClean({ url: url, data: null }).then(result => {
+        _self.getPageAll();
+      });
     }
   }
 };

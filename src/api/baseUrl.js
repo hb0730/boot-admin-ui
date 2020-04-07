@@ -239,7 +239,19 @@ export const loginInfoDeletePath = '/delete'
 export const loginInfoCleanPath = '/clean'
 /*************访问日志操作 end***************/
 /*************操作日志操作 start*************/
+/**
+ * 分页
+ */
 export const operLogAllPagePath = "/all/page"
+
+/**
+ * 删除
+ */
+export const operLogDeletePath = '/delete'
+/**
+ * 清空
+ */
+export const operLogCleanPath = '/clean'
 /*************操作日志操作 end***************/
 /*************在线用户操作 start*************/
 /**
