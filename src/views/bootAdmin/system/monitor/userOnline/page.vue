@@ -8,13 +8,17 @@
         <el-input v-model="searchInfo.ipaddr" placeholder="登录ip" clearable></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button plain size="medium" icon="fa fa-search">查询</el-button>
+        <el-button plain size="medium" @click="handleSearch" icon="fa fa-search">查询</el-button>
       </el-form-item>
     </el-form>
     <el-row :gutter="2">
       <div class="avue-crud__menu">
         <div class="avue-crud__left">
-          <button type="button" class="el-button filter-item el-button--danger el-button--mini">
+          <button
+            @click="handleLogOut"
+            type="button"
+            class="el-button filter-item el-button--danger el-button--mini"
+          >
             <i class="fa fa-sign-out"></i>
             <span>强退</span>
           </button>
@@ -34,6 +38,7 @@
         <el-table
           :data="userOnlineList"
           style="width: 100%;"
+          ref="userOnlineRef"
           border
           :fit="true"
           :header-cell-style="{'text-align':'center'}"
@@ -95,16 +100,22 @@
             :show-overflow-tooltip="true"
             align="center"
           ></el-table-column>
-           <el-table-column
+          <el-table-column
             label="操作"
             sortable
             resizable
             :show-overflow-tooltip="true"
             align="center"
           >
-          <template scope="scope">
-          <el-button size="medium" @click="handleLogout(scope.row)" type="danger" plain icon="fa fa-sign-out">危险按钮</el-button>
-          </template>
+            <template scope="scope">
+              <el-button
+                size="small"
+                @click="handleLogout(scope.row)"
+                type="danger"
+                plain
+                icon="fa fa-sign-out"
+              >强退</el-button>
+            </template>
           </el-table-column>
         </el-table>
         <el-pagination
@@ -123,7 +134,8 @@
 </template>
 <script>
 import { mapActions } from "vuex";
-import { userOnlineAllPagePath } from "@/api/baseUrl";
+import { userOnlineAllPagePath, userOnlineDeletePath } from "@/api/baseUrl";
+import { MessageBox } from "element-ui";
 export default {
   data() {
     return {
@@ -143,7 +155,10 @@ export default {
     _self.getPage();
   },
   methods: {
-    ...mapActions("bootAdmin/userOnline", ["userOnlineAllPage"]),
+    ...mapActions("bootAdmin/userOnline", [
+      "userOnlineAllPage",
+      "userOnlineDeleteIds"
+    ]),
     getPage() {
       let _self = this;
       let url = userOnlineAllPagePath;
@@ -164,12 +179,53 @@ export default {
     /**
      * 强退
      */
-    handleLogout(row){
-
+    handleLogout(row) {
+      let _self = this;
+      let info = JSON.parse(JSON.stringify(row));
+      MessageBox.confirm("是否删除选中数据", "删除", {
+        type: "warning"
+      }).then(() => {
+        const array = [];
+        array.push(row.tokenId);
+        _self.logout(array);
+      });
     },
-    logout(id){
-      let _self =this 
-      
+    handleLogOut() {
+      let _self = this;
+      const lists = _self.$refs.userOnlineRef.selection;
+      if (lists.length <= 0) {
+        _self.$message({
+          message: "请选择",
+          type: "warning"
+        });
+      } else {
+        const array = [];
+        lists.forEach(element => {
+          array.push(element.tokenId);
+        });
+        MessageBox.confirm("是否删除选中数据", "删除", {
+          type: "warning"
+        }).then(() => {
+          _self.logout(array);
+        });
+      }
+    },
+    /**
+     * 检索
+     */
+    handleSearch() {
+      let _self = this;
+      _self.getPage();
+    },
+    logout(ids) {
+      let _self = this;
+      if (ids.length > 0) {
+        let url = userOnlineDeletePath;
+        let params = JSON.parse(JSON.stringify(ids));
+        _self.userOnlineDeleteIds({ url: url, data: params }).then(result => {
+          _self.getPage();
+        });
+      }
     }
   }
 };

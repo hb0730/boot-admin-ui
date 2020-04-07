@@ -230,9 +230,17 @@ export const loginInfoAllPagePath = '/all/page'
 /*************操作日志操作 start*************/
 export const operLogAllPagePath = "/all/page"
 /*************操作日志操作 end***************/
-/*************操作日志操作 start*************/
+/*************在线用户操作 start*************/
+/**
+ * 分页
+ */
 export const userOnlineAllPagePath = "/all/page"
-/*************操作日志操作 end***************/
+
+/**
+ * 强退
+ */
+export const userOnlineDeletePath = '/logout'
+/*************在线用户操作 end***************/
 /*************定时任务操作 start*************/
 /**
  * 分页
