@@ -45,13 +45,6 @@
             </el-form-item>
             <el-form-item>
               <el-button plain @click="handleSearch" size="medium" icon="fa fa-search">查询</el-button>
-              <el-button
-                plain
-                type="primary"
-                @click="handleAddNew"
-                size="medium"
-                icon="el-icon-plus"
-              >新增</el-button>
             </el-form-item>
           </el-form>
         </el-row>
@@ -61,11 +54,31 @@
               <div class="avue-crud__left">
                 <button
                   type="button"
+                  @click="handleAddNew"
+                  class="el-button filter-item el-button--success el-button--mini"
+                >
+                  <i class="fa fa-plus"></i>
+                  <span>新增</span>
+                </button>
+                <button
+                  type="button"
+                  class="el-button filter-item el-button--primary el-button--mini"
+                  @click="handleEdit"
+                >
+                  <i class="fa fa-edit"></i>
+                  <span>修改</span>
+                </button>
+                <button
+                  type="button"
                   @click="handleDeleteIds"
                   class="el-button filter-item el-button--danger el-button--mini"
                 >
                   <i class="fa fa-remove"></i>
                   <span>删除</span>
+                </button>
+                <button type="button" class="el-button filter-item el-button--info el-button--mini">
+                  <i class="fa fa-upload"></i>
+                  <span>导入</span>
                 </button>
                 <button
                   type="button"
@@ -95,7 +108,13 @@
                 :fit="true"
                 :header-cell-style="{'text-align':'center'}"
               >
-                <el-table-column type="selection"></el-table-column>
+                <el-table-column
+                  sortable
+                  resizable
+                  :show-overflow-tooltip="true"
+                  align="center"
+                  type="selection"
+                ></el-table-column>
                 <el-table-column
                   prop="nickName"
                   label="用户昵称"
@@ -378,7 +397,7 @@ export default {
       "userUpdate",
       "userInfoAll",
       "userResetPassword",
-      'userDelete'
+      "userDelete"
     ]),
     ...mapActions("bootAdmin/post", ["postAll"]),
     ...mapActions("bootAdmin/role", ["roleAll"]),
@@ -442,11 +461,10 @@ export default {
     init() {
       let _self = this;
       _self.searchInfo = {
-        isAll: -1,
         deptId: "",
         nickName: "",
         username: "",
-        isEnabled: 0
+        isEnabled: ""
       };
     },
     /**
@@ -456,11 +474,10 @@ export default {
       let _self = this;
       _self.currentTreeData = data;
       _self.searchInfo = {
-        isAll: -1,
         deptId: data.id,
         nickName: "",
         username: "",
-        isEnabled: 0
+        isEnabled: ""
       };
       _self.getUserPage();
     },
@@ -476,7 +493,7 @@ export default {
       _self.dialogTableVisible = false;
       _self.init();
       _self.initUser();
-      _self.getUserPage()
+      _self.getUserPage();
     },
     /**
      * 初始化用户
@@ -554,6 +571,28 @@ export default {
       _self.isUpdate = true;
       _self.isView = false;
       _self.getUserInfoAll(row.id);
+    },
+    /**
+     * 修改
+     */
+    handleEdit() {
+      let _self = this;
+      let info = _self.$refs.userListRef.selection;
+      if (info.length <= 0) {
+        _self.$message({
+          message: "请选择",
+          type: "warning"
+        });
+      } else if (info.length > 1) {
+        _self.$message({
+          message: "请选择(有且只有一个)",
+          type: "warning"
+        });
+      } else {
+        _self.isUpdate = true;
+        _self.isView = false;
+        _self.getUserInfoAll(info[0].id);
+      }
     },
     /** */
     getUserInfoAll(id) {
@@ -635,9 +674,9 @@ export default {
     /**
      * 删除
      */
-    handleDelete(row){
-      let _self =this 
-       let info = JSON.parse(JSON.stringify(row));
+    handleDelete(row) {
+      let _self = this;
+      let info = JSON.parse(JSON.stringify(row));
       MessageBox.confirm("是否删除该数据", "删除", {
         type: "warning"
       }).then(() => {
@@ -650,7 +689,7 @@ export default {
      * 删除
      */
     handleDeleteIds() {
-       let _self = this;
+      let _self = this;
       let info = _self.$refs.userListRef.selection;
       if (info.length > 0) {
         MessageBox.confirm("是否删除该数据", "删除", {
@@ -668,13 +707,13 @@ export default {
     /**
      * 删除
      */
-    delete(id){
-      let _self =this 
-      let url =userDeletePath
-      let params=JSON.parse(JSON.stringify(id))
-      _self.userDelete({url:url,data:params}).then(result=>{
+    delete(id) {
+      let _self = this;
+      let url = userDeletePath;
+      let params = JSON.parse(JSON.stringify(id));
+      _self.userDelete({ url: url, data: params }).then(result => {
         _self.getUserPage();
-      })
+      });
     }
   }
 };
