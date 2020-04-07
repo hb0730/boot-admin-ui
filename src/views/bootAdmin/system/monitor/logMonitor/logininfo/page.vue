@@ -18,27 +18,29 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-time-picker
-          is-range
-          v-model="searchInfo.time"
-          range-separator="至"
-          start-placeholder="开始时间"
-          end-placeholder="结束时间"
-          placeholder="选择时间范围"
-        ></el-time-picker>
+        <el-date-picker v-model="searchInfo.startTime" type="date" placeholder="登录开始"></el-date-picker>-
+        <el-date-picker v-model="searchInfo.endTime" type="date" placeholder="登录结束"></el-date-picker>
       </el-form-item>
       <el-form-item>
-        <el-button plain size="medium" icon="fa fa-search">查询</el-button>
+        <el-button @click="handleSearch" plain size="medium" icon="fa fa-search">查询</el-button>
       </el-form-item>
     </el-form>
     <el-row :gutter="2">
       <div class="avue-crud__menu">
         <div class="avue-crud__left">
-          <button type="button" class="el-button filter-item el-button--danger  el-button--mini">
+          <button
+            @click="handleDelete"
+            type="button"
+            class="el-button filter-item el-button--danger el-button--mini"
+          >
             <i class="fa fa-remove"></i>
             <span>删除</span>
           </button>
-           <button type="button" class="el-button filter-item el-button--danger el-button--mini">
+          <button
+            @click="handleClean"
+            type="button"
+            class="el-button filter-item el-button--danger el-button--mini"
+          >
             <i class="fa fa-trash"></i>
             <span>清除</span>
           </button>
@@ -62,11 +64,18 @@
         <el-table
           :data="loginInfoList"
           style="width: 100%;"
+          ref="loginInfoRef"
           border
           :fit="true"
           :header-cell-style="{'text-align':'center'}"
         >
-          <el-table-column type="selection"></el-table-column>
+          <el-table-column
+            sortable
+            resizable
+            :show-overflow-tooltip="true"
+            align="center"
+            type="selection"
+          ></el-table-column>
           <el-table-column
             prop="id"
             label="登录编号"
@@ -163,8 +172,13 @@
 </template>
 <script>
 import { mapActions } from "vuex";
-import { loginInfoAllPagePath } from "@/api/baseUrl";
+import {
+  loginInfoAllPagePath,
+  loginInfoDeletePath,
+  loginInfoCleanPath
+} from "@/api/baseUrl";
 import util from "@/libs/util";
+import { MessageBox } from "element-ui";
 export default {
   data() {
     return {
@@ -187,7 +201,11 @@ export default {
     _self.getPageAll();
   },
   methods: {
-    ...mapActions("bootAdmin/loginInfo", ["loginInfoAllPage"]),
+    ...mapActions("bootAdmin/loginInfo", [
+      "loginInfoAllPage",
+      "loginInfoDelete",
+      "loginInfoClean"
+    ]),
     ...mapActions("d2admin/dict", ["getDictMap"]),
     handleSizeChange(val) {
       this.pages.pageSize = val;
@@ -232,6 +250,61 @@ export default {
     getMapType(type) {
       let _self = this;
       _self.status = util.dicts.getMapType(_self.mapInfo, type);
+    },
+    handleSearch() {
+      let _self = this;
+      _self.getPageAll();
+    },
+    /**
+     * 删除
+     */
+    handleDelete() {
+      let _self = this;
+      const lists = _self.$refs.loginInfoRef.selection;
+      if (lists.length <= 0) {
+        _self.$message({
+          message: "请选择",
+          type: "warning"
+        });
+      } else {
+        const array = [];
+        lists.forEach(element => {
+          array.push(element.id);
+        });
+        MessageBox.confirm("是否删除选中数据", "删除", {
+          type: "warning"
+        }).then(() => {
+          _self.delete(array);
+        });
+      }
+    },
+    delete(ids) {
+      let _self = this;
+      if (ids.length > 0) {
+        let url = loginInfoDeletePath;
+        let params = JSON.parse(JSON.stringify(ids));
+        _self.loginInfoDelete({ url: url, data: params }).then(result => {
+          _self.getPageAll();
+        });
+      }
+    },
+    /**
+     * 数据清空
+     */
+    handleClean() {
+      let _self = this;
+      MessageBox.confirm("是否删除选中数据", "删除", {
+        type: "warning"
+      }).then(() => {
+        _self.clean();
+      });
+    },
+    clean() {
+      let _self = this;
+      let url = loginInfoCleanPath;
+      _self.loginInfoClean({ url: url, data: null }).then(result => {
+        _self.getPageAll();
+      });
     }
   }
 };

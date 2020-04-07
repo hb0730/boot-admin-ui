@@ -225,7 +225,18 @@ export const dictDeletePath = '/delete/id'
 export const dictMapPath = '/map'
 /*************数据字典操作 end***************/
 /*************访问日志操作 starter***********/
+/**
+ * 分页
+ */
 export const loginInfoAllPagePath = '/all/page'
+/**
+ * 删除
+ */
+export const loginInfoDeletePath = '/delete'
+/**
+ * 清空
+ */
+export const loginInfoCleanPath = '/clean'
 /*************访问日志操作 end***************/
 /*************操作日志操作 start*************/
 export const operLogAllPagePath = "/all/page"
