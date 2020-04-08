@@ -7,7 +7,6 @@
             <el-form
               ref="userInfoForm"
               :model="userInfoForm"
-              label-width="auto"
               required-asterisk
               :rules="rules"
               :label-position="position"
@@ -34,10 +33,12 @@
               <el-form-item prop="avatar" label="头像">
                 <el-upload
                   class="avatar-uploader"
-                  action="https://jsonplaceholder.typicode.com/posts/"
+                  :action="imageUploadUrl"
                   :show-file-list="false"
+                  :on-success="handleAvatarSuccess"
+                  :before-upload="beforeAvatarUpload"
                 >
-                  <img v-if="userInfoForm.avatar" :src="userInfoForm.avatar" class="avatar" />
+                  <img v-if="avatar" :src="avatar" class="avatar" />
                   <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                 </el-upload>
               </el-form-item>
@@ -61,7 +62,6 @@
             <el-form
               ref="userPasswordForm"
               :model="userPasswordForm"
-              label-width="auto"
               required-asterisk
               :label-position="position"
               :rules="passwordRules"
@@ -98,10 +98,11 @@ import { mapActions } from "vuex";
 import {
   userInfoPath,
   userUpdateInfoPath,
-  userUpdatePasswordPath
+  userUpdatePasswordPath,
+  imageFileUploadPath
 } from "@/api/baseUrl";
 export default {
-  name: 'userManger-userInfo',
+  name: "userManger-userInfo",
   data() {
     var validatePass = (rule, value, callback) => {
       if (value === "") {
@@ -125,9 +126,12 @@ export default {
       }
     };
     return {
+      avatar: "",
       activeName: "userInfo",
       position: "left",
+
       userInfoForm: {},
+      imageUploadUrl: process.env.VUE_APP_API + imageFileUploadPath,
       userPasswordForm: {
         oldPassword: "",
         newPassword: "",
@@ -164,7 +168,7 @@ export default {
     ]),
     ...mapActions("d2admin/account", ["logout"]),
     handleClick(tab, event) {
-      console.log(tab, event);
+      
     },
     /**
      * 获取当前用户信息
@@ -188,6 +192,7 @@ export default {
         _self.getCurrentUserInfo();
       } else {
         _self.userPasswordForm = {};
+        _self.avatar = "";
       }
     },
     /**
@@ -205,7 +210,7 @@ export default {
               email: info.email,
               phonenumber: info.phonenumber,
               sex: info.sex,
-              avatar: info.avatar
+              avatar: _self.avatar
             };
             let url = userUpdateInfoPath + "/" + userId;
             _self.userUpdateInfo({ url: url, data: params }).then(result => {
@@ -241,7 +246,18 @@ export default {
           this.$message.error("表单校验失败，请检查");
         }
       });
-    }
+    },
+    // 	文件上传成功时的钩子
+    handleAvatarSuccess(res, file) {
+      let _self = this;
+      if (res.code != "BA20000") {
+        $$message.error(res.data);
+      } else {
+        _self.avatar = res.data.filePath;
+      }
+    },
+    //上传文件之前的钩子
+    beforeAvatarUpload(file) {}
   }
 };
 </script>

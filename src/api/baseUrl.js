@@ -1,3 +1,5 @@
+/**通用图片上传****/
+export const imageFileUploadPath='/common/upload'
 /**************用户操作 start*******************/
 /**
  * 用户登录
