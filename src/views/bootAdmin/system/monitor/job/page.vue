@@ -48,6 +48,14 @@
             <i class="fa fa-remove"></i>
             <span>刪除</span>
           </button>
+          <button class="el-button filter-item el-button--info el-button--mini" style="padding:0 0 0 0px">
+            <el-upload>
+              <button class="el-button filter-item el-button--info el-button--mini">
+                <i class="fa fa-upload"></i>
+                <span>导入</span>
+              </button>
+            </el-upload>
+          </button>
           <button
             @click="handleExport"
             type="button"
@@ -509,7 +517,8 @@ export default {
       let url = jobExportPath;
       var xhh = new window._XMLHttpRequest();
       bootAdminExport("post", jobServer + jobExportPath, params);
-    }
+    },
+    hadnleUpload() {}
   }
 };
 </script>
