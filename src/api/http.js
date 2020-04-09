@@ -25,3 +25,17 @@ export function httpPost (url, data = {}) {
     data
   })
 }
+
+/**
+ * 导出
+ * @param {*} url 
+ * @param {*} data 
+ */
+export function httpExport(url,data){
+  return request({
+    url,
+    method: 'post',
+    responseType: 'blob',
+    data
+  })
+}

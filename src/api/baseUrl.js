@@ -1,5 +1,5 @@
 /**通用图片上传****/
-export const imageFileUploadPath='/common/upload'
+export const imageFileUploadPath = '/common/upload'
 /**************用户操作 start*******************/
 /**
  * 用户登录
@@ -271,6 +271,7 @@ export const userOnlineDeletePath = '/logout'
  * 分页
  */
 export const jobAllPagePath = "/all/page"
+
 export const jobAllPath = '/all'
 /**
  * 保存
@@ -285,6 +286,10 @@ export const jobUpdatePath = '/update'
  * 删除
  */
 export const jobDeletePath = '/delete'
+/**
+ * 导出
+ */
+export const jobExportPath = '/export'
 /*************操作日志操作 end***************/
 /*************调度日志操作 start*************/
 /**

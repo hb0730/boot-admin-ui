@@ -48,7 +48,11 @@
             <i class="fa fa-remove"></i>
             <span>刪除</span>
           </button>
-          <button type="button" class="el-button filter-item el-button--warning el-button--mini">
+          <button
+            @click="handleExport"
+            type="button"
+            class="el-button filter-item el-button--warning el-button--mini"
+          >
             <i class="fa fa-download"></i>
             <span>导出</span>
           </button>
@@ -237,16 +241,20 @@
   </d2-container>
 </template>
 <script>
+import axios from "axios";
 import router from "@/router";
 import { mapActions } from "vuex";
 import {
   jobAllPagePath,
   jobSavePath,
   jobUpdatePath,
-  jobDeletePath
+  jobDeletePath,
+  jobExportPath
 } from "@/api/baseUrl";
+import { bootAdminExport } from "@/api/export";
 import util from "@/libs/util";
 import { MessageBox } from "element-ui";
+import { jobServer } from "@/api/baseServer";
 export default {
   data() {
     return {
@@ -289,7 +297,8 @@ export default {
       "jobAllPage",
       "jobSave",
       "jobUpdate",
-      "jobDeleteIds"
+      "jobDeleteIds",
+      "jobExport"
     ]),
     ...mapActions("d2admin/dict", ["getDictMap"]),
     getPage() {
@@ -482,6 +491,24 @@ export default {
           d: encodeURIComponent(jobInfo.id)
         }
       });
+    },
+    /**
+     * 导出
+     */
+    handleExport() {
+      let _self = this;
+      MessageBox.confirm("确定导出所有任务吗", "导出", {
+        type: "warning"
+      }).then(() => {
+        _self.export();
+      });
+    },
+    export() {
+      let _self = this;
+      let params = JSON.parse(JSON.stringify(_self.searchInfo));
+      let url = jobExportPath;
+      var xhh = new window._XMLHttpRequest();
+      bootAdminExport("post", jobServer + jobExportPath, params);
     }
   }
 };

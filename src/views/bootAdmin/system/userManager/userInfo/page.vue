@@ -167,9 +167,7 @@ export default {
       "userUpdatePassword"
     ]),
     ...mapActions("d2admin/account", ["logout"]),
-    handleClick(tab, event) {
-      
-    },
+    handleClick(tab, event) {},
     /**
      * 获取当前用户信息
      */
@@ -180,6 +178,7 @@ export default {
         let url = userInfoPath + "/" + userId;
         _self.userInfo({ url: url, data: "" }).then(result => {
           _self.userInfoForm = result;
+          _self.avatar = result.avatar;
         });
       }
     },

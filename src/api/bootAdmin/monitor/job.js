@@ -1,5 +1,5 @@
 import { jobServer } from "@/api/baseServer"
-import { httpPost, httpGet } from "@/api/http"
+import { httpPost, httpGet, httpExport } from "@/api/http"
 
 /**
  * 分页定时任务
@@ -49,6 +49,16 @@ export function JobDelete(url, data) {
 export function JobDeleteIds(url, data) {
     url = baseUrl(url)
     return httpPost(url, data)
+}
+
+/**
+ * 任务导出
+ * @param {*} url 
+ * @param {*} data 
+ */
+export function JobExport(url, data) {
+    url = baseUrl(url)
+    return httpExport(url, data)
 }
 
 /**
