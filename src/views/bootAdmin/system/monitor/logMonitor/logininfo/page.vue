@@ -44,7 +44,7 @@
             <i class="fa fa-trash"></i>
             <span>清除</span>
           </button>
-          <button type="button" class="el-button filter-item el-button--warning el-button--mini">
+          <button @click="handleExport" type="button" class="el-button filter-item el-button--warning el-button--mini">
             <i class="fa fa-download"></i>
             <span>导出</span>
           </button>
@@ -175,10 +175,13 @@ import { mapActions } from "vuex";
 import {
   loginInfoAllPagePath,
   loginInfoDeletePath,
-  loginInfoCleanPath
+  loginInfoCleanPath,
+  loginInfoExportPath
 } from "@/api/baseUrl";
 import util from "@/libs/util";
 import { MessageBox } from "element-ui";
+import { loginInfoServer } from '@/api/baseServer';
+import { bootAdminExport } from '@/api/export';
 export default {
   data() {
     return {
@@ -305,6 +308,15 @@ export default {
       _self.loginInfoClean({ url: url, data: null }).then(result => {
         _self.getPageAll();
       });
+    },
+    /**
+     * 导出
+     */
+    handleExport(){
+      let _self=this 
+      let params=JSON.parse(JSON.stringify(_self.searchInfo))
+      let url =loginInfoServer+loginInfoExportPath
+      bootAdminExport('post',url,params)
     }
   }
 };

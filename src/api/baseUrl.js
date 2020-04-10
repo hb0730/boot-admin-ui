@@ -239,6 +239,10 @@ export const loginInfoDeletePath = '/delete'
  * 清空
  */
 export const loginInfoCleanPath = '/clean'
+/**
+ * 导出
+ */
+export const loginInfoExportPath = '/export'
 /*************访问日志操作 end***************/
 /*************操作日志操作 start*************/
 /**
@@ -291,7 +295,7 @@ export const jobDeletePath = '/delete'
  */
 export const jobExportPath = '/export'
 
-export const jobUploadPath ='/upload'
+export const jobUploadPath = '/upload'
 /*************操作日志操作 end***************/
 /*************调度日志操作 start*************/
 /**
@@ -309,5 +313,5 @@ export const jobLogCleanPath = '/clean/job'
 /**
  * 导出
  */
-export const jobLogExportPath='/export'
+export const jobLogExportPath = '/export'
 /*************调度日志操作 end***************/
