@@ -258,6 +258,11 @@ export const operLogDeletePath = '/delete'
  * 清空
  */
 export const operLogCleanPath = '/clean'
+
+/**
+ * 导出
+ */
+export const operLogExportPath='/export'
 /*************操作日志操作 end***************/
 /*************在线用户操作 start*************/
 /**

@@ -43,7 +43,13 @@
           :fit="true"
           :header-cell-style="{'text-align':'center'}"
         >
-          <el-table-column type="selection"></el-table-column>
+          <el-table-column
+            sortable
+            resizable
+            :show-overflow-tooltip="true"
+            align="center"
+            type="selection"
+          ></el-table-column>
           <el-table-column
             prop="tokenId"
             label="会话id"
