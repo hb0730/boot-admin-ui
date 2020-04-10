@@ -590,8 +590,8 @@ export default {
           type: "success"
         });
         _self.getPage();
-        _self.$refs.upload.uploadFiles = [];
       });
+        _self.$refs.upload.clearFiles()
     }
   }
 };

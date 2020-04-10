@@ -27,7 +27,8 @@ export function httpPost (url, data = {}) {
 }
 
 /**
- * 导出
+ * 导出(废弃)
+ * 具体请看export.js
  * @param {*} url 
  * @param {*} data 
  */
@@ -38,4 +39,20 @@ export function httpExport(url,data){
     responseType: 'blob',
     data
   })
+}
+
+/**
+ * 文件上传
+ * @param {*} url 
+ * @param {*} data 
+ */
+export function httpUpload(url,data){
+  return request({
+    url,
+    method: 'post',
+    headers: {
+        "Content-Type": 'multipart/form-data'
+    },
+    data: data
+})
 }

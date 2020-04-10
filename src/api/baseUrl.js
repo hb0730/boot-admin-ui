@@ -290,6 +290,8 @@ export const jobDeletePath = '/delete'
  * 导出
  */
 export const jobExportPath = '/export'
+
+export const jobUploadPath ='/upload'
 /*************操作日志操作 end***************/
 /*************调度日志操作 start*************/
 /**

@@ -1,6 +1,5 @@
 import util from "@/libs/util";
 
-
 /**
  * 导出
  * @param {*} method 请求类型 
@@ -22,7 +21,6 @@ export function bootAdminExport(method, url, params) {
     data = JSON.stringify(params);
     xhh.responseType = "blob";
     xhh.onreadystatechange = function () {
-        console.info(xhh);
         if (xhh.readyState === 4 && xhh.status === 200) {
             var filename = window.decodeURIComponent(
                 xhh

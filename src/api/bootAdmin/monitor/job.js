@@ -1,5 +1,5 @@
 import { jobServer } from "@/api/baseServer"
-import { httpPost, httpGet, httpExport } from "@/api/http"
+import { httpPost, httpGet, httpExport, httpUpload } from "@/api/http"
 
 /**
  * 分页定时任务
@@ -53,6 +53,7 @@ export function JobDeleteIds(url, data) {
 
 /**
  * 任务导出
+ * (已过时请勿使用)
  * @param {*} url 
  * @param {*} data 
  */
@@ -61,6 +62,15 @@ export function JobExport(url, data) {
     return httpExport(url, data)
 }
 
+/**
+ * 文件上传
+ * @param {*} url 
+ * @param {*} data 
+ */
+export function JobUpload(url, data) {
+    url = baseUrl(url)
+    return httpUpload(url, data)
+}
 /**
  * 基础url
  * @param {*} url 
