@@ -306,4 +306,8 @@ export const jobLogDeletePath = '/delete'
  * 清空
  */
 export const jobLogCleanPath = '/clean/job'
+/**
+ * 导出
+ */
+export const jobLogExportPath='/export'
 /*************调度日志操作 end***************/

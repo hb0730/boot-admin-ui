@@ -40,7 +40,11 @@
             <i class="fa fa-trash"></i>
             <span>清空</span>
           </button>
-          <button type="button" class="el-button filter-item el-button--warning el-button--mini">
+          <button
+            @click="handleExport"
+            type="button"
+            class="el-button filter-item el-button--warning el-button--mini"
+          >
             <i class="fa fa-download"></i>
             <span>导出</span>
           </button>
@@ -154,9 +158,12 @@ import util from "@/libs/util";
 import {
   jobLogAllPagePath,
   jobLogDeletePath,
-  jobLogCleanPath
+  jobLogCleanPath,
+  jobLogExportPath
 } from "@/api/baseUrl";
 import { MessageBox } from "element-ui";
+import { bootAdminExport } from '@/api/export';
+import { jobLogServer } from '@/api/baseServer';
 export default {
   data() {
     return {
@@ -301,6 +308,15 @@ export default {
           _self.getPage();
         });
       }
+    },
+    /**
+     * 导出
+     */
+    handleExport() {
+      let _self =this
+      let params= JSON.parse(JSON.stringify(_self.searchInfo));
+      let url = jobLogServer+jobLogExportPath
+      bootAdminExport('post',url,params)
     }
   }
 };
