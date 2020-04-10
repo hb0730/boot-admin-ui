@@ -1,5 +1,5 @@
 import { userServer } from '@/api/baseServer'
-import { httpGet, httpPost } from '@/api/http'
+import { httpGet, httpPost, httpUpload } from '@/api/http'
 /**
  * 用户详情
  * /info/{id}
@@ -91,6 +91,16 @@ export function UserResetPassword(url, data) {
 export function UserDelete(url, data) {
     url = baseUrl(url, data)
     return httpPost(url, data)
+}
+
+/**
+ * 导出
+ * @param {*} url 
+ * @param {*} data 
+ */
+export function UserUpload(url, data) {
+    url = baseUrl(url)
+    return httpUpload(url, data)
 }
 
 function baseUrl(url) {

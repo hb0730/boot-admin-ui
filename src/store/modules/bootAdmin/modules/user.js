@@ -1,4 +1,4 @@
-import { UserInfo, UserUpdateInfo, UserUpdatePassword, UserAllPage, UserSave, UserUpdate, UserInfoAll, UserResetPassword, UserDelete } from '@/api/bootAdmin/userManager/user'
+import { UserInfo, UserUpdateInfo, UserUpdatePassword, UserAllPage, UserSave, UserUpdate, UserInfoAll, UserResetPassword, UserDelete, UserUpload } from '@/api/bootAdmin/userManager/user'
 export default {
     namespaced: true,
     actions: {
@@ -128,7 +128,20 @@ export default {
                     reject(err)
                 })
             })
-        }
-
+        },
+        /**
+         * 导入
+         * @param {*} param0 
+         * @param {*} param1 
+         */
+        userUpload({ dispatch }, { url, data }) {
+            return new Promise((resolve, reject) => {
+                UserUpload(url, data).then(result => {
+                    resolve(result)
+                }).catch(err => {
+                    reject(err)
+                })
+            })
+        },
     }
 }

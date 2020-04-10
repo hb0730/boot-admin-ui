@@ -76,13 +76,29 @@
                   <i class="fa fa-remove"></i>
                   <span>删除</span>
                 </button>
-                <button type="button" class="el-button filter-item el-button--info el-button--mini">
-                  <i class="fa fa-upload"></i>
-                  <span>导入</span>
+                <button
+                  class="el-button filter-item el-button--info el-button--mini"
+                  style="padding:0 0 0 0px"
+                >
+                  <el-upload
+                    ref="upload"
+                    action
+                    :http-request="handleUploadFile"
+                    :on-exceed="handleUploadExceed"
+                    :limit="1"
+                    :show-file-list="false"
+                    accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                  >
+                    <button class="el-button filter-item el-button--info el-button--mini">
+                      <i class="fa fa-upload"></i>
+                      <span>导入</span>
+                    </button>
+                  </el-upload>
                 </button>
                 <button
                   type="button"
                   class="el-button filter-item el-button--warning el-button--mini"
+                  @click="handleExport"
                 >
                   <i class="fa fa-download"></i>
                   <span>导出</span>
@@ -300,12 +316,16 @@ import {
   userInfoAllPath,
   userUpdatePath,
   userResetPasswordPath,
-  userDeletePath
+  userDeletePath,
+  userUploadPath,
+  userExportPath
 } from "@/api/baseUrl";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 import util from "@/libs/util";
 import { MessageBox } from "element-ui";
+import { userServer } from "../../../../../api/baseServer";
+import { bootAdminExport } from "../../../../../api/export";
 export default {
   components: { Treeselect },
   data() {
@@ -397,7 +417,8 @@ export default {
       "userUpdate",
       "userInfoAll",
       "userResetPassword",
-      "userDelete"
+      "userDelete",
+      "userUpload"
     ]),
     ...mapActions("bootAdmin/post", ["postAll"]),
     ...mapActions("bootAdmin/role", ["roleAll"]),
@@ -714,6 +735,42 @@ export default {
       _self.userDelete({ url: url, data: params }).then(result => {
         _self.getUserPage();
       });
+    },
+    /**
+      超出最大上传文件数量时的处理方法
+     */
+    handleUploadExceed() {
+      this.$message({
+        type: "warning",
+        message: "超出最大上传文件数量的限制！"
+      });
+      return;
+    },
+    /**
+     * 自定义上传
+     */
+    handleUploadFile(params) {
+      let _self = this;
+      let url = userUploadPath;
+      let data = new FormData();
+      data.append("file", params.file);
+      _self.userUpload({ url: url, data: data }).then(result => {
+        _self.$message({
+          message: result,
+          type: "success"
+        });
+        _self.getUserPage();
+      });
+      _self.$refs.upload.clearFiles();
+    },
+    /**
+     * 导出
+     */
+    handleExport() {
+      let _self = this;
+      let url = userServer + userExportPath;
+      let params = JSON.parse(JSON.stringify(_self.searchInfo));
+      bootAdminExport("post", url, params);
     }
   }
 };

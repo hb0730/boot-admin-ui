@@ -54,6 +54,16 @@ export const userResetPasswordPath = '/update/reset/password'
  * 用户删除
  */
 export const userDeletePath = "/delete"
+
+/**
+ * 导入
+ */
+export const userUploadPath='/upload'
+
+/**
+ * 导出
+ */
+export const userExportPath='/export'
 /*************用户操作 end**********************/
 
 /*************菜单操作 start*******************/
