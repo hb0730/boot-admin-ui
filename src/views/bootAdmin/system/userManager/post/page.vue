@@ -48,7 +48,30 @@
             <i class="fa fa-remove"></i>
             <span>删除</span>
           </button>
-          <button type="button" class="el-button filter-item el-button--warning el-button--mini">
+          <button
+            class="el-button filter-item el-button--info el-button--mini"
+            style="padding:0 0 0 0px"
+          >
+            <el-upload
+              ref="upload"
+              action
+              :http-request="handleUploadFile"
+              :on-exceed="handleUploadExceed"
+              :limit="1"
+              :show-file-list="false"
+              accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+            >
+              <button class="el-button filter-item el-button--info el-button--mini">
+                <i class="fa fa-upload"></i>
+                <span>导入</span>
+              </button>
+            </el-upload>
+          </button>
+          <button
+            @click="handleExport"
+            type="button"
+            class="el-button filter-item el-button--warning el-button--mini"
+          >
             <i class="fa fa-download"></i>
             <span>导出</span>
           </button>
@@ -230,11 +253,15 @@ import {
   postSavePath,
   postAllPagePath,
   postUpdatePath,
-  postDeletePath
+  postDeletePath,
+  postExportPath,
+  postUploadPath
 } from "@/api/baseUrl";
 import { mapActions } from "vuex";
 import { MessageBox } from "element-ui";
 import util from "@/libs/util";
+import { postServer } from "../../../../../api/baseServer";
+import { bootAdminExport } from "../../../../../api/export";
 export default {
   data() {
     return {
@@ -279,7 +306,8 @@ export default {
       "postAllPage",
       "postSave",
       "postUpdate",
-      "postDelete"
+      "postDelete",
+      "postUpload"
     ]),
     ...mapActions("d2admin/dict", ["getDictMap"]),
     /*关闭弹出 */
@@ -473,6 +501,42 @@ export default {
           _self.delete(ids);
         });
       }
+    },
+    /**
+     * 导出
+     */
+    handleExport() {
+      let _self = this;
+      let url = postServer + postExportPath;
+      let params = JSON.parse(JSON.stringify(_self.searchInfo));
+      bootAdminExport("post", url, params);
+    },
+     /**
+      超出最大上传文件数量时的处理方法
+     */
+    handleUploadExceed() {
+      this.$message({
+        type: "warning",
+        message: "超出最大上传文件数量的限制！"
+      });
+      return;
+    },
+     /**
+     * 自定义上传
+     */
+    handleUploadFile(params) {
+      let _self = this;
+      let url = postUploadPath;
+      let data = new FormData();
+      data.append("file", params.file);
+      _self.postUpload({ url: url, data: data }).then(result => {
+        _self.$message({
+          message: result,
+          type: "success"
+        });
+        _self.getPage();
+      });
+      _self.$refs.upload.clearFiles();
     }
   }
 };

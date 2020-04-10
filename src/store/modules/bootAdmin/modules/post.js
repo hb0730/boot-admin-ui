@@ -1,4 +1,4 @@
-import { PostAllPage, PostAll, PostSave, PostUpdate, PostDelete } from "@/api/bootAdmin/userManager/post"
+import { PostAllPage, PostAll, PostSave, PostUpdate, PostDelete, PostUpload } from "@/api/bootAdmin/userManager/post"
 
 export default {
     namespaced: true,
@@ -68,6 +68,20 @@ export default {
             return new Promise((resolve, reject) => {
                 PostDelete(url, data).then(reuslt => {
                     resolve(reuslt)
+                }).catch(err => {
+                    reject(err)
+                })
+            })
+        },
+        /**
+         * 文件上传
+         * @param {*} param0 
+         * @param {*} param1 
+         */
+        postUpload({ dispatch }, { url, data }) {
+            return new Promise((resolve, reject) => {
+                PostUpload(url, data).then(result => {
+                    resolve(result)
                 }).catch(err => {
                     reject(err)
                 })

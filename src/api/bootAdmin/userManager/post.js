@@ -1,14 +1,14 @@
 import { postServer } from "@/api/baseServer"
-import { httpPost, httpGet } from "@/api/http"
+import { httpPost, httpGet, httpUpload } from "@/api/http"
 
 /**
  * 分页后的岗位
  * @param {*} url 
  * @param {*} data 
  */
-export function PostAllPage(url,data){
+export function PostAllPage(url, data) {
     url = baseUrl(url)
-    return httpPost(url,data)
+    return httpPost(url, data)
 }
 
 /**
@@ -16,18 +16,18 @@ export function PostAllPage(url,data){
  * @param {*} url 
  * @param {*} data 
  */
-export function PostAll(url,data){
+export function PostAll(url, data) {
     url = baseUrl(url)
-    return httpPost(url,data)
+    return httpPost(url, data)
 }
 /**
  * 岗位保存
  * @param {*} url 
  * @param {*} data 
  */
-export function PostSave(url,data){
-    url =baseUrl(url);
-    return  httpPost(url,data)
+export function PostSave(url, data) {
+    url = baseUrl(url);
+    return httpPost(url, data)
 }
 
 /**
@@ -35,9 +35,9 @@ export function PostSave(url,data){
  * @param {*} url 
  * @param {*} data 
  */
-export function PostUpdate(url,data){
-    url= baseUrl(url);
-    return httpPost(url,data)
+export function PostUpdate(url, data) {
+    url = baseUrl(url);
+    return httpPost(url, data)
 }
 
 /**
@@ -45,11 +45,20 @@ export function PostUpdate(url,data){
  * @param {*} url 
  * @param {*} data 
  */
-export function PostDelete(url,data){
-    url =baseUrl(url)
-    return httpPost(url,data)
+export function PostDelete(url, data) {
+    url = baseUrl(url)
+    return httpPost(url, data)
 }
 
+/**
+ * 文件上传
+ * @param {*} url 
+ * @param {*} data 
+ */
+export function PostUpload(url, data) {
+    url = baseUrl(url)
+    return httpUpload(url, data)
+}
 
 function baseUrl(url) {
     if (url) {

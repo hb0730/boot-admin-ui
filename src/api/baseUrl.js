@@ -197,6 +197,15 @@ export const postUpdatePath = '/update'
  * 岗位删除
  */
 export const postDeletePath = '/delete'
+
+/**
+ * 上传
+ */
+export const postUploadPath = '/upload'
+/**
+ * 下载
+ */
+export const postExportPath = "/export"
 /*************岗位操作 end*******************/
 /*************数据字典操作 start*************/
 /**
@@ -262,7 +271,7 @@ export const operLogCleanPath = '/clean'
 /**
  * 导出
  */
-export const operLogExportPath='/export'
+export const operLogExportPath = '/export'
 /*************操作日志操作 end***************/
 /*************在线用户操作 start*************/
 /**
