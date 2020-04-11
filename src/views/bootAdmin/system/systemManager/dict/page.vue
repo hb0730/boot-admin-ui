@@ -55,10 +55,12 @@
         </div>
         <div class="avue-crud__right">
           <button
+            title="刷新"
             type="button"
             class="el-button el-tooltip el-button--default el-button--small is-circle"
             aria-describedby="el-tooltip-2497"
             tabindex="0"
+            @click="getDictPageAll()"
           >
             <i class="el-icon-refresh"></i>
           </button>
@@ -145,30 +147,27 @@
             align="center"
           >
             <template slot-scope="scope">
-              <el-tooltip content="修改" placement="bottom" effect="light">
-                <el-button
-                  type="text"
-                  @click="handleUpdate(scope.row)"
-                  icon="fa fa-pencil"
-                  size="mini"
-                ></el-button>
-              </el-tooltip>
-              <el-tooltip content="删除" placement="bottom" effect="light">
-                <el-button
-                  @click="handleDelete(scope.row)"
-                  type="text"
-                  icon="fa fa-trash"
-                  size="mini"
-                ></el-button>
-              </el-tooltip>
-              <el-tooltip content="字典项" placement="bottom" effect="light">
-                <el-button
-                  @click="handleDataShow(scope.row)"
-                  type="text"
-                  icon="fa fa-plus-square"
-                  size="mini"
-                ></el-button>
-              </el-tooltip>
+              <el-button
+                title="修改"
+                type="text"
+                @click="handleUpdate(scope.row)"
+                icon="fa fa-pencil"
+                size="mini"
+              ></el-button>
+              <el-button
+                title="删除"
+                @click="handleDelete(scope.row)"
+                type="text"
+                icon="fa fa-trash"
+                size="mini"
+              ></el-button>
+              <el-button
+                title="字典项"
+                @click="handleDataShow(scope.row)"
+                type="text"
+                icon="fa fa-plus-square"
+                size="mini"
+              ></el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -306,22 +305,20 @@
               align="center"
             >
               <template slot-scope="scope">
-                <el-tooltip content="修改" placement="bottom" effect="light">
-                  <el-button
-                    type="text"
-                    icon="fa fa-pencil"
-                    @click="handleDataUpdate(scope.row)"
-                    size="mini"
-                  ></el-button>
-                </el-tooltip>
-                <el-tooltip content="删除" placement="bottom" effect="light">
-                  <el-button
-                    type="text"
-                    @click="handleDataDelete(scope.row)"
-                    icon="fa fa-trash"
-                    size="mini"
-                  ></el-button>
-                </el-tooltip>
+                <el-button
+                  title="修改"
+                  type="text"
+                  icon="fa fa-pencil"
+                  @click="handleDataUpdate(scope.row)"
+                  size="mini"
+                ></el-button>
+                <el-button
+                  title="删除"
+                  type="text"
+                  @click="handleDataDelete(scope.row)"
+                  icon="fa fa-trash"
+                  size="mini"
+                ></el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -819,7 +816,6 @@ export default {
         });
       }
     }
-    
   }
 };
 </script>

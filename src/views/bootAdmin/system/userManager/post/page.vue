@@ -82,6 +82,8 @@
             class="el-button el-tooltip el-button--default el-button--small is-circle"
             aria-describedby="el-tooltip-2497"
             tabindex="0"
+            title="刷新"
+            @click="getPostPage"
           >
             <i class="el-icon-refresh"></i>
           </button>
@@ -166,25 +168,27 @@
             align="center"
           >
             <template slot-scope="scope">
-              <el-tooltip content="查看" placement="bottom" effect="light">
-                <el-button type="text" @click="handleView(scope.row)" icon="fa fa-eye" size="mini"></el-button>
-              </el-tooltip>
-              <el-tooltip content="修改" placement="bottom" effect="light">
-                <el-button
-                  type="text"
-                  @click="handleUpdate(scope.row)"
-                  icon="fa fa-pencil"
-                  size="mini"
-                ></el-button>
-              </el-tooltip>
-              <el-tooltip content="删除" placement="bottom" effect="light">
-                <el-button
-                  type="text"
-                  @click="handleDelete(scope.row)"
-                  icon="fa fa-trash"
-                  size="mini"
-                ></el-button>
-              </el-tooltip>
+              <el-button
+                title="查看"
+                type="text"
+                @click="handleView(scope.row)"
+                icon="fa fa-eye"
+                size="mini"
+              ></el-button>
+              <el-button
+                title="修改"
+                type="text"
+                @click="handleUpdate(scope.row)"
+                icon="fa fa-pencil"
+                size="mini"
+              ></el-button>
+              <el-button
+                title="删除"
+                type="text"
+                @click="handleDelete(scope.row)"
+                icon="fa fa-trash"
+                size="mini"
+              ></el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -260,8 +264,8 @@ import {
 import { mapActions } from "vuex";
 import { MessageBox } from "element-ui";
 import util from "@/libs/util";
-import { postServer } from "../../../../../api/baseServer";
-import { bootAdminExport } from "../../../../../api/export";
+import { postServer } from "@/api/baseServer";
+import { bootAdminExport } from "@/api/export";
 export default {
   data() {
     return {
@@ -511,7 +515,7 @@ export default {
       let params = JSON.parse(JSON.stringify(_self.searchInfo));
       bootAdminExport("post", url, params);
     },
-     /**
+    /**
       超出最大上传文件数量时的处理方法
      */
     handleUploadExceed() {
@@ -521,7 +525,7 @@ export default {
       });
       return;
     },
-     /**
+    /**
      * 自定义上传
      */
     handleUploadFile(params) {

@@ -60,6 +60,8 @@
             class="el-button el-tooltip el-button--default el-button--small is-circle"
             aria-describedby="el-tooltip-2497"
             tabindex="0"
+            title="刷新"
+            @click="getPageAll"
           >
             <i class="el-icon-refresh"></i>
           </button>
@@ -144,41 +146,41 @@
             align="center"
           >
             <template slot-scope="scope">
-              <el-tooltip content="查看" placement="bottom" effect="light">
-                <el-button type="text" @click="handleView(scope.row)" icon="fa fa-eye" size="mini"></el-button>
-              </el-tooltip>
-              <el-tooltip content="修改" placement="bottom" effect="light">
-                <el-button
-                  type="text"
-                  @click="handleUpdate(scope.row)"
-                  icon="fa fa-pencil"
-                  size="mini"
-                ></el-button>
-              </el-tooltip>
-              <el-tooltip content="删除" placement="bottom" effect="light">
-                <el-button
-                  type="text"
-                  @click="handleDelete(scope.row)"
-                  icon="fa fa-trash"
-                  size="mini"
-                ></el-button>
-              </el-tooltip>
-              <el-tooltip content="权限" placement="bottom" effect="light">
-                <el-button
-                  type="text"
-                  @click="handlePermissionSave(scope.row)"
-                  icon="fa fa-key"
-                  size="mini"
-                ></el-button>
-              </el-tooltip>
-              <el-tooltip content="数据范围" placement="bottom" effect="light">
-                <el-button
-                  type="text"
-                  @click="handleOrgSave(scope.row)"
-                  icon="fa fa-sitemap"
-                  size="mini"
-                ></el-button>
-              </el-tooltip>
+              <el-button
+                type="text"
+                title="查看"
+                @click="handleView(scope.row)"
+                icon="fa fa-eye"
+                size="mini"
+              ></el-button>
+              <el-button
+                title="修改"
+                type="text"
+                @click="handleUpdate(scope.row)"
+                icon="fa fa-pencil"
+                size="mini"
+              ></el-button>
+              <el-button
+                title="删除"
+                type="text"
+                @click="handleDelete(scope.row)"
+                icon="fa fa-trash"
+                size="mini"
+              ></el-button>
+              <el-button
+                title="权限"
+                type="text"
+                @click="handlePermissionSave(scope.row)"
+                icon="fa fa-key"
+                size="mini"
+              ></el-button>
+              <el-button
+                title="数据范围"
+                type="text"
+                @click="handleOrgSave(scope.row)"
+                icon="fa fa-sitemap"
+                size="mini"
+              ></el-button>
             </template>
           </el-table-column>
         </el-table>

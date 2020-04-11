@@ -192,12 +192,14 @@
               >
                 <template slot-scope="scope">
                   <el-button
+                   title="修改"
                     @click="handlePermissionEdit(scope.row)"
                     type="text"
                     icon="el-icon-edit"
                     circle
                   ></el-button>
                   <el-button
+                   title="删除"
                     type="text"
                     @click="handlePermissionDelete(scope.row)"
                     icon="el-icon-delete"

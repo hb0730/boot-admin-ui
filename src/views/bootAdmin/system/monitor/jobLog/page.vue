@@ -55,6 +55,8 @@
             class="el-button el-tooltip el-button--default el-button--small is-circle"
             aria-describedby="el-tooltip-2497"
             tabindex="0"
+             title="刷新"
+            @click="getPage"
           >
             <i class="el-icon-refresh"></i>
           </button>
