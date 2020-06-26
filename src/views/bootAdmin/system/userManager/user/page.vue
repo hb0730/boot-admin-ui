@@ -216,11 +216,11 @@
                 align="left"
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
-                :current-page="pages.page"
+                :current-page="searchInfo.pageNum"
                 :page-sizes="[10, 20, 50, 100]"
-                :page-size="pages.pageSize"
+                :page-size="searchInfo.pageSize"
                 layout="total, sizes, prev, pager, next, jumper"
-                :total="pages.total"
+                :total="searchInfo.total"
               ></el-pagination>
             </el-col>
           </el-row>
@@ -349,7 +349,12 @@ export default {
         deptId: "",
         nickName: "",
         username: "",
-        isEnabled: ""
+        isEnabled: "",
+        sortColumn: [],
+        groupColumn: [],
+        pageSize: 10,
+        pageNum: 1,
+        total: 0
       },
       isEnabledOptions: [],
       sexOptions: [],
@@ -427,12 +432,11 @@ export default {
      */
     getUserPage() {
       let _self = this;
-      let url =
-        userAllPagePath + "/" + _self.pages.page + "/" + _self.pages.pageSize;
+      let url = userAllPagePath;
       let params = JSON.parse(JSON.stringify(_self.searchInfo));
       _self.userAllPage({ url: url, data: params }).then(result => {
-        _self.userList = result.list;
-        _self.pages.total = Number(result.total);
+        _self.userList = result.records;
+        _self.searchInfo.total = Number(result.total);
       });
     },
     /**
@@ -484,7 +488,12 @@ export default {
         deptId: "",
         nickName: "",
         username: "",
-        isEnabled: ""
+        isEnabled: "",
+        sortColumn: [],
+        groupColumn: [],
+        pageSize: 10,
+        pageNum: 1,
+        total: 0
       };
     },
     /**
@@ -497,15 +506,24 @@ export default {
         deptId: data.id,
         nickName: "",
         username: "",
-        isEnabled: ""
+        isEnabled: "",
+        sortColumn: [],
+        groupColumn: [],
+        pageSize: 10,
+        pageNum: 1,
+        total: 0
       };
       _self.getUserPage();
     },
     handleSizeChange(val) {
-      this.pages.pageSize = val;
+      let _self = this;
+      this.searchInfo.pageSize = val;
+      _self.getUserPage();
     },
-    handleCurrentChange(Page) {
-      this.pages.page = Page;
+    handleCurrentChange(val) {
+      let _self = this;
+      this.searchInfo.pageNum = val;
+      _self.getUserPage();
     },
     /*关闭弹出 */
     handleDialogClose() {

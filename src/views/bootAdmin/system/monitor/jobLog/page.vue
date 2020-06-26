@@ -143,11 +143,11 @@
           align="left"
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :current-page="pages.page"
+          :current-page="searchInfo.pageNum"
           :page-sizes="[10, 20, 50, 100]"
-          :page-size="pages.pageSize"
+          :page-size="searchInfo.pageSize"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="pages.total"
+          :total="searchInfo.total"
         ></el-pagination>
       </el-col>
     </el-row>
@@ -171,7 +171,14 @@ export default {
     return {
       jobLogList: [],
       searchInfo: {
-        jobId: ""
+        jobId: "",
+        jobName:"",
+        status:"",
+        sortColumn: [],
+        groupColumn: [],
+        pageSize: 10,
+        pageNum: 1,
+        total: 0
       },
       // 分页
       pages: {
@@ -214,8 +221,8 @@ export default {
       this.pages.pageSize = val;
       this.getPage();
     },
-    handleCurrentChange(Page) {
-      this.pages.page = Page;
+    handleCurrentChange(val) {
+      this.searchInfo.pageNum = val;
       this.getPage();
     },
     /**
@@ -240,11 +247,11 @@ export default {
     getPage() {
       let _self = this;
       let url =
-        jobLogAllPagePath + "/" + _self.pages.page + "/" + _self.pages.pageSize;
+        jobLogAllPagePath;
       let params = JSON.parse(JSON.stringify(_self.searchInfo));
       _self.jobLogAllPage({ url: url, data: params }).then(result => {
-        _self.jobLogList = result.list;
-        _self.pages.total = Number(result.total);
+        _self.jobLogList = result.records;
+        _self.searchInfo.total = Number(result.total);
       });
     },
     handleViewError(row) {

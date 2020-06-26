@@ -188,11 +188,11 @@
           align="left"
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :current-page="pages.page"
+          :current-page="searchInfo.pageNum"
           :page-sizes="[10, 20, 50, 100]"
-          :page-size="pages.pageSize"
+          :page-size="searchInfo.pageSize"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="pages.total"
+          :total="searchInfo.total"
         ></el-pagination>
       </el-col>
     </el-row>
@@ -304,7 +304,7 @@
           align="left"
           @size-change="handlePermissionSizeChange"
           @current-change="handlePermissionCurrentChange"
-          :current-page="permissionPages.page"
+          :current-page="permissionPages.pageNum"
           :page-sizes="[10, 20, 50, 100]"
           :page-size="permissionPages.pageSize"
           layout="total, sizes, prev, pager, next, jumper"
@@ -368,17 +368,20 @@ export default {
   data() {
     return {
       position: "left",
-      searchInfo: {},
-      roleList: [],
-      // 分页
-      pages: {
-        page: 1,
+      searchInfo: {
+        name: "",
+        isEnabled: "",
+        enname: "",
+        sortColumn: [],
+        groupColumn: [],
         pageSize: 10,
+        pageNum: 1,
         total: 0
       },
+      roleList: [],
       // 分页
       permissionPages: {
-        page: 1,
+        pageNum: 1,
         pageSize: 10,
         total: 0
       },
@@ -457,22 +460,24 @@ export default {
       this.getPageAll();
     },
     handlePermissionSizeChange(val) {
+      
       this.permissionPages.pageSize = val;
+      this.getPermissionPageList(this.currentMenuInfo.id);
     },
-    handlePermissionCurrentChange(Page) {
-      this.permissionPages.page = Page;
+    handlePermissionCurrentChange(val) {
+      this.permissionPages.pageNum = val;
+      this.getPermissionPageList(this.currentMenuInfo.id);
     },
     /**
      * 获取分页后的角色
      */
     getPageAll() {
       let _self = this;
-      let url =
-        roleAllPagePath + "/" + _self.pages.page + "/" + _self.pages.pageSize;
+      let url = roleAllPagePath;
       let params = JSON.parse(JSON.stringify(_self.searchInfo));
       _self.roleAllPage({ url: url, data: params }).then(result => {
-        _self.roleList = result.list;
-        _self.pages.total = Number(result.total);
+        _self.roleList = result.records;
+        _self.searchInfo.total = Number(result.total);
       });
     },
     /**
@@ -680,17 +685,13 @@ export default {
      */
     getPermissionPageList(id) {
       let _self = this;
-      let url =
-        permissionPagePath +
-        "/" +
-        id +
-        "/" +
-        _self.permissionPages.page +
-        "/" +
-        _self.permissionPages.pageSize;
-      let params = {};
+      let url = permissionPagePath + "/" + id;
+      let params = {
+        pageSize: _self.permissionPages.pageSize,
+        pageNum: _self.permissionPages.pageNum
+      };
       _self.permissionPageList({ url: url, data: params }).then(result => {
-        _self.permissionList = result.list;
+        _self.permissionList = result.records;
         _self.permissionPages.total = Number(result.total);
         // 切换 菜单后重新选择表格权限
         this.$nextTick(() => {
@@ -891,31 +892,5 @@ export default {
   }
 };
 </script>
-<style>
-.el-dialog__body {
-  overflow: auto;
-}
-.dialog-main-tree {
-  max-height: 400px;
-  overflow-y: auto;
-}
-.el-table th {
-  word-break: break-word;
-  color: rgba(0, 0, 0, 0.85);
-  background-color: #fafafa;
-}
-.avue-crud__menu {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: justify;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-  position: relative;
-  width: 100%;
-  min-height: 40px;
-  height: auto;
-  overflow: hidden;
-  margin-bottom: 5px;
-}
+<style scoped>
 </style>

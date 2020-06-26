@@ -196,11 +196,11 @@
           align="left"
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :current-page="pages.page"
+          :current-page="searchInfo.pageNum"
           :page-sizes="[10, 20, 50, 100]"
-          :page-size="pages.pageSize"
+          :page-size="searchInfo.pageSize"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="pages.total"
+          :total="Number(searchInfo.total)"
         ></el-pagination>
       </el-col>
     </el-row>
@@ -269,7 +269,16 @@ import { bootAdminExport } from "@/api/export";
 export default {
   data() {
     return {
-      searchInfo: {},
+      searchInfo: {
+        number: "",
+        name: "",
+        isEnabled: "",
+        sortColumn: [],
+        groupColumn: [],
+        pageSize: 10,
+        pageNum: 1,
+        total: 0
+      },
       isEnabledOptions: [],
       postList: [],
       dialogTableVisible: false,
@@ -376,12 +385,11 @@ export default {
     },
     getPostPage() {
       let _self = this;
-      let url =
-        postAllPagePath + "/" + _self.pages.page + "/" + _self.pages.pageSize;
+      let url = postAllPagePath;
       let params = JSON.parse(JSON.stringify(_self.searchInfo));
       _self.postAllPage({ url: url, data: params }).then(result => {
-        _self.postList = result.list;
-        _self.pages.total = Number(result.total);
+        _self.postList = result.records;
+        _self.searchInfo.total = Number(result.total);
       });
     },
     handleSizeChange(val) {

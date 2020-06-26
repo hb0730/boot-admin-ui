@@ -204,11 +204,11 @@
           align="left"
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :current-page="pages.page"
+          :current-page="searchInfo.pageNum"
           :page-sizes="[10, 20, 50, 100]"
-          :page-size="pages.pageSize"
+          :page-size="searchInfo.pageSize"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="pages.total"
+          :total="searchInfo.total"
         ></el-pagination>
       </el-col>
     </el-row>
@@ -284,7 +284,16 @@ export default {
   data() {
     return {
       jobList: [],
-      searchInfo: {},
+      searchInfo: {
+        number: "",
+        name: "",
+        enabled: "",
+        sortColumn: [],
+        groupColumn: [],
+        pageSize: 10,
+        pageNum: 1,
+        total: 0
+      },
       // 分页
       pages: {
         page: 1,
@@ -329,20 +338,20 @@ export default {
     ...mapActions("d2admin/dict", ["getDictMap"]),
     getPage() {
       let _self = this;
-      let url =
-        jobAllPagePath + "/" + _self.pages.page + "/" + _self.pages.pageSize;
+      let url = jobAllPagePath;
       let params = JSON.parse(JSON.stringify(_self.searchInfo));
+      console.info(params)
       _self.jobAllPage({ url: url, data: params }).then(result => {
-        _self.jobList = result.list;
-        _self.pages.total = Number(result.total);
+        _self.jobList = result.records;
+        _self.searchInfo.total = Number(result.total);
       });
     },
     handleSizeChange(val) {
-      this.pages.pageSize = val;
+      this.searchInfo.pageSize = val;
       this.getPage();
     },
-    handleCurrentChange(Page) {
-      this.pages.page = Page;
+    handleCurrentChange(val) {
+      this.searchInfo.pageNum = val;
       this.getPage();
     },
     /**
@@ -366,7 +375,16 @@ export default {
     },
     handleDataDialogClose() {
       let _self = this;
-      _self.searchInfo = {};
+      _self.searchInfo = {
+        number: "",
+        name: "",
+        enabled: "",
+        sortColumn: [],
+        groupColumn: [],
+        pageSize: 10,
+        pageNum: 1,
+        total: 0
+      };
       _self.getPage();
       _self.dialogDataTableVisible = false;
     },

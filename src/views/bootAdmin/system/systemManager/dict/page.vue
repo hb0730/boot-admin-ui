@@ -175,11 +175,11 @@
           align="left"
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :current-page="pages.page"
+          :current-page="searchInfo.pageNum"
           :page-sizes="[10, 20, 50, 100]"
-          :page-size="pages.pageSize"
+          :page-size="searchInfo.pageSize"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="pages.total"
+          :total="searchInfo.total"
         ></el-pagination>
       </el-col>
     </el-row>
@@ -324,11 +324,13 @@
           </el-table>
           <el-pagination
             align="right"
-            :current-page="dataPages.page"
+            :current-page="dataSearchInfo.pageNum"
             :page-sizes="[10, 20, 50, 100]"
-            :page-size="dataPages.pageSize"
+            :page-size="dataSearchInfo.pageSize"
             layout="total, sizes, prev, pager, next, jumper"
-            :total="dataPages.total"
+            :total="dataSearchInfo.total"
+            @size-change="handleSizeDataChange"
+            @current-change="handleCurrentDataChange"
           ></el-pagination>
         </el-col>
       </el-row>
@@ -408,7 +410,16 @@ import { MessageBox } from "element-ui";
 export default {
   data() {
     return {
-      searchInfo: {},
+      searchInfo: {
+        number: "",
+        name: "",
+        isEnabled: "",
+        sortColumn: [],
+        groupColumn: [],
+        pageSize: 10,
+        pageNum: 1,
+        total: 0
+      },
       isEnabledOptions: [],
       defaultOptions: [],
       // 分页
@@ -448,7 +459,13 @@ export default {
         description: ""
       },
       dialogDataTableVisible: false,
-      dataSearchInfo: {},
+      dataSearchInfo: {
+        sortColumn: [],
+        groupColumn: [],
+        pageSize: 10,
+        pageNum: 1,
+        total: 0
+      },
       dataDictList: [],
       currentDictInfo: {},
       currentDataDictInfo: {},
@@ -477,21 +494,22 @@ export default {
     ]),
     ...mapActions("d2admin/dict", ["getDictMap"]),
     handleSizeChange(val) {
-      this.pages.pageSize = val;
+      let _self = this;
+      this.searchInfo.pageSize = val;
       _self.getDictPageAll();
     },
-    handleCurrentChange(Page) {
-      this.pages.page = Page;
+    handleCurrentChange(val) {
+      let _self = this;
+      this.searchInfo.pageNum = val;
       _self.getDictPageAll();
     },
     getDictPageAll() {
       let _self = this;
-      let url =
-        dictPageAllPath + "/" + _self.pages.page + "/" + _self.pages.pageSize;
+      let url = dictPageAllPath;
       let params = JSON.parse(JSON.stringify(_self.searchInfo));
       _self.dictPageAll({ url: url, data: params }).then(result => {
-        _self.dictList = result.list;
-        _self.pages.total = Number(result.total);
+        _self.dictList = result.records;
+        _self.searchInfo.total = Number(result.total);
       });
     },
     initInfo() {
@@ -528,7 +546,16 @@ export default {
     handleDialogClose() {
       let _self = this;
       _self.initInfo();
-      _self.searchInfo = {};
+      _self.searchInfo = {
+        number: "",
+        name: "",
+        isEnabled: "",
+        sortColumn: [],
+        groupColumn: [],
+        pageSize: 10,
+        pageNum: 1,
+        total: 0
+      };
       _self.getDictPageAll();
       _self.dialogTableVisible = false;
     },
@@ -616,22 +643,25 @@ export default {
       _self.getDataDict(info.id);
       _self.dialogDataTableVisible = true;
     },
+    handleSizeDataChange(val) {
+      let _self = this;
+      _self.dataSearchInfo.pageSize = val;
+      _self.getDataDict(_self.currentDictInfo.id);
+    },
+    handleCurrentDataChange(val) {
+      let _self = this;
+      _self.dataSearchInfo.pageNum = val;
+      _self.getDataDict(_self.currentDictInfo.id);
+    },
     /**获取字典项值 */
     getDataDict(id) {
       let _self = this;
       if (id) {
-        let url =
-          dictDataPageAllPath +
-          "/" +
-          id +
-          "/" +
-          _self.dataPages.page +
-          "/" +
-          _self.dataPages.pageSize;
+        let url = dictDataPageAllPath + "/" + id;
         let params = JSON.parse(JSON.stringify(_self.dataSearchInfo));
         _self.dictDataPageAll({ url: url, data: params }).then(result => {
-          _self.dataDictList = result.list;
-          _self.dataPages.total = Number(result.total);
+          _self.dataDictList = result.records;
+          _self.dataSearchInfo.total = Number(result.total);
         });
       }
     },
@@ -669,7 +699,16 @@ export default {
     handleDataDialogClose() {
       let _self = this;
       _self.initDataDict();
-      _self.searchInfo = {};
+      _self.searchInfo = {
+        number: "",
+        name: "",
+        isEnabled: "",
+        sortColumn: [],
+        groupColumn: [],
+        pageSize: 10,
+        pageNum: 1,
+        total: 0
+      };
       let info = _self.currentDictInfo;
       _self.getDataDict(info.id);
       _self.dialogDataFormTableVisible = false;

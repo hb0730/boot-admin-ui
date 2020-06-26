@@ -42,3 +42,58 @@ $prefix: d2;
   font-size: 14px;
   position: relative;
 }
+
+.button {
+  float: right;
+}
+.filter-item {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.el-dialog__body {
+  overflow: auto;
+}
+.dialog-main-tree {
+  max-height: 400px;
+  overflow-y: auto;
+}
+.el-table th {
+  word-break: break-word;
+  color: rgba(0, 0, 0, 0.85);
+  background-color: #fafafa;
+}
+.avue-crud__menu {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  position: relative;
+  width: 100%;
+  min-height: 40px;
+  height: auto;
+  overflow: hidden;
+  margin-bottom: 5px;
+}
+
+// .el-table th {
+//   word-break: break-word;
+//   color: rgba(0, 0, 0, 0.85);
+//   background-color: #fafafa;
+// }
+// .avue-crud__menu {
+//   display: -webkit-box;
+//   display: -ms-flexbox;
+//   display: flex;
+//   -webkit-box-pack: justify;
+//   -ms-flex-pack: justify;
+//   justify-content: space-between;
+//   position: relative;
+//   width: 100%;
+//   min-height: 40px;
+//   height: auto;
+//   overflow: hidden;
+//   margin-bottom: 5px;
+// }

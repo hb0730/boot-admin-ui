@@ -172,7 +172,7 @@ export default {
       let url = userOnlineAllPagePath;
       let params = JSON.parse(JSON.stringify(_self.searchInfo));
       _self.userOnlineAllPage({ url: url, data: params }).then(result => {
-        _self.userOnlineList = result.list;
+        _self.userOnlineList = result.records;
         _self.pages.total = Number(result.total);
       });
     },

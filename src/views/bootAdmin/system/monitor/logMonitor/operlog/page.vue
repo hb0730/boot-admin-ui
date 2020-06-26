@@ -51,7 +51,11 @@
             <i class="fa fa-trash"></i>
             <span>清除</span>
           </button>
-          <button @click="handleExport" type="button" class="el-button filter-item el-button--warning el-button--mini">
+          <button
+            @click="handleExport"
+            type="button"
+            class="el-button filter-item el-button--warning el-button--mini"
+          >
             <i class="fa fa-download"></i>
             <span>导出</span>
           </button>
@@ -204,11 +208,11 @@
           align="left"
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :current-page="pages.page"
+          :current-page="searchInfo.pageNum"
           :page-sizes="[10, 20, 50, 100]"
-          :page-size="pages.pageSize"
+          :page-size="searchInfo.pageSize"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="pages.total"
+          :total="searchInfo.total"
         ></el-pagination>
       </el-col>
     </el-row>
@@ -262,14 +266,26 @@ import {
 } from "@/api/baseUrl";
 import util from "@/libs/util";
 import { MessageBox } from "element-ui";
-import { operLogServer } from '@/api/baseServer';
-import { bootAdminExport } from '@/api/export';
+import { operLogServer } from "@/api/baseServer";
+import { bootAdminExport } from "@/api/export";
 export default {
   data() {
     return {
       position: "left",
       operLogList: [],
-      searchInfo: {},
+      searchInfo: {
+        module: "",
+        businessType: "",
+        username: "",
+        status: "",
+        startTime: "",
+        endTime: "",
+        sortColumn: [],
+        groupColumn: [],
+        pageSize: 10,
+        pageNum: 1,
+        total: 0
+      },
       // 分页
       pages: {
         page: 1,
@@ -297,11 +313,11 @@ export default {
     ]),
     ...mapActions("d2admin/dict", ["getDictMap"]),
     handleSizeChange(val) {
-      this.pages.pageSize = val;
+      this.searchInfo.pageSize = val;
       this.getPageAll();
     },
-    handleCurrentChange(Page) {
-      this.pages.page = Page;
+    handleCurrentChange(val) {
+      this.searchInfo.pageNum = val;
       this.getPageAll();
     },
     /**
@@ -309,16 +325,11 @@ export default {
      */
     getPageAll() {
       let _self = this;
-      let url =
-        loginInfoAllPagePath +
-        "/" +
-        _self.pages.page +
-        "/" +
-        _self.pages.pageSize;
+      let url = loginInfoAllPagePath;
       let info = JSON.parse(JSON.stringify(_self.searchInfo));
       _self.operLogAllPage({ url: url, data: info }).then(result => {
-        _self.operLogList = result.list;
-        _self.pages.total = Number(result.total);
+        _self.operLogList = result.records;
+        _self.searchInfo.total = Number(result.total);
       });
     },
     /**
@@ -407,11 +418,11 @@ export default {
         _self.getPageAll();
       });
     },
-    handleExport(){
-      let _self =this 
-      let params=JSON.parse(JSON.stringify(_self.searchInfo))
-      let url =operLogServer+operLogExportPath
-      bootAdminExport('post',url,params)
+    handleExport() {
+      let _self = this;
+      let params = JSON.parse(JSON.stringify(_self.searchInfo));
+      let url = operLogServer + operLogExportPath;
+      bootAdminExport("post", url, params);
     }
   }
 };

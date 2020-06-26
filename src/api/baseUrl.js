@@ -187,7 +187,7 @@ export const roleOrgAllPath = '/org/role'
 /**
  * 岗位分页
  */
-export const postAllPagePath = '/all'
+export const postAllPagePath = '/all/page'
 /**
  * 岗位
  */

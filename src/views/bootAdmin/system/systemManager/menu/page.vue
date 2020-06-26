@@ -192,14 +192,14 @@
               >
                 <template slot-scope="scope">
                   <el-button
-                   title="修改"
+                    title="修改"
                     @click="handlePermissionEdit(scope.row)"
                     type="text"
                     icon="el-icon-edit"
                     circle
                   ></el-button>
                   <el-button
-                   title="删除"
+                    title="删除"
                     type="text"
                     @click="handlePermissionDelete(scope.row)"
                     icon="el-icon-delete"
@@ -212,11 +212,11 @@
               align="left"
               @size-change="handleSizeChange"
               @current-change="handleCurrentChange"
-              :current-page="pages.page"
+              :current-page="searchPermission.pageNum"
               :page-sizes="[10, 20, 50, 100]"
-              :page-size="pages.pageSize"
+              :page-size="searchPermission.pageSize"
               layout="total, sizes, prev, pager, next, jumper"
-              :total="pages.total"
+              :total="searchPermission.total"
             ></el-pagination>
           </el-col>
         </el-row>
@@ -268,7 +268,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" size="medium" @click="handlePermissionSave" plain>保存</el-button>
-        <el-button  size="medium" @click="handleDialogClose" plain>取 消</el-button>
+        <el-button size="medium" @click="handleDialogClose" plain>取 消</el-button>
       </div>
     </el-dialog>
   </d2-container>
@@ -326,7 +326,15 @@ export default {
         value: "id",
         label: "name"
       },
-      searchPermission: {},
+      searchPermission: {
+        sortColumn: [],
+        groupColumn: [],
+        pageSize: 10,
+        pageNum: 1,
+        total: 0,
+        mark: "",
+        name: ""
+      },
       dialogTableVisible: false,
       permissionInfo: {
         id: "",
@@ -342,11 +350,11 @@ export default {
       isPermissionUpdate: false,
       isPermissionView: false,
       // 分页
-      pages: {
-        page: 1,
-        pageSize: 10,
-        total: 0
-      },
+      // pages: {
+      //   page: 1,
+      //   pageSize: 10,
+      //   total: 0
+      // },
       isAll: -1,
       mapInfo: {},
       isEnabledOptions: []
@@ -544,28 +552,23 @@ export default {
       });
     },
     handleSizeChange(val) {
-      this.pages.pageSize = val;
+      this.searchPermission.pageSize = val;
+      this.handleSearchPermission();
     },
-    handleCurrentChange(Page) {
-      this.pages.page = Page;
+    handleCurrentChange(val) {
+      this.searchPermission.pageNum = val;
+      this.handleSearchPermission();
     },
     /**
      * 获取分页的权限信息
      */
     getPermissionPageList(id) {
       let _self = this;
-      let url =
-        permissionPagePath +
-        "/" +
-        id +
-        "/" +
-        _self.pages.page +
-        "/" +
-        _self.pages.pageSize;
+      let url = permissionPagePath + "/" + id;
       let params = JSON.parse(JSON.stringify(_self.searchPermission));
       _self.permissionPageList({ url: url, data: params }).then(result => {
-        _self.permissionList = result.list;
-        _self.pages.total = Number(result.total);
+        _self.permissionList = result.records;
+        _self.searchPermission.total = Number(result.total);
       });
     },
     /**
@@ -738,12 +741,5 @@ export default {
   }
 };
 </script>
-<style >
-.button {
-  float: right;
-}
-.filter-item {
-  display: inline-block;
-  vertical-align: middle;
-}
+<style scoped>
 </style>
