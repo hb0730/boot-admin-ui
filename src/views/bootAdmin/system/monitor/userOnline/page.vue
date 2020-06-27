@@ -8,7 +8,7 @@
         <el-input v-model="searchInfo.ipaddr" placeholder="登录ip" clearable></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button plain size="medium" @click="handleSearch" icon="fa fa-search">查询</el-button>
+        <el-button plain size="medium" @click="handlerSearch" icon="fa fa-search">查询</el-button>
       </el-form-item>
     </el-form>
     <el-row :gutter="2">
@@ -38,7 +38,7 @@
       </div>
       <el-col :xs="10">
         <el-table
-          :data="userOnlineList"
+          :data="userOnlineList.slice((pages.page-1)*pages.pageSize,pages.page*pages.pageSize)"
           style="width: 100%;"
           ref="userOnlineRef"
           border
@@ -107,7 +107,9 @@
             resizable
             :show-overflow-tooltip="true"
             align="center"
-          ></el-table-column>
+          >
+            <template slot-scope="scope">{{scope.row.loginTime|time}}</template>
+          </el-table-column>
           <el-table-column
             label="操作"
             sortable
@@ -162,6 +164,22 @@ export default {
     let _self = this;
     _self.getPage();
   },
+  filters: {
+    time: function time(value) {
+      var val = JSON.parse(value);
+      var date = new Date(val);
+      var Y = date.getFullYear() + "-";
+      var M =
+        (date.getMonth() + 1 < 10
+          ? "0" + (date.getMonth() + 1)
+          : date.getMonth() + 1) + "-";
+      var D = date.getDate() + " ";
+      var h = date.getHours() + ":";
+      var m = date.getMinutes() + ":";
+      var s = date.getSeconds();
+      return Y + M + D + h + m + s;
+    }
+  },
   methods: {
     ...mapActions("bootAdmin/userOnline", [
       "userOnlineAllPage",
@@ -173,16 +191,17 @@ export default {
       let params = JSON.parse(JSON.stringify(_self.searchInfo));
       _self.userOnlineAllPage({ url: url, data: params }).then(result => {
         _self.userOnlineList = result.records;
+        console.info(result.records)
         _self.pages.total = Number(result.total);
       });
     },
     handleSizeChange(val) {
       this.pages.pageSize = val;
-      this.getPage();
+      // this.getPage();
     },
     handleCurrentChange(Page) {
       this.pages.page = Page;
-      this.getPage();
+      // this.getPage();
     },
     /**
      * 强退
@@ -221,8 +240,10 @@ export default {
     /**
      * 检索
      */
-    handleSearch() {
+    handlerSearch() {
       let _self = this;
+      _self.pages.page = 1;
+      _self.pages.pageSize = 10;
       _self.getPage();
     },
     logout(ids) {
