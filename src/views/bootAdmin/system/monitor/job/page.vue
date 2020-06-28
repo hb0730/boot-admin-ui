@@ -191,6 +191,14 @@
                 size="mini"
               ></el-button>
               <el-button
+                title="立即执行"
+                type="text"
+                @click="handleExecutor(scope.row)"
+                icon="fa fa-play-circle-o"
+                size="mini"
+              ></el-button>
+
+              <el-button
                 title="调度日志"
                 type="text"
                 icon="fa fa-list"
@@ -274,7 +282,8 @@ import {
   jobUpdatePath,
   jobDeletePath,
   jobExportPath,
-  jobUploadPath
+  jobUploadPath,
+  jobExecutorPath
 } from "@/api/baseUrl";
 import { bootAdminExport } from "@/api/export";
 import util from "@/libs/util";
@@ -333,14 +342,14 @@ export default {
       "jobSave",
       "jobUpdate",
       "jobDeleteIds",
-      "jobUpload"
+      "jobUpload",
+      "jobExecutor"
     ]),
     ...mapActions("d2admin/dict", ["getDictMap"]),
     getPage() {
       let _self = this;
       let url = jobAllPagePath;
       let params = JSON.parse(JSON.stringify(_self.searchInfo));
-      console.info(params)
       _self.jobAllPage({ url: url, data: params }).then(result => {
         _self.jobList = result.records;
         _self.searchInfo.total = Number(result.total);
@@ -615,6 +624,22 @@ export default {
         _self.getPage();
       });
       _self.$refs.upload.clearFiles();
+    },
+    /**
+     * 立即执行
+     */
+    handleExecutor(row) {
+      let _self = this;
+      if (row) {
+        MessageBox.confirm("确定执行当前任务", "执行", {
+          type: "warning"
+        }).then(() => {
+          let url =  "/" + row.id;
+          _self.jobExecutor({ url: url, data: null }).then(result => {
+            _self.getPage();
+          });
+        });
+      }
     }
   }
 };

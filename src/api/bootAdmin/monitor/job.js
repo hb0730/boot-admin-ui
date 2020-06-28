@@ -72,6 +72,15 @@ export function JobUpload(url, data) {
     return httpUpload(url, data)
 }
 /**
+ * 立即执行
+ * @param {*} url 
+ * @param {*} data 
+ */
+export function JobExecutor(url, data) {
+    url = baseUrl(url);
+    return httpGet(url, data);
+}
+/**
  * 基础url
  * @param {*} url 
  */

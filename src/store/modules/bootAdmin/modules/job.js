@@ -1,4 +1,4 @@
-import { JobAllPage, JobSave, JobUpdate, JobDelete, JobDeleteIds, JobExport, JobUpload } from "@/api/bootAdmin/monitor/job"
+import { JobAllPage, JobSave, JobUpdate, JobDelete, JobDeleteIds, JobExport, JobUpload, JobExecutor } from "@/api/bootAdmin/monitor/job"
 
 export default {
     namespaced: true,
@@ -95,6 +95,20 @@ export default {
             return new Promise((resolve, reject) => {
                 JobUpload(url, data).then(result => {
                     resolve(result)
+                }).catch(err => {
+                    reject(err)
+                })
+            })
+        },
+        /**
+         * 立即执行
+         * @param {*} param0 
+         * @param {*} param1 
+         */
+        jobExecutor({ dispatch }, { url, data }) {
+            return new Promise((resolve, reject) => {
+                JobExecutor(url, data).then(result => {
+                    resolve(result);
                 }).catch(err => {
                     reject(err)
                 })
