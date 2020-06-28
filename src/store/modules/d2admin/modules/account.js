@@ -33,10 +33,7 @@ export default {
           }, { root: true })
           // 用户登录后从持久化数据加载一系列的设置
           dispatch('load')
-          // 加载菜单
-          dispatch('bootAdmin/menu/currentMenu', { url: currentMenuPath, data: null }, { root: true })
-          // 加载数据字典
-          dispatch('bootAdmin/dict/dictMap',{url:dictMapPath},{ root: true })
+          dispatch('updateCache')
           // 结束
           resolve()
         }).catch(err => {
@@ -66,6 +63,7 @@ export default {
             router.push({
               name: 'login'
             })
+            window.location.reload();
             resolve()
           }).catch(error => {
             reject(error)
@@ -135,6 +133,20 @@ export default {
         // end
         resolve()
       })
+    },
+    /**
+    * 更新缓存
+    * @param {*} param0 
+    */
+    updateCache({ dispatch }) {
+      return new Promise(async resolve => {
+        // 加载菜单
+        await dispatch('bootAdmin/menu/currentMenu', { url: currentMenuPath, data: null }, { root: true })
+        // 加载数据字典
+        await dispatch('bootAdmin/dict/dictMap', { url: dictMapPath }, { root: true })
+        resolve()
+      })
     }
+
   }
 }

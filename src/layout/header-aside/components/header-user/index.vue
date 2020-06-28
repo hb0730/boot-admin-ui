@@ -6,6 +6,10 @@
         <i class="fa fa-cogs" aria-hidden="true"></i>
         设置
       </el-dropdown-item>
+      <el-dropdown-item @click.native="uCahce">
+        <i class="fa fa-trash" aria-hidden="true"></i>
+        清除缓存
+      </el-dropdown-item>
       <el-dropdown-item @click.native="logOff">
         <d2-icon name="power-off" class="d2-mr-5" />注销
       </el-dropdown-item>
@@ -24,7 +28,8 @@ export default {
   },
   methods: {
     ...mapActions('d2admin/account', [
-      'logout'
+      'logout',
+      'updateCache'
     ]),
     /**
      * @description 登出
@@ -48,7 +53,17 @@ export default {
       router.push({
         name: 'userManager-userInfo'
       })
+    },
+    /**
+     * 更新缓存
+     */
+    uCahce() {
+      let _self = this;
+      _self.updateCache().then(result => {
+        _self.$message.success("更新成功");
+      });
     }
+
   }
 }
 </script>
