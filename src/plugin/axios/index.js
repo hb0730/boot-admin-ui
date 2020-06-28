@@ -59,10 +59,10 @@ service.interceptors.request.use(
 // 响应拦截器
 service.interceptors.response.use(
   response => {
-   if(response.headers['content-type']=="application/vnd.ms-excel;charset=UTF-8"){
-    return response;
-   } 
-   // dataAxios 是 axios 返回数据中的 data
+    if (response.headers['content-type'] == "application/vnd.ms-excel;charset=UTF-8") {
+      return response;
+    }
+    // dataAxios 是 axios 返回数据中的 data
     const dataAxios = response.data
     // 这个状态码是和后端约定的
     const { code } = dataAxios
@@ -86,10 +86,7 @@ service.interceptors.response.use(
               type: 'warning'
             }
           ).then(() => {
-            store.dispatch('d2admin/account/logout', {}, { root: true }).then(() => {
-
-              location.reload() // 为了重新实例化vue-router对象 避免bug
-            })
+            store.dispatch('d2admin/account/logout', {}, { root: true });
           })
           break
         default:
