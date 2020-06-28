@@ -6,7 +6,7 @@
 # boot-admin-ui
 boot-admin vue 
 # 后端admin
-<https://github.com/hb0730/boot-admin>
+[boot-admin](https://github.com/hb0730/boot-admin)
 
 # Thanks
  * <a href="https://github.com/d2-projects/d2-admin" target="_blank"><img src="https://raw.githubusercontent.com/FairyEver/d2-admin/master/docs/image/d2-admin@2x.png" width="200"></a>
