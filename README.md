@@ -11,5 +11,5 @@ boot-admin vue
 <https://github.com/hb0730/boot-admin>
 
 # Thanks
- * [D2-admin](https://d2.pub/)
+ * <a href="https://github.com/d2-projects/d2-admin" target="_blank"><img src="https://raw.githubusercontent.com/FairyEver/d2-admin/master/docs/image/d2-admin@2x.png" width="200"></a>
  * [e-icon-picker](http://doc.icon.cnovel.club/)

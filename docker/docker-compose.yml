@@ -1,0 +1,14 @@
+version: '3.1'
+services:
+   recovery-ui:
+      image: boot-admin-ui
+      restart: boot-admin-ui
+      container_name: boot-admin-ui
+      restart: always
+      networks:
+        - docker-net
+      environment:
+        TZ: 'Asia/Shanghai'
+networks:
+   docker-net:
+     external: true
