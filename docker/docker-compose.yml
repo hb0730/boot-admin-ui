@@ -1,6 +1,6 @@
 version: '3.1'
 services:
-   recovery-ui:
+   boot-admin-ui:
       image: boot-admin-ui
       restart: boot-admin-ui
       container_name: boot-admin-ui
