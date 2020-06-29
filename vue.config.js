@@ -1,6 +1,7 @@
 const CompressionWebpackPlugin = require('compression-webpack-plugin')
 const VueFilenameInjector = require('@d2-projects/vue-filename-injector')
 const ThemeColorReplacer = require('webpack-theme-color-replacer')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const forElementUI = require('webpack-theme-color-replacer/forElementUI')
 const cdnDependencies = require('./dependencies-cdn')
 const { chain, set, each, keys } = require('lodash')
@@ -63,7 +64,18 @@ module.exports = {
           deleteOriginalAssets: false
         })
       ]
+    }else  if (process.env.NODE_ENV === 'test') {
+      configNew.plugins=[
+        new ExtractTextPlugin({
+          filename: 'css/[name].[contenthash:8].css',
+        })
+      ]
+      configNew.output={
+        filename: 'js/[name].[contenthash:8].js',
+        chunkFilename: 'js/[name].[contenthash:8].js'
+      }
     }
+
     return configNew
   },
   // 默认设置: https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-service/lib/config/base.js
