@@ -58,12 +58,12 @@ export const userDeletePath = "/delete"
 /**
  * 导入
  */
-export const userUploadPath='/upload'
+export const userUploadPath = '/upload'
 
 /**
  * 导出
  */
-export const userExportPath='/export'
+export const userExportPath = '/export'
 /*************用户操作 end**********************/
 
 /*************菜单操作 start*******************/
@@ -325,7 +325,7 @@ export const jobUploadPath = '/upload'
 /**
  * 立即执行
  */
-export const jobExecutorPath='/'
+export const jobExecutorPath = '/'
 /*************操作日志操作 end***************/
 /*************调度日志操作 start*************/
 /**
@@ -345,3 +345,27 @@ export const jobLogCleanPath = '/clean/job'
  */
 export const jobLogExportPath = '/export'
 /*************调度日志操作 end***************/
+/*************图库 start********************/
+/**
+ * 分页列表
+ */
+export const imagPagePath = '/list/page'
+/**
+ * 列表
+ */
+export const imageListPath = '/list'
+/**
+ * 删除
+ */
+export const imageDeletePath = '/delete'
+/**
+ * 上传
+ */
+export const imageUploadPath='/upload';
+
+/**
+ * 批量上传
+ */
+export const imageUploadsPath='/uploads'
+
+/*************图库   end********************/

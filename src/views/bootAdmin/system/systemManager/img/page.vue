@@ -54,35 +54,35 @@
         </div>
       </div>
       <el-col :xs="10">
-        <el-table
-          :data="pageListDatas"
-          style="width: 100%;"
-          ref="datasRef"
-          border
-          :fit="true"
-          :header-cell-style="{'text-align':'center'}"
-        >
-          <el-table-column
-            sortable
-            resizable
-            :show-overflow-tooltip="true"
-            align="center"
-            type="selection"
-          ></el-table-column>
-        </el-table>
+        <el-row>
+          <el-col
+            :span="4"
+            style="padding: 6px 6px 6px 6px;"
+            v-for="item in pageListDatas"
+            :key="item.id"
+          >
+            <el-card shadow="hover" :body-style="{ padding: '0px' }">
+              <el-image :src="item.thumbPath"></el-image>
+              <div style="padding: 14px;">
+                <span>{{item.name}}</span>
+              </div>
+              <el-checkbox :id="item.id" class="select-attachment-checkbox"></el-checkbox>
+            </el-card>
+          </el-col>
+        </el-row>
         <el-pagination
           align="left"
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :current-page="pages.page"
-          :page-sizes="[10, 20, 50, 100]"
-          :page-size="pages.pageSize"
+          :current-page="searchInfo.pageNum"
+          :page-sizes="[18, 36, 54, 72]"
+          :page-size="searchInfo.pageSize"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="pages.total"
+          :total="searchInfo.total"
         ></el-pagination>
       </el-col>
     </el-row>
-    <el-dialog :before-close="handleClose" :visible.sync="dialogFormVisible">
+    <el-dialog width="30%" :before-close="handleClose" :visible.sync="dialogFormVisible">
       <FilePondUpload ref="upload" :uploadHandler="handlerUpload"></FilePondUpload>
     </el-dialog>
   </d2-container>
@@ -92,35 +92,44 @@ import util from "@/libs/util";
 import { mapActions } from "vuex";
 import FilePondUpload from "@/components/Upload/FileUpload";
 import { upload } from "@/api/http";
+import { imageUploadPath, imagPagePath } from "@/api/baseUrl";
 export default {
   data() {
     return {
-      searchInfo: {},
+      searchInfo: {
+        pageNum: 1,
+        pageSize: 18,
+        total: 0
+      },
       isEnabledOptions: [],
       isOnlineOptions: [],
       pageListDatas: [],
       position: "left",
-      // 分页
-      pages: {
-        page: 1,
-        pageSize: 10,
-        total: 0
-      },
       dialogFormVisible: false
     };
   },
   mounted() {
     let _self = this;
     _self.getMap();
+    _self.getPage();
   },
   methods: {
     ...mapActions("d2admin/dict", ["getDictMap"]),
-    ...mapActions("bootAdmin/file", ["FileUpload"]),
+    ...mapActions("bootAdmin/img", ["ImgPage", "ImgUpload"]),
     handleSizeChange(val) {
-      this.pages.pageSize = val;
+      this.searchInfo.pageSize = val;
     },
-    handleCurrentChange(Page) {
-      this.pages.page = Page;
+    handleCurrentChange(val) {
+      this.searchInfo.pageNum = val;
+    },
+    getPage() {
+      let _self = this;
+      let url = imagPagePath;
+      let params = JSON.parse(JSON.stringify(_self.searchInfo));
+      _self.ImgPage({ url: url, data: params }).then(result => {
+        _self.pageListDatas = result.records;
+        _self.searchInfo.total = Number(result.total);
+      });
     },
     /**
      * 获取数据字典类型
@@ -162,12 +171,12 @@ export default {
     },
     handlerUpload(formData, uploadProgress, cancelToken) {
       let _self = this;
-      return upload(
-        "/api/v1/base/img/upload",
-        formData,
-        uploadProgress,
-        cancelToken
-      );
+      return _self.ImgUpload({
+        url: imageUploadPath,
+        formData: formData,
+        uploadProgress: uploadProgress,
+        cancelToken: cancelToken
+      });
     },
     handleClose() {
       let _self = this;
@@ -177,5 +186,15 @@ export default {
   }
 };
 </script>
-<style >
+<style scoped>
+.select-attachment-checkbox {
+  display: block;
+  width: 100%;
+  height: 100%;
+  /* position: absolute; */
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 10;
+}
 </style>
