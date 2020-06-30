@@ -160,11 +160,11 @@ module.exports = {
     // 判断环境加入模拟数据
     // 已适配多页
     if (process.env.VUE_APP_BUILD_MODE !== 'NOMOCK') {
-      const multiEntry = keys(pages || {})
-      const entrys = multiEntry.length ? multiEntry : ['app']
-      each(entrys, entry => {
-        config.entry(entry).add('@/mock').end()
-      })
+      // const multiEntry = keys(pages || {})
+      // const entrys = multiEntry.length ? multiEntry : ['app']
+      // each(entrys, entry => {
+      //   config.entry(entry).add('@/mock').end()
+      // })
     }
     // 分析工具
     if (process.env.npm_config_report) {

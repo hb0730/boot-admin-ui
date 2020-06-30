@@ -1,11 +1,10 @@
 import request from '@/plugin/axios'
-
 /**
  * get 请求
  * @param url 请求路径
  * @param params 请求参数
  */
-export function httpGet (url, params = {}) {
+export function httpGet(url, params = {}) {
   return request({
     url,
     method: 'get',
@@ -18,7 +17,7 @@ export function httpGet (url, params = {}) {
  * @param url 请求路径
  * @param data 请求参数
  */
-export function httpPost (url, data = {}) {
+export function httpPost(url, data = {}) {
   return request({
     url,
     method: 'post',
@@ -32,7 +31,7 @@ export function httpPost (url, data = {}) {
  * @param {*} url 
  * @param {*} data 
  */
-export function httpExport(url,data){
+export function httpExport(url, data) {
   return request({
     url,
     method: 'post',
@@ -46,13 +45,40 @@ export function httpExport(url,data){
  * @param {*} url 
  * @param {*} data 
  */
-export function httpUpload(url,data){
+export function httpUpload(url, data) {
   return request({
     url,
     method: 'post',
     headers: {
-        "Content-Type": 'multipart/form-data'
+      "Content-Type": 'multipart/form-data'
     },
     data: data
-})
+  })
+}
+export function upload(url, formData, uploadProgress, cancelToken) {
+  return request({
+    headers: {
+      "Content-Type": 'multipart/form-data'
+    },
+    url: url,
+    timeout: 8640000, // 24 hours
+    data: formData, // form data
+    onUploadProgress: uploadProgress,
+    cancelToken: cancelToken,
+    method: 'post'
+  })
+}
+
+export function uploads(url,formdatas,uploadProgress, cancelToken){
+  return request({
+    headers: {
+      "Content-Type": 'multipart/form-data',
+    },
+    url: url,
+    timeout: 8640000, // 24 hours
+    data: formdatas, // form data
+    onUploadProgress: uploadProgress,
+    cancelToken: cancelToken,
+    method: 'post'
+  })
 }

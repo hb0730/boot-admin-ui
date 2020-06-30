@@ -51,6 +51,15 @@ export default {
               ...meta,
               title:'字典管理'
             }
+          },
+          {
+            path:'/bootAdmin/systemManager/imag',
+            name:`${pre}imag`,
+            component:_import('bootAdmin/system/systemManager/img/index'),
+            meta:{
+              ...meta,
+              title:'资源管理'
+            }
           }
     ])('systemManager-')
 
