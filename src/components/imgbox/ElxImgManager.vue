@@ -40,6 +40,14 @@
                 @click="onConfirm"
               >确定</el-button>
             </el-badge>
+            <el-badge :value="images.length" class="item">
+              <el-button
+                type="primary"
+                size="medium"
+                :disabled="images.length == 0"
+                @click="onConfirm"
+              >删除</el-button>
+            </el-badge>
             <el-button
               type="primary"
               size="medium"
