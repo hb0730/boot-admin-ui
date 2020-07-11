@@ -83,7 +83,8 @@
       </el-col>
     </el-row>
     <el-dialog width="30%" :before-close="handleClose" :visible.sync="dialogFormVisible">
-      <FilePondUpload ref="upload" :uploadHandler="handlerUpload"></FilePondUpload>
+      <!-- <FilePondUpload ref="upload" :uploadHandler="handlerUpload"></FilePondUpload> -->
+      <elx-imgbox v-model="imgList" :upload-url="uploadImgUrl" :list-url="listUrl" :limit="10"></elx-imgbox>
     </el-dialog>
   </d2-container>
 </template>
@@ -91,8 +92,9 @@
 import util from "@/libs/util";
 import { mapActions } from "vuex";
 import FilePondUpload from "@/components/Upload/FileUpload";
+import elImgbox from "@/components/imgbox";
 import { upload } from "@/api/http";
-import { imageUploadPath, imagPagePath } from "@/api/baseUrl";
+import { imageUploadPath, imagPagePath, imageUploadsPath } from "@/api/baseUrl";
 export default {
   data() {
     return {
@@ -105,7 +107,11 @@ export default {
       isOnlineOptions: [],
       pageListDatas: [],
       position: "left",
-      dialogFormVisible: false
+      dialogFormVisible: false,
+      listUrl: imagPagePath,
+      uploadImgUrl: imageUploadsPath,
+      action: "",
+      imgList: []
     };
   },
   mounted() {
