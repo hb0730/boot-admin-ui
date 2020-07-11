@@ -17,3 +17,4 @@ Administrator/123456
 # Thanks
  * <a href="https://github.com/d2-projects/d2-admin" target="_blank"><img src="https://raw.githubusercontent.com/FairyEver/d2-admin/master/docs/image/d2-admin@2x.png" width="200"></a>
  * [e-icon-picker](http://doc.icon.cnovel.club/)
+ * [elx-imgbox](https://github.com/erzh/elx-imgbox/blob/master/src/ElxImgManager.vue)
