@@ -84,7 +84,14 @@
     </el-row>
     <el-dialog width="30%" :before-close="handleClose" :visible.sync="dialogFormVisible">
       <!-- <FilePondUpload ref="upload" :uploadHandler="handlerUpload"></FilePondUpload> -->
-      <elx-imgbox v-model="imgList" :upload-url="uploadImgUrl" :list-url="listUrl" :limit="10"></elx-imgbox>
+      <elx-imgbox
+        v-model="imgList"
+        class="imgbox"
+        :upload-url="uploadImgUrl"
+        :list-url="listUrl"
+        :limit="10"
+      ></elx-imgbox>
+      <el-button @click="handlerButtion">测试</el-button>
     </el-dialog>
   </d2-container>
 </template>
@@ -188,11 +195,15 @@ export default {
       let _self = this;
       _self.$refs.upload.handleClearFileList();
       _self.dialogFormVisible = false;
+    },
+    handlerButtion() {
+      let _self = this;
+      console.info(_self.imgList);
     }
   }
 };
 </script>
-<style scoped>
+<style scoped  lang="scss">
 .select-attachment-checkbox {
   display: block;
   width: 100%;

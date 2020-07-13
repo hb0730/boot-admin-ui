@@ -1,7 +1,7 @@
 <template>
   <div class="elx-imgbox">
-    <el-dialog title="图片管理器" :visible.sync="visible" class="elx-imgbox-dialog" top="5vh">
-      <el-tabs v-model="options.activeTab" tab-position="left">
+    <el-dialog title="图片管理器" :visible.sync="visible"  class="elx-imgbox-dialog" top="5vh">
+      <el-tabs v-model="options.activeTab" @tab-click="handlerTabs" tab-position="left">
         <el-tab-pane label="选择图片" name="pick" class="pick-block">
           <div class="elx-img-list-loading" v-if="isLoading">
             <div class="el-icon-loading"></div>
@@ -42,10 +42,10 @@
             </el-badge>
             <el-badge :value="images.length" class="item">
               <el-button
-                type="primary"
+                type="warning"
                 size="medium"
                 :disabled="images.length == 0"
-                @click="onConfirm"
+                @click="onDelete"
               >删除</el-button>
             </el-badge>
             <el-button
@@ -97,7 +97,12 @@
 </template>
 
 <script type="text/babel">
-import { imagePage, uploadImage } from "@/api/bootAdmin/systemManager/img";
+import {
+  imagePage,
+  uploadImage,
+  imageDeletes
+} from "@/api/bootAdmin/systemManager/img";
+import { imageDeletePath } from "@/api/baseUrl";
 export default {
   name: "ElxImgbox",
   model: {
@@ -146,6 +151,13 @@ export default {
         this.options.activeTab = "pick";
       }
     },
+    handlerTabs(tab, event){
+       if(tab.paneName=='pick'){
+         this.loadListImage();
+       }else{
+         
+       }
+    },
     show() {
       this.visible = true;
     },
@@ -157,6 +169,35 @@ export default {
       if (typeof this.options.callback === "function") {
         this.options.callback(this.images);
       }
+    },
+    /**
+     * 删除
+     */
+    onDelete() {
+      let _self = this;
+      if (_self.images.length <= 0) {
+        ELEMENT.Message.warning("请选择图片");
+        return;
+      }
+      let ids = [];
+      _self.images.forEach(item => {
+        ids.push(item.id);
+      });
+      // 调用
+      let url = imageDeletePath;
+      let params = JSON.parse(JSON.stringify(ids));
+      imageDeletes(url, params).then(result => {
+        _self.removeAll();
+        _self.loadListImage();
+      });
+    },
+    removeAll() {
+      let _self = this;
+      console.info(_self.images);
+      _self.images.forEach(item => {
+        _self.clearListSelected(item);
+      });
+      _self.images = [];
     },
     /**
      * 点击图片时选中或取消选中图片
@@ -191,6 +232,7 @@ export default {
             break;
           }
         } else if (this.imgRes.items[i].selected) {
+          console.info(this.imgRes.items[i].selected);
           this.imgRes.items[i].selected = false;
         }
       }
@@ -248,7 +290,6 @@ export default {
      */
     onUploadConfirm() {
       this.$refs.upload.submit();
-      // let { uploadFiles, action, data } = this.$refs.uploadFile;
       let url = this.options.uploadUrl;
       uploadImage(url, this.fileData).then(result => {
         this.fileData = new FormData();
