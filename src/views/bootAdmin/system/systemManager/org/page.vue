@@ -136,7 +136,7 @@ import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
 import { MessageBox } from "element-ui";
-import util from '@/libs/util';
+import util from "@/libs/util";
 export default {
   components: { Treeselect },
   data() {
@@ -176,7 +176,7 @@ export default {
   mounted() {
     let _self = this;
     _self.GetOrgTreeAll();
-     _self.getMap();
+    _self.getMap();
   },
   methods: {
     ...mapActions("bootAdmin/org", [
@@ -256,6 +256,8 @@ export default {
       let params = JSON.parse(JSON.stringify(_self.orgInfo));
       let url = orgSavePath;
       _self.orgSave({ url: url, data: params }).then(result => {
+        this.$message.success(result);
+        this.$refs.form.resetFields();
         _self.GetOrgTreeAll();
         _self.orgInfo = {
           id: "",
@@ -314,6 +316,8 @@ export default {
       let params = JSON.parse(JSON.stringify(_self.orgInfo));
       let url = orgUpdatePath + "/" + params.id;
       _self.orgUpdate({ url: url, data: params }).then(result => {
+        this.$message.success(result);
+        this.$refs.form.resetFields();
         _self.GetOrgTreeAll();
         _self.orgInfo = {
           id: "",
@@ -352,6 +356,7 @@ export default {
       if (id) {
         let url = orgDeletePath + "/" + id;
         _self.orgDelete({ url: url, data: null }).then(result => {
+          this.$message.success(result);
           _self.GetOrgTreeAll();
         });
       }

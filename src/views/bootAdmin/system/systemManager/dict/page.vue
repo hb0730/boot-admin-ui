@@ -183,7 +183,7 @@
         ></el-pagination>
       </el-col>
     </el-row>
-    <el-dialog title="字典信息" :before-close="handleDialogClose" :visible.sync="dialogTableVisible">
+    <el-dialog title="字典信息" :before-close="handleDialogClose" :visible.sync="dialogTableVisible" :destroy-on-close="!dialogTableVisible">
       <el-form
         label-width="auto"
         :model="dictInfo"
@@ -228,7 +228,7 @@
         <el-button size="medium" @click="handleDialogClose" plain>取 消</el-button>
       </div>
     </el-dialog>
-    <el-dialog title="字典项信息" :visible.sync="dialogDataTableVisible">
+    <el-dialog title="字典项信息" :visible.sync="dialogDataTableVisible" :destroy-on-close="!dialogDataTableVisible" >
       <el-form ref="searchForm" :model="searchInfo" :inline="true" :label-position="position">
         <el-form-item>
           <el-button
@@ -339,6 +339,7 @@
       title="字典项信息"
       :before-close="handleDataDialogClose"
       :visible.sync="dialogDataFormTableVisible"
+      :destroy-on-close="!dialogDataFormTableVisible"
     >
       <el-form
         label-width="auto"
@@ -584,6 +585,7 @@ export default {
       let url = dictSavePath;
       let parmas = JSON.parse(JSON.stringify(_self.dictInfo));
       _self.dictSave({ url: url, data: parmas }).then(result => {
+        this.$message.success(result);
         _self.handleDialogClose();
       });
     },
@@ -595,6 +597,7 @@ export default {
       let params = JSON.parse(JSON.stringify(_self.dictInfo));
       let url = dictUpdatePath + "/" + params.id;
       _self.dictUpdate({ url: url, data: params }).then(result => {
+        this.$message.success(result);
         _self.handleDialogClose();
       });
     },
@@ -738,6 +741,7 @@ export default {
       let params = JSON.parse(JSON.stringify(_self.dictInfo));
       let url = dictSavePath;
       _self.dictSave({ url: url, data: params }).then(result => {
+        this.$message.success(result);
         _self.handleDataDialogClose();
       });
     },
@@ -750,6 +754,7 @@ export default {
       console.info(params);
       let url = dictUpdatePath + "/" + params.id;
       _self.dictUpdate({ url: url, data: params }).then(result => {
+        this.$message.success(result);
         _self.handleDataDialogClose();
       });
     },
@@ -773,6 +778,7 @@ export default {
         let url = dictDeletePath;
         let params = JSON.parse(JSON.stringify(id));
         _self.dictDelete({ url: url, data: params }).then(result => {
+          this.$message.success(result);
           if (_self.isParent) {
             _self.getDictPageAll();
           } else {

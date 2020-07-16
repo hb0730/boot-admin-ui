@@ -478,7 +478,9 @@ export default {
       let _self = this;
       let url = menuSavePath;
       let params = JSON.parse(JSON.stringify(_self.menuInfo));
-      _self.menuSave({ url: url, data: params }).then(reuslt => {
+      _self.menuSave({ url: url, data: params }).then(result => {
+        this.$message.success(result);
+        this.$refs.form.resetFields()
         _self.getMenuTree();
         _self.menuInfo = {
           parentId: null,
@@ -514,6 +516,8 @@ export default {
       let params = JSON.parse(JSON.stringify(_self.menuInfo));
       let url = menuUpdatePath + "/" + params.id;
       _self.menuUpdate({ url: url, data: params }).then(result => {
+        this.$message.success(result);
+        this.$refs.form.resetFields()
         _self.getMenuTree();
         _self.menuInfo = {
           parentId: null,
@@ -548,7 +552,9 @@ export default {
       let _self = this;
       let url = menuDeletePath + "/" + id;
       _self.menuDelete({ url: url, data: null }).then(result => {
+        this.$message.success(result);
         _self.getMenuTree();
+        _self.i = 0;
       });
     },
     handleSizeChange(val) {
@@ -649,6 +655,8 @@ export default {
       let params = JSON.parse(JSON.stringify(_self.permissionInfo));
       let url = permissionSavePath + "/" + params.menuId;
       _self.permissionSave({ url: url, data: params }).then(result => {
+        this.$message.success(result);
+        this.$refs.permissionForm.resetFields();
         _self.handleDialogClose();
       });
     },
@@ -660,6 +668,10 @@ export default {
       let info = JSON.parse(JSON.stringify(row));
       _self.permissionInfo = info;
       let currentNodes = _self.$refs.tree.getCheckedNodes(false);
+      if (currentNodes.length <= 0) {
+        this.$message.warning("请选择菜单");
+        return;
+      }
       _self.permissionInfo.menuName = currentNodes[0].name;
       _self.dialogTableVisible = true;
       _self.isPermissionUpdate = true;
@@ -672,6 +684,8 @@ export default {
       let params = JSON.parse(JSON.stringify(_self.permissionInfo));
       let url = permissionUpdatePath + "/" + params.id;
       _self.permissionUpdate({ url: url, data: params }).then(result => {
+        this.$message.success(result);
+        this.$refs.permissionForm.resetFields();
         _self.handleDialogClose();
       });
     },
@@ -691,6 +705,7 @@ export default {
       let _self = this;
       let url = permissionDeletePath + "/" + id;
       _self.permissionDelete({ url: url, data: null }).then(result => {
+        this.$message.success(result);
         _self.handleDialogClose();
       });
     },

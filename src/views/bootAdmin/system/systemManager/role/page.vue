@@ -196,7 +196,12 @@
         ></el-pagination>
       </el-col>
     </el-row>
-    <el-dialog title="角色信息" :before-close="handleDialogClose" :visible.sync="dialogTableVisible">
+    <el-dialog
+      title="角色信息"
+      :before-close="handleDialogClose"
+      :visible.sync="dialogTableVisible"
+      :destroy-on-close="!dialogTableVisible"
+    >
       <el-form
         label-width="auto"
         :model="roleInfo"
@@ -460,7 +465,6 @@ export default {
       this.getPageAll();
     },
     handlePermissionSizeChange(val) {
-      
       this.permissionPages.pageSize = val;
       this.getPermissionPageList(this.currentMenuInfo.id);
     },
@@ -486,6 +490,14 @@ export default {
     handleDialogClose() {
       let _self = this;
       _self.dialogTableVisible = false;
+      _self.roleInfo = {
+        id: "",
+        name: "",
+        enname: "",
+        sort: 0,
+        description: "",
+        isEnabled: 1
+      };
       _self.getPageAll();
     },
     /**
@@ -530,6 +542,7 @@ export default {
       let params = JSON.parse(JSON.stringify(_self.roleInfo));
       let url = roleSavePath;
       _self.roleSave({ url: url, data: params }).then(result => {
+        this.$message.success(result);
         _self.handleDialogClose();
       });
     },
@@ -606,6 +619,7 @@ export default {
       let params = JSON.parse(JSON.stringify(_self.roleInfo));
       let url = roleUpdatePath + "/" + params.id;
       _self.roleUpdate({ url: url, data: params }).then(result => {
+        this.$message.success(result);
         _self.handleDialogClose();
       });
     },
@@ -630,6 +644,7 @@ export default {
       let params = JSON.parse(JSON.stringify(id));
       console.info(params);
       _self.roleDelete({ url: url, data: params }).then(result => {
+        _self.$message.success(result);
         _self.handleDialogClose();
       });
     },
@@ -751,6 +766,7 @@ export default {
       let url = rolePermissionSavePath + "/" + _self.currentData.id;
       if (params || params.length > 0) {
         _self.rolePermissionSave({ url: url, data: params }).then(result => {
+          this.$message.success(result);
           _self.handlePermissionDialogClose();
         });
       } else {
@@ -840,6 +856,7 @@ export default {
       let url = roleOrgSavePath + "/" + _self.currentData.id;
       let params = JSON.parse(JSON.stringify(_self.currentOrgList));
       _self.roleOrgSave({ url: url, data: params }).then(result => {
+        _self.$message.success(result);
         _self.handleOrgDialogClose();
       });
     },
