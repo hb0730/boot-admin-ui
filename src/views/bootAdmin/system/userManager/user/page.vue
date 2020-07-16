@@ -227,7 +227,12 @@
         </el-row>
       </el-card>
     </el-col>
-    <el-dialog title="用户信息" :before-close="handleDialogClose" :visible.sync="dialogTableVisible">
+    <el-dialog
+      title="用户信息"
+      :before-close="handleDialogClose"
+      :visible.sync="dialogTableVisible"
+      :destroy-on-close="!dialogTableVisible"
+    >
       <el-form
         label-width="auto"
         :model="userInfo"
@@ -585,6 +590,7 @@ export default {
       let params = JSON.parse(JSON.stringify(_self.userInfo));
       let url = userSavePath;
       _self.userSave({ url: url, data: params }).then(result => {
+        _self.$message.success(result);
         _self.handleDialogClose();
       });
     },
@@ -598,6 +604,7 @@ export default {
       console.info(params);
       let url = userUpdatePath + "/" + params.id;
       _self.userUpdate({ url: url, data: params }).then(result => {
+        _self.$message.success(result);
         _self.handleDialogClose();
       });
     },
@@ -750,6 +757,7 @@ export default {
       let url = userDeletePath;
       let params = JSON.parse(JSON.stringify(id));
       _self.userDelete({ url: url, data: params }).then(result => {
+        this.$message.success(result);
         _self.getUserPage();
       });
     },
