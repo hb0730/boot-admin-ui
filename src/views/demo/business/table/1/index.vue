@@ -17,14 +17,13 @@
 </template>
 
 <script>
-import { BusinessTable1List } from '@api/demo.business.table.1'
 export default {
   // name 值和本页的 $route.name 一致才可以缓存页面
   name: 'demo-business-table-1',
   components: {
-    'DemoPageHeader': () => import('./componnets/PageHeader'),
-    'DemoPageMain': () => import('./componnets/PageMain'),
-    'DemoPageFooter': () => import('./componnets/PageFooter')
+    DemoPageHeader: () => import('./componnets/PageHeader'),
+    DemoPageMain: () => import('./componnets/PageMain'),
+    DemoPageFooter: () => import('./componnets/PageFooter')
   },
   data () {
     return {
@@ -38,7 +37,7 @@ export default {
     }
   },
   methods: {
-    handlePaginationChange (val) {
+    async handlePaginationChange (val) {
       this.$notify({
         title: '分页变化',
         message: `当前第${val.current}页 共${val.total}条 每页${val.size}条`
@@ -49,16 +48,15 @@ export default {
         pageTotal: val.total
       }
       // nextTick 只是为了优化示例中 notify 的显示
-      this.$nextTick(() => {
-        this.$refs.header.handleFormSubmit()
-      })
+      await this.$nextTick()
+      this.$refs.header.handleFormSubmit()
     },
     handleSubmit (form) {
       this.loading = true
       this.$notify({
         title: '开始请求模拟表格数据'
       })
-      BusinessTable1List({
+      this.$api.DEMO_BUSINESS_TABLE_1_LIST({
         ...form,
         ...this.page
       })

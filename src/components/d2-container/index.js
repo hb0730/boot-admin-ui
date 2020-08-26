@@ -1,11 +1,13 @@
-// 组件
-import d2ContainerFull from './components/d2-container-full.vue'
-import d2ContainerFullBs from './components/d2-container-full-bs.vue'
-import d2ContainerGhost from './components/d2-container-ghost.vue'
-import d2ContainerGhostBs from './components/d2-container-ghost-bs.vue'
-import d2ContainerCard from './components/d2-container-card.vue'
-import d2ContainerCardBs from './components/d2-container-card-bs.vue'
 import d2Source from './components/d2-source.vue'
+
+const containers = {
+  full: () => import('./components/d2-container-full.vue'),
+  fullbs: () => import('./components/d2-container-full-bs.vue'),
+  ghost: () => import('./components/d2-container-ghost.vue'),
+  ghostbs: () => import('./components/d2-container-ghost-bs.vue'),
+  card: () => import('./components/d2-container-card.vue'),
+  cardbs: () => import('./components/d2-container-card-bs.vue')
+}
 
 export default {
   name: 'd2-container',
@@ -26,34 +28,26 @@ export default {
   computed: {
     // 始终返回渲染组件
     component () {
-      if (this.type === 'card' && !this.betterScroll) return d2ContainerCard
-      if (this.type === 'card' && this.betterScroll) return d2ContainerCardBs
-      if (this.type === 'ghost' && !this.betterScroll) return d2ContainerGhost
-      if (this.type === 'ghost' && this.betterScroll) return d2ContainerGhostBs
-      if (this.type === 'full' && !this.betterScroll) return d2ContainerFull
-      if (this.type === 'full' && this.betterScroll) return d2ContainerFullBs
-      else {
-        return 'div'
-      }
+      return containers[`${this.type}${this.betterScroll ? 'bs' : ''}`] || 'div'
     }
   },
   render (h) {
-    const slots = [ this.$slots.default ]
-    if (this.$slots.header) slots.push(h('template', { slot: 'header' }, [ this.$slots.header ]))
-    if (this.$slots.footer) slots.push(h('template', { slot: 'footer' }, [ this.$slots.footer ]))
-    return h('div', {
-      ref: 'container',
-      class: 'container-component'
-    }, [
-      h(this.component, {
-        ref: 'component',
-        props: this.$attrs,
-        on: {
-          scroll: e => this.$emit('scroll', e)
-        }
-      }, slots),
-      h(d2Source)
-    ])
+    const slots = [
+      this.$slots.default,
+      this.$slots.header ? <template slot="header">{ this.$slots.header }</template> : null,
+      this.$slots.footer ? <template slot="footer">{ this.$slots.footer }</template> : null
+    ]
+    return <div
+      ref="container"
+      class="container-component">
+      <this.component
+        ref="component"
+        { ...{ attrs: this.$attrs } }
+        onScroll={ e => this.$emit('scroll', e) }>
+        { slots }
+      </this.component>
+      <d2Source/>
+    </div>
   },
   methods: {
     // 返回顶部

@@ -12,17 +12,6 @@ import router from './router'
 import { menuHeader, menuAside } from '@/menu'
 import { frameInRoutes } from '@/router/routes'
 
-import iconPicker from 'e-icon-picker';
-import 'e-icon-picker/dist/index.css';//基础样式
-import 'e-icon-picker/dist/main.css'; //fontAwesome 图标库样式
-
-//使用时必须引用ElementUI相关的组件以及css
-import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
-
-Vue.use(iconPicker);//使用e-icon-picker
-Vue.use(ElementUI); //使用ElementUI
-
 // 核心插件
 Vue.use(d2Admin)
 
@@ -35,10 +24,7 @@ new Vue({
     // 处理路由 得到每一级的路由设置
     this.$store.commit('d2admin/page/init', frameInRoutes)
     // 设置顶栏菜单
-    // this.$store.commit('d2admin/menu/headerSet', menuHeader)
-    // 设置侧栏菜单
-    // this.$store.commit('d2admin/menu/asideSet', menuAside)
-    this.$store.dispatch('d2admin/menu/get')
+    this.$store.commit('d2admin/menu/headerSet', menuHeader)
     // 初始化菜单搜索功能
     this.$store.commit('d2admin/search/init', menuHeader)
   },
@@ -51,18 +37,17 @@ new Vue({
     this.$store.commit('d2admin/ua/get')
     // 初始化全屏监听
     this.$store.dispatch('d2admin/fullscreen/listen')
+  },
+  watch: {
+    // 检测路由变化切换侧边栏内容
+    '$route.matched': {
+      handler (matched) {
+        if (matched.length > 0) {
+          const _side = menuAside.filter(menu => menu.path === matched[0].path)
+          this.$store.commit('d2admin/menu/asideSet', _side.length > 0 ? _side[0].children : [])
+        }
+      },
+      immediate: true
+    }
   }
-  // watch: {
-  //   // 检测路由变化切换侧边栏内容
-  //   '$route.matched': {
-  //     handler (matched) {
-  //       if (matched.length > 0) {
-  //         console.info(matched)
-  //         const _side = menuAside.filter(menu => menu.path === matched[0].path)
-  //         this.$store.commit('d2admin/menu/asideSet', _side.length > 0 ? _side[0].children : [])
-  //       }
-  //     },
-  //     immediate: true
-  //   }
-  // }
 }).$mount('#app')

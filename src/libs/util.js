@@ -1,11 +1,10 @@
 import cookies from './util.cookies'
 import db from './util.db'
 import log from './util.log'
-import dicts from './util.dict'
+
 const util = {
   cookies,
   db,
-  dicts,
   log
 }
 
@@ -30,16 +29,6 @@ util.open = function (url) {
   document.body.appendChild(a)
   a.click()
   document.body.removeChild(document.getElementById('d2admin-link-temp'))
-}
-/**
- * 将json对象转为 map
- */
-util.objToMap = function (obj) {
-  let strMap = new Map();
-  for (let k of Object.keys(obj)) {
-    strMap.set(k, obj[k]);
-  }
-  return strMap;
 }
 
 export default util

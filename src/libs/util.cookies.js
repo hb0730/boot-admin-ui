@@ -9,8 +9,8 @@ const cookies = {}
  * @param {Object} setting cookie setting
  */
 cookies.set = function (name = 'default', value = '', cookieSetting = {}) {
-  let currentCookieSetting = {
-    expires: Number(process.env.VUE_APP_STORAGE_TIME)
+  const currentCookieSetting = {
+    expires: 1
   }
   Object.assign(currentCookieSetting, cookieSetting)
   Cookies.set(`d2admin-${process.env.VUE_APP_VERSION}-${name}`, value, currentCookieSetting)

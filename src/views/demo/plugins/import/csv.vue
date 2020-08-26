@@ -1,12 +1,11 @@
 <template>
   <d2-container type="card">
-    <template slot="header">导入 csv</template>
-    <div class="d2-mb">
+    <template slot="header">
       <el-button @click="download">
         <d2-icon name="download"/>
         下载演示 .csv 表格
       </el-button>
-    </div>
+    </template>
     <div class="d2-mb">
       <el-upload :before-upload="handleUpload" action="default">
         <el-button type="success">
@@ -56,7 +55,7 @@ export default {
       return false
     },
     download () {
-      window.location.href = 'http://fairyever.qiniudn.com/d2-admin-import-csv-demo.csv'
+      this.$open('https://cdn.d2.pub/files/d2-admin/demo-csv.csv')
     }
   }
 }
