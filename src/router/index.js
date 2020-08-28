@@ -9,7 +9,7 @@ import store from '@/store/index'
 import util from '@/libs/util.js'
 
 // 路由数据
-import routes from './routes'
+import routerList from './routes'
 
 // fix vue-router NavigationDuplicated
 const VueRouterPush = VueRouter.prototype.push
@@ -23,11 +23,24 @@ VueRouter.prototype.replace = function replace (location) {
 
 Vue.use(VueRouter)
 
-// 导出路由 在 main.js 里使用
-const router = new VueRouter({
+/**
+ * 创建路由
+ * @param {*} routers 路由设置
+ */
+const createRouter = (routes = []) => new VueRouter({
   routes
 })
 
+// 导出路由 在 main.js 里使用
+const router =createRouter(routerList);
+
+/**
+ * @description 重新设置路由
+ * @param {Array} routes 额外追加的路由
+ */
+export function resetRouter (routes = []) {
+  router.matcher = createRouter(routes).matcher
+}
 /**
  * 路由拦截
  * 权限验证
