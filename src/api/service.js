@@ -3,11 +3,12 @@ import Adapter from 'axios-mock-adapter'
 import { get } from 'lodash'
 import util from '@/libs/util'
 import { errorLog, errorCreate } from './tools'
+import { MessageBox } from 'element-ui'
 
 /**
  * @description 创建请求实例
  */
-function createService () {
+function createService() {
   // 创建一个 axios 实例
   const service = axios.create()
   // 请求拦截
@@ -33,16 +34,23 @@ function createService () {
       } else {
         // 有 code 代表这是一个后端接口 可以进行进一步的判断
         switch (code) {
-          case 0:
+          case '00000':
             // [ 示例 ] code === 0 代表没有错误
-            return dataAxios.data
-          case 'xxx':
-            // [ 示例 ] 其它和后台约定的 code
-            errorCreate(`[ code: xxx ] ${dataAxios.msg}: ${response.config.url}`)
-            break
+            return dataAxios.data;
+          case 'A0301':
+            MessageBox.confirm('登录状态已过期，您可以继续留在该页面，或者重新登录',
+              '系统提示',
+              {
+                confirmButtonText: '重新登录',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }).then(() => {
+                store.dispatch('d2admin/account/logout', {}, { root: true });
+              })
+            break;
           default:
             // 不是正确的 code
-            errorCreate(`${dataAxios.msg}: ${response.config.url}`)
+            errorCreate(`${dataAxios.message}: ${dataAxios.data} ${response.config.url}`)
             break
         }
       }
@@ -74,7 +82,7 @@ function createService () {
  * @description 创建请求方法
  * @param {Object} service axios 实例
  */
-function createRequestFunction (service) {
+function createRequestFunction(service) {
   return function (config) {
     const token = util.cookies.get('token')
     const configDefault = {
