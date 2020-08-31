@@ -14,9 +14,10 @@ function supplementPath (menu) {
     } : {}
   }))
 }
-
+import aside from './modules/sys'
 // 菜单 侧边栏
 export const menuAside = supplementPath([
+  aside
 ])
 
 // 菜单 顶栏

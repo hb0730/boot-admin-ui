@@ -24,3 +24,6 @@ export const userUpdateByIdUrl="/update";
  * 修改密码
  */
 export const updatePasswordUrl="/update/password";
+
+/****菜单 */
+export const menuQueryTreeUrl="/query/tree"
