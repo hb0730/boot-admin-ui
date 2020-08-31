@@ -27,6 +27,7 @@ new Vue({
     // this.$store.commit('d2admin/menu/headerSet', menuHeader)
        // 设置侧栏菜单
     this.$store.commit('d2admin/menu/asideSet', menuAside)
+    this.$store.dispatch('d2admin/menu/get')
     // 初始化菜单搜索功能
     this.$store.commit('d2admin/search/init', menuAside)
   },

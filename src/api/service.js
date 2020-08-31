@@ -1,3 +1,4 @@
+import store from '@/store'
 import axios from 'axios'
 import Adapter from 'axios-mock-adapter'
 import { get } from 'lodash'
@@ -87,7 +88,7 @@ function createRequestFunction(service) {
     const token = util.cookies.get('token')
     const configDefault = {
       headers: {
-        Authorization: token,
+        Authorization: "Bearer " + token,
         'Content-Type': get(config, 'headers.Content-Type', 'application/json')
       },
       timeout: 5000,

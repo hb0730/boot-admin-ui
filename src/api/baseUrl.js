@@ -25,5 +25,12 @@ export const userUpdateByIdUrl="/update";
  */
 export const updatePasswordUrl="/update/password";
 
-/****菜单 */
+/****菜单 ******/
+/**
+ * 当前用户菜单树
+ */
+export const menuCurrentTreeUrl="/get/current/tree";
+
+export const menuCurrentRouterUrl="/get/current/router"
+
 export const menuQueryTreeUrl="/query/tree"

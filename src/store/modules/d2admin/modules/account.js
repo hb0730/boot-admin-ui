@@ -105,7 +105,17 @@ export default {
         resolve();
       })
     },
-    updateCache({dispatch}){
+    /**
+     * 更新缓存
+     * @param {*} dispatch 
+     */
+    updateCache({ dispatch }) {
+      return new Promise(async resolve => {
+        // 加载菜单
+        await dispatch('bootAdmin/menu/currentMenu', {}, { root: true })
+        await dispatch('bootAdmin/permission/load', {focus: true, to:'/'}, { root: true })
+        resolve();
+      })
 
     }
   }
