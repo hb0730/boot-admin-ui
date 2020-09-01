@@ -15,6 +15,13 @@ import { frameInRoutes } from '@/router/routes'
 // 核心插件
 Vue.use(d2Admin)
 
+// icon http://doc.icon.cnovel.club/doc/dev/
+import iconPicker from 'e-icon-picker';
+import 'e-icon-picker/dist/index.css';//基础样式
+import 'e-icon-picker/dist/main.css'; //fontAwesome 图标库样式
+
+Vue.use(iconPicker);
+
 new Vue({
   router,
   store,

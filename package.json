@@ -22,6 +22,7 @@
     "core-js": "^3.4.3",
     "countup.js": "^2.0.4",
     "dayjs": "^1.8.17",
+    "e-icon-picker": "^1.0.4",
     "echarts": "^4.5.0",
     "element-ui": "^2.13.2",
     "faker": "^4.1.0",

@@ -30,7 +30,11 @@ export const updatePasswordUrl="/update/password";
  * 当前用户菜单树
  */
 export const menuCurrentTreeUrl="/get/current/tree";
-
+/**
+ * 当前菜单对应的路由
+ */
 export const menuCurrentRouterUrl="/get/current/router"
-
+/**
+ * 菜单树
+ */
 export const menuQueryTreeUrl="/query/tree"

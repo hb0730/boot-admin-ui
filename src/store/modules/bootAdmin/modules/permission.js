@@ -98,7 +98,7 @@ export function getRoutes(menuSource) {
                     meta: {
                         title: sourceItem.meta.title,
                         auth: sourceItem.meta.auth,
-                        cache: sourceItem.meta.noCache
+                        cache: sourceItem.meta.cache
                     },
                     component: utils.import(sourceItem.component)
                 }

@@ -28,6 +28,19 @@ export default {
                     reject(err);
                 })
             })
+        },
+        /**
+         * 菜单树
+         * @param {*} dispatch 
+         */
+        queryTree({ dispatch }) {
+            return new Promise((resolve, reject) => {
+                api.MENU_QUERY_TREE().then(result => {
+                    resolve(result)
+                }).catch(err => {
+                    reject(err)
+                });
+            })
         }
     }
 }

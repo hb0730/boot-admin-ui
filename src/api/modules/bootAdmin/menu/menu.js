@@ -1,5 +1,5 @@
 import { baseServer, menuServer } from "@/api/baseServer"
-import { menuCurrentTreeUrl, menuCurrentRouterUrl } from "@/api/baseUrl"
+import { menuCurrentTreeUrl, menuCurrentRouterUrl, menuQueryTreeUrl } from "@/api/baseUrl"
 export default ({ https }) => ({
     /***
      * 获取当前用户菜单树
@@ -16,6 +16,14 @@ export default ({ https }) => ({
         let url = menuCurrentRouterUrl;
         url = baseUrl(menuCurrentRouterUrl);
         return https.httpGet({ url: url, params: null });
+    },
+    /**
+     * 菜单树
+     */
+    MENU_QUERY_TREE(){
+        let url = menuQueryTreeUrl;
+        url = baseUrl(url);
+        return https.httpGet({url:url,params:null});
     }
 })
 function baseUrl(url) {
