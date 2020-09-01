@@ -41,6 +41,49 @@ export default {
                     reject(err)
                 });
             })
+        },
+        /**
+         * 根据id修改
+         * @param {*} dispatch 
+         * @param {*} url
+         * @param {*} data  
+         */
+        updateById({ dispatch }, { url, data }) {
+            return new Promise((resolve, reject) => {
+                api.MENU_UPDATE_ID(url, data).then(result => {
+                    resolve(result);
+                }).catch(err => {
+                    reject(err);
+                })
+            })
+        },
+        /**
+         * 新增菜单
+         * @param {*} dispatch 
+         * @param {*} data 
+         */
+        save({ dispatch }, { data }) {
+            return new Promise((resolve, rejcet) => {
+                api.MENU_SAVE(data).then(result => {
+                    resolve(result);
+                }).catch(err => {
+                    reject(err);
+                })
+            })
+        },
+        /**
+         * 根据id删除
+         * @param {*} dispatch 
+         * @param {*} id 
+         */
+        deleteById({ dispatch }, { id }) {
+            return new Promise((resolve, reject) => {
+                api.MENU_DELETE_ID(id).then(result => {
+                    resolve(result);
+                }).catch(err => {
+                    reject(err);
+                })
+            })
         }
     }
 }

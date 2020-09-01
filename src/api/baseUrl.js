@@ -38,3 +38,17 @@ export const menuCurrentRouterUrl="/get/current/router"
  * 菜单树
  */
 export const menuQueryTreeUrl="/query/tree"
+
+/**
+ * 根据id修改
+ */
+export const menuUpdateByIdUrl='/update'
+/**
+ * 新增菜单
+ */
+export const menuSaveUrl='/save';
+
+/**
+ * 根据id删除菜单
+ */
+export const menuDeleteByIdUrl="/delete"

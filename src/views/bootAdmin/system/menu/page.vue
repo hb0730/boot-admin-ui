@@ -4,8 +4,20 @@
       <el-card shadow="never">
         <el-row>
           <el-col :span="24">
-            <el-button type="primary" size="medium" icon="el-icon-plus" plain>添加</el-button>
-            <el-button type="danger" size="medium" icon="el-icon-delete" plain>删除</el-button>
+            <el-button
+              type="primary"
+              size="medium"
+              icon="el-icon-plus"
+              @click="handlerMenuAddNew"
+              plain
+            >添加</el-button>
+            <el-button
+              type="danger"
+              size="medium"
+              icon="el-icon-delete"
+              @click="handlerMenuDelete"
+              plain
+            >删除</el-button>
           </el-col>
         </el-row>
         <el-row style="padding-top:10%;">
@@ -56,7 +68,7 @@
               <el-form-item required label="菜单地址：" prop="path">
                 <el-input v-model="menuInfo.path" clearable></el-input>
               </el-form-item>
-              <el-form-item  label="路由地址：" prop="component">
+              <el-form-item label="路由地址：" prop="component">
                 <el-input v-model="menuInfo.component" clearable></el-input>
               </el-form-item>
               <el-form-item label="图标：" prop="icon">
@@ -85,8 +97,22 @@
               </el-form-item>
             </el-form>
             <div>
-              <el-button type="primary" size="medium" plain class="button" v-if="!isUpdate">新增</el-button>
-              <el-button type="primary" size="medium" plain class="button" v-if="isUpdate">修改</el-button>
+              <el-button
+                type="primary"
+                size="medium"
+                plain
+                @click="handlerMenuSave"
+                class="button"
+                v-if="!isUpdate"
+              >新增</el-button>
+              <el-button
+                type="primary"
+                size="medium"
+                plain
+                @click="handlerMenuUpdate"
+                class="button"
+                v-if="isUpdate"
+              >修改</el-button>
             </div>
           </el-col>
         </el-row>
@@ -106,6 +132,7 @@ import { mapActions } from "vuex";
 // https://www.vue-treeselect.cn/#vuex-support
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
+import { MessageBox } from "element-ui";
 
 export default {
   components: { Treeselect },
@@ -133,7 +160,13 @@ export default {
         isEnabled: 0,
       },
       // 菜单表单规则
-      menuRules: {},
+      menuRules: {
+        title: [{ required: true, message: "请输入菜单名称", trigger: "blur" }],
+        enname: [
+          { required: true, message: "请输入路由标题", trigger: "blur" },
+        ],
+        path: [{ required: true, message: "请输入菜单地址", trigger: "blur" }],
+      },
       isEnabledOptions: [
         { label: "启用", value: 1 },
         { label: "禁用", value: 0 },
@@ -146,7 +179,12 @@ export default {
     _self.getMenuTree();
   },
   methods: {
-    ...mapActions("bootAdmin/menu", ["queryTree"]),
+    ...mapActions("bootAdmin/menu", [
+      "queryTree",
+      "updateById",
+      "save",
+      "deleteById",
+    ]),
     /**
      * 获取菜单树
      */
@@ -205,6 +243,107 @@ export default {
         label: node.title,
         children: node.children,
       };
+    },
+    /**
+     * 初始化menuInfo
+     */
+    initMenuInfo() {
+      let _self = this;
+      _self.$refs.menuForm.resetFields();
+      _self.menuInfo = {
+        id: "",
+        parentId: -1,
+        title: "",
+        enname: "",
+        path: "",
+        component: "",
+        icon: "",
+        sort: 999,
+        isEnabled: 0,
+      };
+    },
+    /**
+     * 菜单新增
+     */
+    handlerMenuAddNew() {
+      let _self = this;
+      let currentNodes = _self.$refs.tree.getCheckedNodes(false);
+      _self.isUpdate = false;
+      let parentId = currentNodes.length > 0 ? currentNodes[0].id : -1;
+      _self.initMenuInfo();
+      _self.menuInfo.parentId = parentId;
+    },
+    /**
+     * 菜单删除
+     */
+    handlerMenuDelete() {
+      let _self = this;
+      let currentNodes = _self.$refs.tree.getCheckedNodes(false);
+      if (currentNodes.length <= 0) {
+        this.$message.warning("请选择需要删除的数据");
+      } else {
+        let currentNode = currentNodes[0];
+        MessageBox.confirm("是否删除该数据(包含子集)", "删除", {
+          type: "warning",
+        }).then(() => {
+          _self.menuDelete(currentNode.id);
+        });
+      }
+    },
+    menuDelete(id) {
+      let _self = this;
+      if (id) {
+        _self.deleteById({ id: id }).then((result) => {
+          _self.$message.success("删除成功");
+          _self.getMenuTree();
+          _self.initMenuInfo();
+        });
+      }
+    },
+    /**
+     * 菜单修改
+     */
+    handlerMenuUpdate() {
+      let _self = this;
+      _self.$refs.menuForm.validate((valid) => {
+        if (valid) {
+          _self.menuUpdate();
+        } else {
+          this.$message.error("表单校验失败，请检查");
+        }
+      });
+    },
+    menuUpdate() {
+      let _self = this;
+      let url = "/" + _self.menuInfo.id;
+      let params = JSON.parse(JSON.stringify(_self.menuInfo));
+      _self.updateById({ url: url, data: params }).then((result) => {
+        _self.$message.success("修改成功");
+        _self.getMenuTree();
+        _self.initMenuInfo();
+      });
+    },
+    /**
+     * 菜单新增
+     */
+    handlerMenuSave() {
+      let _self = this;
+      _self.$refs.menuForm.validate((valid) => {
+        if (valid) {
+          _self.menuSave();
+        } else {
+          this.$message.error("表单校验失败，请检查");
+        }
+      });
+    },
+    menuSave() {
+      let _self = this;
+      let params = JSON.parse(JSON.stringify(_self.menuInfo));
+      _self.save({ data: params }).then((result) => {
+        _self.$message.success("新增成功");
+        _self.getMenuTree();
+        _self.initMenuInfo();
+      });
     },
   },
 };
