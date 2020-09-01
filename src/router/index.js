@@ -51,6 +51,26 @@ export function createRoutesInLayout(routes = []) {
         { path: 'log', name: 'log', meta: { title: '前端日志', auth: true }, component: util.import('system/log') },
         ...routes
       ]
+    },
+    {
+      path: "/boot/admin/system/user",
+      name: 'userManager',
+      auth: true ,
+      redirect: {
+        name: 'user-manager-index'
+      },
+      component: layoutHeaderAside,
+      children: [
+        {
+          path: '/boot/admin/system/user/setting',
+          name: `user-setting`,
+          component: util.import('bootAdmin/system/user/info/setting/index'),
+          meta: {
+            auth: true ,
+            title: '用户设置'
+          }
+        },
+      ]
     }
   ]
 }
