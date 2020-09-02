@@ -52,3 +52,9 @@ export const menuSaveUrl='/save';
  * 根据id删除菜单
  */
 export const menuDeleteByIdUrl="/delete"
+
+/*****权限**************/
+/**
+ * 根据菜单获取权限
+ */
+export const permissionByMenuIdUrl='/menu'

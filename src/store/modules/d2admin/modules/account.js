@@ -59,7 +59,7 @@ export default {
           dispatch('clean')
           // 重置权限并且跳转到登录页 通过 back 参数指定在登陆之后是否需要跳转回原来的页面
           let redirect = router.app.$route.fullPath
-          dispatch('bootAdmin/permission/load', {
+          dispatch('bootAdmin/router/load', {
             focus: true,
             to: {
               name: 'login',
@@ -130,7 +130,7 @@ export default {
       return new Promise(async resolve => {
         // 加载菜单
         await dispatch('bootAdmin/menu/currentMenu', {}, { root: true })
-        await dispatch('bootAdmin/permission/load', { focus: true, to: to }, { root: true })
+        await dispatch('bootAdmin/router/load', { focus: true, to: to }, { root: true })
         resolve();
       })
 

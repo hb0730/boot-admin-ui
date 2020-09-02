@@ -122,7 +122,78 @@
     <el-col :span="10">
       <el-card shadow="never">
         <el-row>
-          <el-col></el-col>
+          <el-col>
+            <el-form :inline="true" size="mini" :model="searchPermissionInfo">
+              <el-form-item label="标识">
+                <el-input v-model="searchPermissionInfo.permission" clearable placeholder="标识"></el-input>
+              </el-form-item>
+              <el-form-item label="名称">
+                <el-input v-model="searchPermissionInfo.name" clearable placeholder="名称"></el-input>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" plain icon="fa fa-search">搜索</el-button>
+                <el-dropdown size="small" class="filter-item">
+                  <el-button plain type="primary">
+                    更多
+                    <i class="el-icon-arrow-down el-icon--right"></i>
+                  </el-button>
+                  <el-dropdown-menu split-button slot="dropdown">
+                    <el-dropdown-item command="addNew">添加</el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
+              </el-form-item>
+            </el-form>
+          </el-col>
+        </el-row>
+        <el-row style="padding-top:10%;">
+          <el-col>
+            <el-table
+              :data="permissionList"
+              ref="permissionTableRef"
+              check-strictly
+              :highlight-current="true"
+              default-expand-all
+              style="width: 100%;"
+              border
+              :fit="true"
+            >
+              <el-table-column
+                type="selection"
+                sortable
+                resizable
+                :show-overflow-tooltip="true"
+                align="center"
+              ></el-table-column>
+              <el-table-column
+                prop="name"
+                label="名称"
+                sortable
+                resizable
+                :show-overflow-tooltip="true"
+                align="center"
+              ></el-table-column>
+              <el-table-column
+                prop="permission"
+                label="标识"
+                sortable
+                resizable
+                :show-overflow-tooltip="true"
+                align="center"
+              ></el-table-column>
+              <el-table-column
+                label="操作"
+                sortable
+                resizable
+                :show-overflow-tooltip="true"
+                align="center"
+              >
+                <template slot-scope="scope">
+                  <el-button title="修改" type="text" icon="el-icon-edit" circle></el-button>
+                  <el-button title="删除" type="text" icon="el-icon-delete" circle></el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+          </el-col>
         </el-row>
       </el-card>
     </el-col>
@@ -173,6 +244,20 @@ export default {
         { label: "禁用", value: 0 },
       ],
       isUpdate: false,
+      /**
+       * 权限检索
+       */
+      searchPermissionInfo: {
+        sortColumn: [],
+        groupColumn: [],
+        pageSize: 10,
+        pageNum: 1,
+        total: 0,
+      },
+      /**
+       * 权限列表信息
+       */
+      permissionList: [],
     };
   },
   mounted() {
@@ -186,6 +271,7 @@ export default {
       "save",
       "deleteById",
     ]),
+    ...mapActions("bootAdmin/permission", ["permissionByMenuId"]),
     /**
      * 获取菜单树
      */
@@ -229,6 +315,7 @@ export default {
         sort: data.sort,
         isEnabled: data.isEnabled,
       };
+      _self.getPermissionById(data.id)
       _self.isUpdate = true;
     },
     /**
@@ -345,6 +432,17 @@ export default {
         _self.getMenuTree();
         _self.initMenuInfo();
       });
+    },
+    /******权限 */
+    getPermissionById(id) {
+      let _self = this;
+      if (id) {
+        let params = JSON.parse(JSON.stringify(_self.searchPermissionInfo));
+        _self.permissionByMenuId({ id: id, data: params }).then((result) => {
+          _self.permissionList = result.records;
+          _self.searchPermissionInfo.total=Number(result.total)
+        });
+      }
     },
   },
 };

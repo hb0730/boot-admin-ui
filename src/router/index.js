@@ -99,7 +99,7 @@ router.beforeEach(async (to, from, next) => {
   // 确认已经加载组件尺寸设置 https://github.com/d2-projects/d2-admin/issues/198
   await store.dispatch('d2admin/size/isLoaded')
   // 加载动态路由 内部已经做了对登录状态和是否已经加载动态路由的判断
-  await store.dispatch('bootAdmin/permission/load', { to: to.fullPath })
+  await store.dispatch('bootAdmin/router/load', { to: to.fullPath })
   // 进度条
   NProgress.start()
   // 关闭搜索面板
