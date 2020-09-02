@@ -57,4 +57,19 @@ export const menuDeleteByIdUrl="/delete"
 /**
  * 根据菜单获取权限
  */
-export const permissionByMenuIdUrl='/menu'
+export const permissionPageByMenuIdUrl='/menu/page'
+
+export const permissionListByMenuIdUrl='/menu/list'
+
+/**
+ * 新增权限
+ */
+export const permsisionSaveUrl='/save'
+/**
+ * 根据id修改
+ */
+export const permissionUpdateByIdUrl="/update"
+/**
+ * 删除
+ */
+export const permissionDeleteUrl='/delete'

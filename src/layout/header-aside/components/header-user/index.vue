@@ -46,10 +46,11 @@ export default {
      */
     updateVueCache() {
       let _self = this;
-      _self.updateCache().then((result) => {
-        _self.$message.success("更新成功");
-      });
-      // _self.updateCache();
+      _self
+        .updateCache({ to: this.$route.query.redirect || "/" })
+        .then((result) => {
+          _self.$message.success("更新成功");
+        });
     },
   },
 };

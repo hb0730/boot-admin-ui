@@ -131,8 +131,13 @@
                 <el-input v-model="searchPermissionInfo.name" clearable placeholder="名称"></el-input>
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" plain icon="fa fa-search">搜索</el-button>
-                <el-dropdown size="small" class="filter-item">
+                <el-button
+                  type="primary"
+                  @click="handlerPermissionSearch"
+                  plain
+                  icon="fa fa-search"
+                >搜索</el-button>
+                <el-dropdown size="small" @command="handlerPermissionAddNew" class="filter-item">
                   <el-button plain type="primary">
                     更多
                     <i class="el-icon-arrow-down el-icon--right"></i>
@@ -181,6 +186,21 @@
                 align="center"
               ></el-table-column>
               <el-table-column
+                prop="isEnabled"
+                label="状态"
+                sortable
+                resizable
+                :show-overflow-tooltip="true"
+                align="center"
+              >
+                <template slot-scope="scope">
+                  <el-tag
+                    :type="scope.row.isEnabled === 1 ? 'primary' : 'warning'"
+                    disable-transitions
+                  >{{scope.row.isEnabled=== 1 ? "启用":"禁用"}}</el-tag>
+                </template>
+              </el-table-column>
+              <el-table-column
                 label="操作"
                 sortable
                 resizable
@@ -188,15 +208,93 @@
                 align="center"
               >
                 <template slot-scope="scope">
-                  <el-button title="修改" type="text" icon="el-icon-edit" circle></el-button>
-                  <el-button title="删除" type="text" icon="el-icon-delete" circle></el-button>
+                  <el-button
+                    title="修改"
+                    @click="handlerPermissionEdit(scope.row)"
+                    type="text"
+                    icon="el-icon-edit"
+                    circle
+                  ></el-button>
+                  <el-button
+                    title="删除"
+                    @click="handlerPermissionDelete(scope.row)"
+                    type="text"
+                    icon="el-icon-delete"
+                    circle
+                  ></el-button>
                 </template>
               </el-table-column>
             </el-table>
+            <el-pagination
+              align="left"
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+              :current-page="searchPermissionInfo.pageNum"
+              :page-sizes="[10, 20, 50, 100]"
+              :page-size="searchPermissionInfo.pageSize"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="searchPermissionInfo.total"
+            ></el-pagination>
           </el-col>
         </el-row>
       </el-card>
     </el-col>
+    <el-dialog
+      title="权限信息"
+      :destroy-on-close="true"
+      :before-close="handleDialogClose"
+      :visible.sync="dialogTableVisible"
+    >
+      <el-form
+        label-width="auto"
+        :model="permissionInfo"
+        :label-position="position"
+        ref="permissionForm"
+        required-asterisk
+        :rules="permissionRules"
+        center
+      >
+        <el-form-item required label="名称：" prop="name">
+          <el-input v-model="permissionInfo.name" clearable></el-input>
+        </el-form-item>
+        <el-form-item required label="权限标识：" prop="permission">
+          <el-input v-model="permissionInfo.permission" clearable></el-input>
+        </el-form-item>
+        <el-form-item required label="所属菜单：" prop="menuId">
+          <treeselect
+            v-model="permissionInfo.menuId"
+            :clearable="false"
+            :normalizer="normalizer"
+            :options="treeData"
+          />
+        </el-form-item>
+        <el-form-item label="排序：" prop="sort">
+          <el-input-number
+            style="width: 100%"
+            controls-position="right"
+            v-model="permissionInfo.sort"
+            placeholder="排序"
+            clearable
+          ></el-input-number>
+        </el-form-item>
+        <el-form-item label="备注：" prop="description">
+          <el-input type="textarea" v-model="permissionInfo.description" placeholder="备注" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="是否启用：" prop="isEnabled">
+          <el-radio-group v-model="permissionInfo.isEnabled">
+            <el-radio
+              v-for="item in isEnabledOptions "
+              :key="Number(item.value)"
+              :label="Number(item.value)"
+            >{{item.label}}</el-radio>
+          </el-radio-group>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="handlerPermissionSave" size="medium" plain>保存</el-button>
+        <el-button size="medium" @click="handleDialogClose" plain>取 消</el-button>
+      </div>
+    </el-dialog>
   </d2-container>
 </template>
 <script>
@@ -215,6 +313,7 @@ export default {
       position: "left",
       // 菜单树数据
       treeData: [],
+      currentCheckMenuInfo: {},
       treeProps: {
         children: "children",
         label: "title",
@@ -258,6 +357,28 @@ export default {
        * 权限列表信息
        */
       permissionList: [],
+      dialogTableVisible: false,
+      /**
+       * 权限表单信息
+       */
+      permissionInfo: {
+        id: "",
+        menuId: "",
+        permission: "",
+        description: "",
+        isEnabled: 0,
+        sort: 999,
+      },
+      permissionRules: {
+        name: [{ required: true, message: "请输入权限名称", trigger: "blur" }],
+        permission: [
+          { required: true, message: "请输入权限标识符", trigger: "blur" },
+        ],
+        menuId: [
+          { required: true, message: "请选择所属菜单", trigger: "change" },
+        ],
+      },
+      isPermissionUpdate: false,
     };
   },
   mounted() {
@@ -271,7 +392,12 @@ export default {
       "save",
       "deleteById",
     ]),
-    ...mapActions("bootAdmin/permission", ["permissionByMenuId"]),
+    ...mapActions("bootAdmin/permission", [
+      "permissionByMenuId",
+      "permissionSave",
+      "permissionUpdate",
+      "permissionDelete",
+    ]),
     /**
      * 获取菜单树
      */
@@ -315,7 +441,8 @@ export default {
         sort: data.sort,
         isEnabled: data.isEnabled,
       };
-      _self.getPermissionById(data.id)
+      _self.getPermissionById(data.id);
+      _self.currentCheckMenuInfo = data;
       _self.isUpdate = true;
     },
     /**
@@ -434,15 +561,148 @@ export default {
       });
     },
     /******权限 */
+    getPermission() {
+      let _self = this;
+      let currentNodes = _self.$refs.tree.getCheckedNodes(false);
+      if (currentNodes.length > 0) {
+        _self.getPermissionById(currentNodes[0].id);
+      }
+    },
+    handlerPermissionSearch() {
+      let _self = this;
+      _self.pageNum = 1;
+      _self.getPermission();
+    },
+    handleSizeChange(val) {
+      let _self = this;
+      _self.searchPermissionInfo.pageSize = val;
+      _self.getPermission();
+    },
+    handleCurrentChange(page) {
+      let _self = this;
+      _self.searchPermissionInfo.pageNum = page;
+      _self.getPermission();
+    },
+    handlerPermissionAddNew(command) {
+      let _self = this;
+      if (command == "addNew") {
+        let currentNodes = _self.$refs.tree.getCheckedNodes(false);
+        if (currentNodes.length > 0) {
+          let currentNode = currentNodes[0];
+          _self.initPermissionInfo();
+          _self.permissionInfo.menuId = currentNode.id;
+          _self.dialogTableVisible = true;
+        } else {
+          this.$message({
+            message: "请选择菜单",
+            type: "warning",
+          });
+        }
+      }
+    },
+    /**
+     * 初始化权限info
+     */
+    initPermissionInfo() {
+      let _self = this;
+      _self.permissionInfo = {
+        id: "",
+        menuId: "",
+        permission: "",
+        description: "",
+        isEnabled: 0,
+        sort: 999,
+      };
+    },
+    /**
+     * 根据菜单获取权限信息
+     */
     getPermissionById(id) {
       let _self = this;
       if (id) {
         let params = JSON.parse(JSON.stringify(_self.searchPermissionInfo));
         _self.permissionByMenuId({ id: id, data: params }).then((result) => {
           _self.permissionList = result.records;
-          _self.searchPermissionInfo.total=Number(result.total)
+          _self.searchPermissionInfo.total = Number(result.total);
         });
       }
+    },
+    /**
+     * 权限信息保存
+     */
+    handlerPermissionSave() {
+      let _self = this;
+      _self.$refs.permissionForm.validate((valid) => {
+        if (valid) {
+          if (_self.isPermissionUpdate) {
+            _self.updatePermission();
+          } else {
+            _self.savePermission();
+          }
+        } else {
+          this.$message.error("表单校验失败，请检查");
+        }
+      });
+    },
+    /**
+     * 权限修改
+     */
+    handlerPermissionEdit(data) {
+      let _self = this;
+      _self.permissionInfo = data;
+      _self.isPermissionUpdate = true;
+      _self.dialogTableVisible = true;
+    },
+    /**
+     * 删除权限
+     */
+    handlerPermissionDelete(data) {
+      let _self = this;
+      if (data) {
+        MessageBox.confirm("是否删除该数据", "删除", {
+          type: "warning",
+        }).then(() => {
+          _self.deletePermission(data.id);
+        });
+      } else {
+        this.$message.warning("请选择要删除的数据");
+      }
+    },
+    deletePermission(id) {
+      let _self = this;
+      if (id) {
+        _self.permissionDelete({ id: id }).then((result) => {
+          _self.$message.success("删除成功");
+          _self.handleDialogClose();
+        });
+      }
+    },
+    savePermission() {
+      let _self = this;
+      let params = JSON.parse(JSON.stringify(_self.permissionInfo));
+      _self.permissionSave({ data: params }).then((result) => {
+        _self.$message.success("保存成功");
+        _self.handleDialogClose();
+      });
+    },
+    updatePermission() {
+      let _self = this;
+      let params = JSON.parse(JSON.stringify(_self.permissionInfo));
+      let id = _self.permissionInfo.id;
+      _self.permissionUpdate({ id: id, data: params }).then((result) => {
+        _self.$message.success("修改成功");
+        _self.handleDialogClose();
+      });
+    },
+    /**
+     * 弹出关闭
+     */
+    handleDialogClose() {
+      let _self = this;
+      _self.initPermissionInfo();
+      _self.getPermission();
+      _self.isPermissionUpdate = false;
+      _self.dialogTableVisible = false;
     },
   },
 };
