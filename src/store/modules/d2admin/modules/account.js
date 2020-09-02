@@ -5,6 +5,10 @@ import api from '@/api'
 
 export default {
   namespaced: true,
+  state: {
+    // 用户登录状态
+    isLogged: false
+  },
   actions: {
     /**
      * @description 登录
@@ -13,9 +17,10 @@ export default {
      * @param {Object} payload password {String} 密码
      * @param {Object} payload route {Object} 登录成功后定向的路由对象 任何 vue-router 支持的格式
      */
-    async login({ dispatch }, {
+    async login({ commit, dispatch }, {
       username = '',
-      password = ''
+      password = '',
+      to = "/"
     } = {}) {
       var data = { "username": username, "password": password }
       const res = await api.USER_LOGIN(JSON.parse(JSON.stringify(data)))
@@ -28,9 +33,11 @@ export default {
       util.cookies.set('token', res.accessToken)
       // 设置 vuex 用户信息
       await dispatch('d2admin/user/set', { name: res.nickName, user: res }, { root: true })
+      // 设置用户已经登陆
+      commit('isLoggedSet', true)
       // 用户登录后从持久化数据加载一系列的设置
       await dispatch('load')
-      await dispatch('updateCache')
+      await dispatch('updateCache', { to: to })
     },
     /**
      * @description 注销用户并返回登录页面
@@ -42,14 +49,24 @@ export default {
        * @description 注销
        */
       async function logout() {
+        // 设置用户登陆状态
+        commit('isLoggedSet', false)
+
         await api.USER_LOGOUT().then(result => {
           // 删除cookie
           util.cookies.remove('token')
           util.cookies.remove('uuid')
           dispatch('clean')
-          // 跳转路由
-          router.push({ name: 'login' })
-          window.location.reload();
+          // 重置权限并且跳转到登录页 通过 back 参数指定在登陆之后是否需要跳转回原来的页面
+          let redirect = router.app.$route.fullPath
+          dispatch('bootAdmin/permission/load', {
+            focus: true,
+            to: {
+              name: 'login',
+              query: redirect ? { redirect } : {}
+            },
+            data: []
+          }, { root: true })
         });
 
       }
@@ -109,14 +126,24 @@ export default {
      * 更新缓存
      * @param {*} dispatch 
      */
-    updateCache({ dispatch }) {
+    updateCache({ dispatch }, { to = "/" }) {
       return new Promise(async resolve => {
         // 加载菜单
         await dispatch('bootAdmin/menu/currentMenu', {}, { root: true })
-        await dispatch('bootAdmin/permission/load', {focus: true, to:'/'}, { root: true })
+        await dispatch('bootAdmin/permission/load', { focus: true, to: to }, { root: true })
         resolve();
       })
 
+    }
+  },
+  mutations: {
+    /**
+     * @description 设置用户登陆状态
+     * @param {Object} state state
+     * @param {Boolean} value 是否登录
+     */
+    isLoggedSet(state, value) {
+      state.isLogged = value
     }
   }
 }

@@ -30,6 +30,7 @@
               :props="treeProps"
               check-strictly
               :highlight-current="true"
+              :expand-on-click-node="true"
               default-expand-all
               @check-change="handleNodeChangeCheckEvent"
               @check="handleNodeCheckClickEvent"

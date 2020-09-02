@@ -18,6 +18,8 @@ const permission = {
          * @param {Object} payload data {Array} 手动设置数据源 用来人工模拟权限数据或者重置权限设置 此项有值的时候登陆状态校验跳过
          */
         async load({ state, rootState, commit, dispatch }, { focus = false, to = '', data }) {
+            // 取消请求 - 没有登录
+            if (!data && !rootState.d2admin.account.isLogged) return
             // 取消请求 - 已经加载过动态路由
             if (!focus && state.isLoaded) return
             // 获取接口原始数据

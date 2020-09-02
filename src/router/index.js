@@ -12,6 +12,7 @@ import util from '@/libs/util.js'
 import routerList from './routes'
 
 import layoutHeaderAside from '@/layout/header-aside'
+import { Message, MessageBox } from 'element-ui'
 
 // fix vue-router NavigationDuplicated
 const VueRouterPush = VueRouter.prototype.push
@@ -55,7 +56,7 @@ export function createRoutesInLayout(routes = []) {
     {
       path: "/boot/admin/system/user",
       name: 'userManager',
-      auth: true ,
+      auth: true,
       redirect: {
         name: 'user-manager-index'
       },
@@ -66,7 +67,7 @@ export function createRoutesInLayout(routes = []) {
           name: `user-setting`,
           component: util.import('bootAdmin/system/user/info/setting/index'),
           meta: {
-            auth: true ,
+            auth: true,
             title: '用户设置'
           }
         },
@@ -113,6 +114,11 @@ router.beforeEach(async (to, from, next) => {
     } else {
       // 没有登录的时候跳转到登录界面
       // 携带上登陆成功之后需要跳转的页面完整路径
+
+      Message({
+        message: "身份验证失败,请重新登录",
+        type: 'warning'
+      })
       next({
         name: 'login',
         query: {
