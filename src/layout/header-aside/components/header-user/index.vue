@@ -47,7 +47,7 @@ export default {
     updateVueCache() {
       let _self = this;
       _self
-        .updateCache({ to: this.$route.query.redirect || "/" })
+        .updateCache({ to: this.$route.fullPath || "/" })
         .then((result) => {
           _self.$message.success("更新成功");
         });

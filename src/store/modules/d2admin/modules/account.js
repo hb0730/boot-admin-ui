@@ -7,7 +7,7 @@ export default {
   namespaced: true,
   state: {
     // 用户登录状态
-    isLogged: false
+    isLogged: !!util.cookies.get("token")
   },
   actions: {
     /**
@@ -130,7 +130,10 @@ export default {
       return new Promise(async resolve => {
         // 加载菜单
         await dispatch('bootAdmin/menu/currentMenu', {}, { root: true })
-        await dispatch('bootAdmin/router/load', { focus: true, to: to }, { root: true })
+        console.info(to)
+        await api.MENU_CURRENT_ROUTER().then(result => {
+           dispatch('bootAdmin/router/load', {focus:true,to: to,data: result}, { root: true })
+        });
         resolve();
       })
 

@@ -73,3 +73,9 @@ export const permissionUpdateByIdUrl="/update"
  * 删除
  */
 export const permissionDeleteUrl='/delete'
+
+/****组织 */
+/**
+ * 组织树
+ */
+export const deptTreeAllUrl='/tree/all';

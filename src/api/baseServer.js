@@ -7,3 +7,7 @@ export const menuServer = "/system/menu"
  * 权限
  */
 export const permissionServer = '/system/permission'
+/**
+ * 组织
+ */
+export const deptServer='/system/dept'

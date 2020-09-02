@@ -48,11 +48,11 @@ function createService() {
             //   }).then(() => {
             //     store.dispatch('d2admin/account/logout', {}, { root: true });
             //   })
-            // Message({
-            //   message:"身份验证失败,请重新登录",
-            //   type: 'warning'
-            // })
-            store.dispatch('d2admin/account/logout', {confirm: true}, { root: true });
+            Message({
+              message:"身份验证失败,请重新登录",
+              type: 'warning'
+            })
+            store.dispatch('d2admin/account/logout', {confirm: false}, { root: true });
             break;
           default:
             // 不是正确的 code

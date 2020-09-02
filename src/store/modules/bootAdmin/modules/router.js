@@ -1,6 +1,7 @@
 import api from "@/api";
 import router, { createRoutesInLayout, routesOutLayout, resetRouter } from '@/router'
 import utils from '@/libs/util.js'
+import { result } from "lodash";
 const permission = {
     namespaced: true,
     state: {
