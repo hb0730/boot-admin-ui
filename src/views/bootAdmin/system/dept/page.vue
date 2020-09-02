@@ -18,6 +18,7 @@
               :props="treeProps"
               check-strictly
               :highlight-current="true"
+              :expand-on-click-node="false"
               default-expand-all
               @check-change="handleNodeChangeCheckEvent"
               @check="handleNodeCheckClickEvent"
@@ -40,26 +41,26 @@
               :rules="rules"
               required-asterisk
             >
-              <el-form-item required label="上级组织:" prop="parentName">
+              <el-form-item label="上级组织：" prop="parentName">
                 <treeselect
                   v-model="depInfo.parentId"
                   :normalizer="normalizer"
                   :options="treeData"
                 />
               </el-form-item>
-              <el-form-item required label="组织名称" prop="name">
+              <el-form-item required label="组织名称：" prop="name">
                 <el-input v-model="depInfo.name" clearable></el-input>
               </el-form-item>
-              <el-form-item required label="负责人" prop="leader">
+              <el-form-item required label="负责人：" prop="leader">
                 <el-input v-model="depInfo.leader" clearable></el-input>
               </el-form-item>
-              <el-form-item label="联系号码" prop="phone">
+              <el-form-item label="联系号码：" prop="phone">
                 <el-input v-model="depInfo.phone" clearable></el-input>
               </el-form-item>
-              <el-form-item label="联系邮箱" prop="email">
+              <el-form-item label="联系邮箱：" prop="email">
                 <el-input v-model="depInfo.email" clearable></el-input>
               </el-form-item>
-              <el-form-item label="排序" prop="sort">
+              <el-form-item label="排序：" prop="sort">
                 <el-input-number
                   style="width: 100%"
                   controls-position="right"
@@ -68,10 +69,10 @@
                   clearable
                 ></el-input-number>
               </el-form-item>
-              <el-form-item label="备注" prop="description">
+              <el-form-item label="备注：" prop="description">
                 <el-input type="textarea" v-model="depInfo.description" placeholder="备注" clearable></el-input>
               </el-form-item>
-              <el-form-item label="是否启用" prop="isEnabled">
+              <el-form-item label="是否启用：" prop="isEnabled">
                 <el-radio-group v-model="depInfo.isEnabled">
                   <el-radio
                     v-for="item in isEnabledOptions "
@@ -106,8 +107,24 @@ export default {
       },
       i: 0,
       position: "left",
-      depInfo: {},
-      rules: {},
+      depInfo: {
+        id: "",
+        name: "",
+        leader: "",
+        phone: "",
+        email: "",
+        parentId: -1,
+        sort: 999,
+        ancestors: "",
+        description: "",
+        isEnabled: 0,
+      },
+      rules: {
+        name: [{ required: true, message: "请输入部门名称", trigger: "blur" }],
+        leader: [
+          { required: true, message: "请输入部门负责人", trigger: "blur" },
+        ],
+      },
       isEnabledOptions: [
         { label: "启用", value: 1 },
         { label: "禁用", value: 0 },
@@ -151,7 +168,35 @@ export default {
     handleNodeCheckClickEvent(data, node) {
       let _self = this;
       _self.currentInfo = data;
+      _self.depInfo = {
+        id: data.id,
+        name: data.name,
+        leader: data.leader,
+        phone: data.phone,
+        email: data.email,
+        parentId: data.parentId,
+        sort: data.sort,
+        ancestors: data.ancestors,
+        description: data.description,
+        isEnabled: data.isEnabled,
+      };
+      _self.$refs.form.resetFields();
       _self.isUpdate = true;
+    },
+    initDeptInfo() {
+      let _self = this;
+      _self.depInfo = {
+        id: "",
+        name: "",
+        leader: "",
+        phone: "",
+        email: "",
+        parentId: -1,
+        sort: 999,
+        ancestors: "",
+        description: "",
+        isEnabled: 0,
+      };
     },
     /**
      * 树形
