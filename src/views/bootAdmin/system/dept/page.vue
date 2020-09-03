@@ -4,8 +4,20 @@
       <el-card shadow="never">
         <el-row>
           <el-col :span="24">
-            <el-button type="primary" size="medium" icon="el-icon-plus" plain>添加</el-button>
-            <el-button type="danger" size="medium" icon="el-icon-delete" plain>删除</el-button>
+            <el-button
+              type="primary"
+              size="medium"
+              @click="handlerAddNew"
+              icon="el-icon-plus"
+              plain
+            >添加</el-button>
+            <el-button
+              type="danger"
+              size="medium"
+              @click="handlerDelete"
+              icon="el-icon-delete"
+              plain
+            >删除</el-button>
           </el-col>
         </el-row>
         <el-row style="padding-top:10%;">
@@ -34,7 +46,7 @@
           <el-col>
             <el-form
               ref="form"
-              :model="depInfo"
+              :model="deptInfo"
               label-width="auto"
               center
               :label-position="position"
@@ -43,37 +55,37 @@
             >
               <el-form-item label="上级组织：" prop="parentName">
                 <treeselect
-                  v-model="depInfo.parentId"
+                  v-model="deptInfo.parentId"
                   :normalizer="normalizer"
                   :options="treeData"
                 />
               </el-form-item>
               <el-form-item required label="组织名称：" prop="name">
-                <el-input v-model="depInfo.name" clearable></el-input>
+                <el-input v-model="deptInfo.name" clearable></el-input>
               </el-form-item>
               <el-form-item required label="负责人：" prop="leader">
-                <el-input v-model="depInfo.leader" clearable></el-input>
+                <el-input v-model="deptInfo.leader" clearable></el-input>
               </el-form-item>
               <el-form-item label="联系号码：" prop="phone">
-                <el-input v-model="depInfo.phone" clearable></el-input>
+                <el-input v-model="deptInfo.phone" clearable></el-input>
               </el-form-item>
               <el-form-item label="联系邮箱：" prop="email">
-                <el-input v-model="depInfo.email" clearable></el-input>
+                <el-input v-model="deptInfo.email" clearable></el-input>
               </el-form-item>
               <el-form-item label="排序：" prop="sort">
                 <el-input-number
                   style="width: 100%"
                   controls-position="right"
-                  v-model="depInfo.sort"
+                  v-model="deptInfo.sort"
                   placeholder="排序"
                   clearable
                 ></el-input-number>
               </el-form-item>
               <el-form-item label="备注：" prop="description">
-                <el-input type="textarea" v-model="depInfo.description" placeholder="备注" clearable></el-input>
+                <el-input type="textarea" v-model="deptInfo.description" placeholder="备注" clearable></el-input>
               </el-form-item>
               <el-form-item label="是否启用：" prop="isEnabled">
-                <el-radio-group v-model="depInfo.isEnabled">
+                <el-radio-group v-model="deptInfo.isEnabled">
                   <el-radio
                     v-for="item in isEnabledOptions "
                     :key="Number(item.value)"
@@ -83,8 +95,22 @@
               </el-form-item>
             </el-form>
             <div>
-              <el-button type="primary" size="medium" plain class="button" v-if="!isUpdate">新增</el-button>
-              <el-button type="primary" size="medium" plain class="button" v-if="isUpdate">修改</el-button>
+              <el-button
+                type="primary"
+                size="medium"
+                @click="handlerSave"
+                plain
+                class="button"
+                v-if="!isUpdate"
+              >新增</el-button>
+              <el-button
+                type="primary"
+                @click="handlerUpdate"
+                size="medium"
+                plain
+                class="button"
+                v-if="isUpdate"
+              >修改</el-button>
             </div>
           </el-col>
         </el-row>
@@ -96,6 +122,7 @@
 import { mapActions } from "vuex";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
+import { MessageBox } from "element-ui";
 export default {
   components: { Treeselect },
   data() {
@@ -107,7 +134,7 @@ export default {
       },
       i: 0,
       position: "left",
-      depInfo: {
+      deptInfo: {
         id: "",
         name: "",
         leader: "",
@@ -137,7 +164,12 @@ export default {
     _self.getTree();
   },
   methods: {
-    ...mapActions("bootAdmin/dept", ["deptTree"]),
+    ...mapActions("bootAdmin/dept", [
+      "deptTree",
+      "deptUpdate",
+      "deptSave",
+      "deptDelete",
+    ]),
     getTree() {
       let _self = this;
       _self.deptTree().then((result) => {
@@ -168,7 +200,8 @@ export default {
     handleNodeCheckClickEvent(data, node) {
       let _self = this;
       _self.currentInfo = data;
-      _self.depInfo = {
+      _self.initDeptInfo();
+      _self.deptInfo = {
         id: data.id,
         name: data.name,
         leader: data.leader,
@@ -180,12 +213,13 @@ export default {
         description: data.description,
         isEnabled: data.isEnabled,
       };
-      _self.$refs.form.resetFields();
+
       _self.isUpdate = true;
     },
     initDeptInfo() {
       let _self = this;
-      _self.depInfo = {
+      _self.$refs.form.resetFields();
+      _self.deptInfo = {
         id: "",
         name: "",
         leader: "",
@@ -211,6 +245,86 @@ export default {
         label: node.name,
         children: node.children,
       };
+    },
+    /**
+     * 修改
+     */
+    handlerUpdate() {
+      let _self = this;
+      _self.$refs.form.validate((valid) => {
+        if (valid) {
+          _self.updateDept();
+        } else {
+          this.$message.error("表单校验失败，请检查");
+        }
+      });
+    },
+    updateDept() {
+      let _self = this;
+      let params = JSON.parse(JSON.stringify(_self.deptInfo));
+      let id = _self.deptInfo.id;
+      _self.deptUpdate({ id: id, data: params }).then((result) => {
+        _self.$message.success("修改成功");
+        _self.getTree();
+        _self.initDeptInfo();
+      });
+    },
+    /**
+     * 新增
+     */
+    handlerAddNew() {
+      let _self = this;
+      let currentNodes = _self.$refs.tree.getCheckedNodes(false);
+      _self.isUpdate = false;
+      let parentId = currentNodes.length > 0 ? currentNodes[0].id : -1;
+      _self.initDeptInfo();
+      _self.deptInfo.parentId = parentId;
+    },
+    handlerSave() {
+      let _self = this;
+      _self.$refs.form.validate((valid) => {
+        if (valid) {
+          _self.saveDept();
+        } else {
+          this.$message.error("表单校验失败，请检查");
+        }
+      });
+    },
+    saveDept() {
+      let _self = this;
+      let params = JSON.parse(JSON.stringify(_self.deptInfo));
+      _self.deptSave({ data: params }).then((result) => {
+        _self.$message.success("新增成功");
+        _self.isUpdate = false;
+        _self.initDeptInfo();
+        _self.getTree();
+      });
+    },
+    /**
+     * 删除
+     */
+    handlerDelete() {
+      let _self = this;
+      let currentNodes = _self.$refs.tree.getCheckedNodes(false);
+      if (currentNodes.length <= 0) {
+        _self.$message.warning("请选择要删除的数据");
+      } else {
+        MessageBox.confirm("是否删除已选择的数据(包含下级)", "删除", {
+          type: "warning",
+        }).then(() => {
+          let id = currentNodes[0].id;
+          _self.deleteDept(id);
+        });
+      }
+    },
+    deleteDept(id) {
+      let _self = this;
+      if (id) {
+        _self.deptDelete({ id: id }).then((result) => {
+          _self.$message.success("删除成功");
+          _self.getTree();
+        });
+      }
     },
   },
 };

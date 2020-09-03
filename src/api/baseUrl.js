@@ -18,64 +18,76 @@ export const currentUserInfoUrl = "";
 /**
  * 根据id修改
  */
-export const userUpdateByIdUrl="/update";
+export const userUpdateByIdUrl = "/update";
 
 /**
  * 修改密码
  */
-export const updatePasswordUrl="/update/password";
+export const updatePasswordUrl = "/update/password";
 
 /****菜单 ******/
 /**
  * 当前用户菜单树
  */
-export const menuCurrentTreeUrl="/get/current/tree";
+export const menuCurrentTreeUrl = "/get/current/tree";
 /**
  * 当前菜单对应的路由
  */
-export const menuCurrentRouterUrl="/get/current/router"
+export const menuCurrentRouterUrl = "/get/current/router"
 /**
  * 菜单树
  */
-export const menuQueryTreeUrl="/query/tree"
+export const menuQueryTreeUrl = "/query/tree"
 
 /**
  * 根据id修改
  */
-export const menuUpdateByIdUrl='/update'
+export const menuUpdateByIdUrl = '/update'
 /**
  * 新增菜单
  */
-export const menuSaveUrl='/save';
+export const menuSaveUrl = '/save';
 
 /**
  * 根据id删除菜单
  */
-export const menuDeleteByIdUrl="/delete"
+export const menuDeleteByIdUrl = "/delete"
 
 /*****权限**************/
 /**
  * 根据菜单获取权限
  */
-export const permissionPageByMenuIdUrl='/menu/page'
+export const permissionPageByMenuIdUrl = '/menu/page'
 
-export const permissionListByMenuIdUrl='/menu/list'
+export const permissionListByMenuIdUrl = '/menu/list'
 
 /**
  * 新增权限
  */
-export const permsisionSaveUrl='/save'
+export const permsisionSaveUrl = '/save'
 /**
  * 根据id修改
  */
-export const permissionUpdateByIdUrl="/update"
+export const permissionUpdateByIdUrl = "/update"
 /**
  * 删除
  */
-export const permissionDeleteUrl='/delete'
+export const permissionDeleteUrl = '/delete'
 
 /****组织 */
 /**
  * 组织树
  */
-export const deptTreeAllUrl='/tree/all';
+export const deptTreeAllUrl = '/tree/all';
+/**
+ * 修改
+ */
+export const deptUpdateById = '/update';
+/**
+ * 新增
+ */
+export const deptSaveUrl = "/save"
+/**
+ * 删除
+ */
+export const deptDeleteUrl = "/delete";
