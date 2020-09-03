@@ -43,6 +43,20 @@ export default {
             })
         },
         /**
+         * 菜单权限树
+         * @param {*} dispatch 
+         */
+        queryPermissionTree({ dispatch }) {
+            //MENU_PERMISSION_TREE
+            return new Promise((resolve, reject) => {
+                api.MENU_PERMISSION_TREE().then(result => {
+                    resolve(result);
+                }).catch(err => {
+                    reject(err);
+                })
+            })
+        },
+        /**
          * 根据id修改
          * @param {*} dispatch 
          * @param {*} url

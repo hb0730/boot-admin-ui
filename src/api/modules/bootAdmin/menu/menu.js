@@ -1,5 +1,5 @@
 import { baseServer, menuServer } from "@/api/baseServer"
-import { menuCurrentTreeUrl, menuCurrentRouterUrl, menuQueryTreeUrl, menuUpdateByIdUrl, menuSaveUrl, menuDeleteByIdUrl } from "@/api/baseUrl"
+import { menuCurrentTreeUrl, menuCurrentRouterUrl, menuQueryTreeUrl, menuUpdateByIdUrl, menuSaveUrl, menuDeleteByIdUrl, menuPermissionQueryTreeUrl } from "@/api/baseUrl"
 export default ({ https }) => ({
     /***
      * 获取当前用户菜单树
@@ -52,6 +52,13 @@ export default ({ https }) => ({
         let url = menuDeleteByIdUrl + '/' + id;
         url = baseUrl(url);
         return https.httpGet({ url: url, params: null });
+    },
+    /**
+     * 菜单权限树
+     */
+    MENU_PERMISSION_TREE(){
+        let url = baseUrl(menuPermissionQueryTreeUrl);
+        return https.httpGet({url:url,params:null});
     }
 })
 function baseUrl(url) {

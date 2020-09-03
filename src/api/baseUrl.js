@@ -38,6 +38,10 @@ export const menuCurrentRouterUrl = "/get/current/router"
  * 菜单树
  */
 export const menuQueryTreeUrl = "/query/tree"
+/**
+ * 菜单权限树
+ */
+export const menuPermissionQueryTreeUrl='/query/tree/permission';
 
 /**
  * 根据id修改
