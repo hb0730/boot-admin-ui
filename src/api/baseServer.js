@@ -11,3 +11,8 @@ export const permissionServer = '/system/permission'
  * 组织
  */
 export const deptServer='/system/dept'
+
+/**
+ * 角色
+ */
+export const roleServer='/system/role'

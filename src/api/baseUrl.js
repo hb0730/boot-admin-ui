@@ -78,7 +78,7 @@ export const permissionUpdateByIdUrl = "/update"
  */
 export const permissionDeleteUrl = '/delete'
 
-/****组织 */
+/****组织 ******/
 /**
  * 组织树
  */
@@ -95,3 +95,25 @@ export const deptSaveUrl = "/save"
  * 删除
  */
 export const deptDeleteUrl = "/delete";
+/****角色****/
+/**
+ * 角色新增
+ */
+export const roleSaveUrl='/save';
+
+/**
+ * 分页查询
+ */
+export const rolePageUrl='/list/page';
+/**
+ * 根据id修改
+ */
+export const roleUpdateByIdUrl='/update'
+/**
+ * 根据id修改权限
+ */
+export const rolePermissionUpdateUrl='/update/permission'
+/**
+ * 删除
+ */
+export const roleDeleteUrl='/delete'
