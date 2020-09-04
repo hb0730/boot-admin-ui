@@ -78,3 +78,21 @@ export const postListUrl = '/list'
 export const postUpdateByIdUrl = '/update'
 //删除
 export const postDeleteUrl = '/delete';
+/////////数据字典///////////////////
+// 保存
+export const dictSaveUrl='/save';
+//修改
+export const dictUpdateByIdUrl='/update'
+//分页
+export const dictPageListUrl='/list/page'
+//删除
+export const dictDeleteUrl='/delete'
+////数据字典项/////
+// 保存
+export const dictEntrySaveUrl='/save';
+//修改
+export const dictEntryUpdateByIdUrl='/update'
+//分页
+export const dictEntryPageListUrl='/list/page'
+//删除
+export const dictEntryDeleteUrl='/delete'

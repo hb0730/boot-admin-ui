@@ -11,3 +11,7 @@ export const deptServer = '/system/dept'
 export const roleServer = '/system/role'
 // 岗位
 export const postServer = '/system/post'
+//数据字典
+export const dictServer = '/system/dict';
+//数据字典项
+export const dictEntryServer = '/system/dict/entry'
