@@ -291,12 +291,11 @@
           </el-col>
           <el-col :span="12">
             <el-form-item
-              :disabled="userInfo.isAdmin==1?true:false"
               required
               label="状态："
               prop="isEnabled"
             >
-              <el-radio-group v-model="userInfo.isEnabled">
+              <el-radio-group :disabled="userInfo.isAdmin==1"  v-model="userInfo.isEnabled">
                 <el-radio
                   v-for="item in isEnabledOptions "
                   :key="Number(item.value)"
