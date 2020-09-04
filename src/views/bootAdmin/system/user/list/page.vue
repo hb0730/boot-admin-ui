@@ -327,8 +327,8 @@
           </el-col>
         </el-row>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="handlerSave" size="medium">保存</el-button>
+      <div slot="footer"  class="dialog-footer">
+        <el-button type="primary" :disabled="userInfo.isAdmin==1" @click="handlerSave" size="medium">保存</el-button>
         <el-button size="medium" @click="handleDialogClose">取 消</el-button>
       </div>
     </el-dialog>
