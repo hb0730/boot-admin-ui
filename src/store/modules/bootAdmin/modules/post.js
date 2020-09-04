@@ -31,6 +31,20 @@ export default {
             })
         },
         /**
+         * 列表查询
+         * @param {context} param0 
+         * @param {*} data 
+         */
+        postList({dispatch},{data}){
+            return new Promise((resolve, reject) => {
+                api.POST_LIST(data).then(result => {
+                    resolve(result);
+                }).catch(err => {
+                    reject(err)
+                })
+            })
+        },
+        /**
          * 根据id修改
          * @param {context} dispatch 
          * @param {*} {id,data} 

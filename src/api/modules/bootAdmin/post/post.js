@@ -1,5 +1,5 @@
 import { baseServer, postServer } from "@/api/baseServer"
-import { postSaveUrl, postPageListUrl, postUpdateByIdUrl, postDeleteUrl } from "@/api/baseUrl"
+import { postSaveUrl, postPageListUrl, postUpdateByIdUrl, postDeleteUrl, postListUrl } from "@/api/baseUrl"
 
 export default ({ https }) => ({
     /**
@@ -16,6 +16,14 @@ export default ({ https }) => ({
      */
     POST_PAGE_LIST(data) {
         let url = baseUrl(postPageListUrl);
+        return https.httpPost({ url: url, data: data });
+    },
+    /**
+     * 列表查询
+     * @param {jsonString} data 
+     */
+    POST_LIST(data) {
+        let url = baseUrl(postListUrl);
         return https.httpPost({ url: url, data: data });
     },
     /**

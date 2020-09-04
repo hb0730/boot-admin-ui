@@ -31,6 +31,20 @@ export default {
             })
         },
         /**
+         * 角色列表
+         * @param {*} dispatch 
+         * @param {*} data 
+         */
+        roleList({dispatch},{data}){
+            return new Promise((resolve, reject) => {
+                api.ROLE_LIST(data).then(result => {
+                    resolve(result);
+                }).catch(err => {
+                    reject(err);
+                })
+            })
+        },
+        /**
          * 根据id修改
          * @param {*} dispatch 
          * @param {*} { url, data } 

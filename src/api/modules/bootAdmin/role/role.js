@@ -1,5 +1,5 @@
 import { baseServer, roleServer } from "@/api/baseServer"
-import { roleSaveUrl, rolePageUrl, roleUpdateByIdUrl, rolePermissionUpdateUrl, roleDeleteUrl } from "@/api/baseUrl"
+import { roleSaveUrl, rolePageUrl, roleUpdateByIdUrl, rolePermissionUpdateUrl, roleDeleteUrl, roleListUrl } from "@/api/baseUrl"
 
 export default ({ https }) => ({
     /**
@@ -16,6 +16,14 @@ export default ({ https }) => ({
      */
     ROLE_LIST_PAGE(data) {
         let url = baseUrl(rolePageUrl);
+        return https.httpPost({ url: url, data: data });
+    },
+    /**
+     * 角色列表
+     * @param {jsonString} data 
+     */
+    ROLE_LIST(data) {
+        let url = baseUrl(roleListUrl);
         return https.httpPost({ url: url, data: data });
     },
     /**

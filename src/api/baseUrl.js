@@ -9,6 +9,16 @@ export const currentUserInfoUrl = "";
 export const userUpdateByIdUrl = "/update";
 //修改密码
 export const updatePasswordUrl = "/update/password";
+//////////用户列表/////////////////
+//用户列表
+export const userPageUrl = '/list/page'
+//用户保存
+export const userSaveUrl = '/save'
+//用户修改
+export const userUpdateUrl = '/update'
+//删除
+export const userDeleteUrl = '/delete';
+
 /////////////菜单///////////////////////
 //当前用户菜单树
 export const menuCurrentTreeUrl = "/get/current/tree";
@@ -49,6 +59,8 @@ export const deptDeleteUrl = "/delete";
 export const roleSaveUrl = '/save';
 //分页查询
 export const rolePageUrl = '/list/page';
+//列表
+export const roleListUrl = '/list'
 //根据id修改
 export const roleUpdateByIdUrl = '/update'
 //根据id修改权限
@@ -60,7 +72,9 @@ export const roleDeleteUrl = '/delete'
 export const postSaveUrl = '/save'
 //分页查询
 export const postPageListUrl = '/list/page';
+//列表查询
+export const postListUrl = '/list'
 // 根据id修改
-export const postUpdateByIdUrl='/update'
+export const postUpdateByIdUrl = '/update'
 //删除
-export const postDeleteUrl='/delete';
+export const postDeleteUrl = '/delete';
