@@ -214,7 +214,7 @@
             ></el-table-column>
             <el-table-column
               prop="value"
-              label="名称"
+              label="值"
               sortable
               resizable
               :show-overflow-tooltip="true"
