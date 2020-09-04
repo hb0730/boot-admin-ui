@@ -253,6 +253,16 @@
               </template>
             </el-table-column>
           </el-table>
+          <el-pagination
+            align="left"
+            @size-change="handleDictEntrySizeChange"
+            @current-change="handleDictEntryCurrentChange"
+            :current-page="searchEntryInfo.pageNum"
+            :page-sizes="[10, 20, 50, 100]"
+            :page-size="searchEntryInfo.pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="searchEntryInfo.total"
+          ></el-pagination>
         </el-card>
       </el-col>
     </el-row>
@@ -693,6 +703,16 @@ export default {
           _self.handleDictEntryDialogClose();
         });
       }
+    },
+    handleDictEntrySizeChange(pageSie) {
+      let _self = this;
+      _self.searchEntryInfo.pageSize = pageSie;
+      _self.getDictEntryPage();
+    },
+    handleDictEntryCurrentChange(pageNum) {
+      let _self = this;
+      _self.searchEntryInfo.pageNum = pageNum;
+      _self.getDictEntryPage();
     },
   },
 };
