@@ -24,11 +24,32 @@ dicts.getDictValue = function (type) {
       defaultValue: {},
       user: false
    })
-   
-   let result =  JSON.parse(JSON.stringify(info)).filter(function (item, index, array) {
+
+   let result = JSON.parse(JSON.stringify(info)).filter(function (item, index, array) {
       return item.type == type
    })
    return result[0].entry;
+}
+/**
+ * 字典详情
+ * @param {string} type 字典类型 
+ * @param {object} value  字典值
+ */
+dicts.getDictEntryValue = function (type, value) {
+   let info = dbGet({
+      dbName: 'sys',
+      path: 'dict',
+      defaultValue: {},
+      user: false
+   })
+
+   let result = JSON.parse(JSON.stringify(info)).filter(function (item, index, array) {
+      return item.type == type
+   })
+   result = result[0].filter(function (item, index, array) {
+      return item.value = value;
+   })
+   return result[0];
 }
 
 export default dicts;
