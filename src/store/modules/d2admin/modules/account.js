@@ -130,10 +130,13 @@ export default {
       return new Promise(async resolve => {
         // 加载菜单
         await dispatch('bootAdmin/menu/currentMenu', {}, { root: true })
-        console.info(to)
         await api.MENU_CURRENT_ROUTER().then(result => {
-           dispatch('bootAdmin/router/load', {focus:true,to: to,data: result}, { root: true })
+          dispatch('bootAdmin/router/load', { focus: true, to: to, data: result }, { root: true })
         });
+        await api.DICT_CACHE_UPDATE();
+        await api.DICT_CACHE_GET().then(resutl => {
+          dispatch('d2admin/dict/set',resutl, { root: true });
+        })
         resolve();
       })
 

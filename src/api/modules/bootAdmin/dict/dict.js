@@ -1,5 +1,5 @@
 import { baseServer, dictServer } from "@/api/baseServer"
-import { dictSaveUrl, dictUpdateByIdUrl, dictDeleteUrl, dictPageListUrl } from "@/api/baseUrl"
+import { dictSaveUrl, dictUpdateByIdUrl, dictDeleteUrl, dictPageListUrl, dictUpdateCacheUrl,dictGetCacheUrl } from "@/api/baseUrl"
 
 export default ({ https }) => ({
     /**
@@ -34,6 +34,20 @@ export default ({ https }) => ({
     DICT_DELETE(data) {
         let url = baseUrl(dictDeleteUrl);
         return https.httpPost({ url: url, data: data });
+    },
+    /**
+     * 更新缓存
+     */
+    DICT_CACHE_UPDATE() {
+        let url = baseUrl(dictUpdateCacheUrl);
+        return https.httpGet({ url: url, params: null });
+    },
+    /**
+     * 获取缓存
+     */
+    DICT_CACHE_GET(){
+        let url  = baseUrl(dictGetCacheUrl)
+        return https.httpGet({ url: url, params: null });
     }
 })
 

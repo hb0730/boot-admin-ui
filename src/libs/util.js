@@ -2,13 +2,15 @@ import cookies from './util.cookies'
 import db from './util.db'
 import log from './util.log'
 import helper from './util.helper'
+import dict from './util.dict'
 
 const util = {
   cookies,
   db,
   log,
   helper,
-  import: require('./util.import.'+process.env.NODE_ENV)
+  import: require('./util.import.'+process.env.NODE_ENV),
+  dict,
 }
 
 /**

@@ -87,6 +87,10 @@ export const dictUpdateByIdUrl='/update'
 export const dictPageListUrl='/list/page'
 //删除
 export const dictDeleteUrl='/delete'
+//更新缓存
+export const dictUpdateCacheUrl='/cache/update'
+//获取缓存
+export const dictGetCacheUrl='/cache/get';
 ////数据字典项/////
 // 保存
 export const dictEntrySaveUrl='/save';

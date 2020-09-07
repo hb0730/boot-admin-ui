@@ -595,6 +595,7 @@ export default {
     //关闭分录弹窗
     handleDictEntryDialogClose() {
       let _self = this;
+      _self.$refs.dictEntryForm.resetFields()
       _self.dictEntryDialogTableVisible = false;
       _self.getDictEntryPage();
     },
@@ -613,9 +614,9 @@ export default {
         _self.searchEntryInfo.total = Number(result.total);
       });
     },
-    initEntryInfo() {
+    initEntry() {
       let _self = this;
-      _self.initEntryInfo = {
+      _self.dictEntryInfo = {
         id: "",
         parentId: _self.currentRowDictData.id,
         name: "",
@@ -629,7 +630,7 @@ export default {
     handlerEntryAddNew() {
       let _self = this;
       _self.isEntryUpdate = false;
-      _self.initEntryInfo();
+      _self.initEntry();
       _self.dictEntryDialogTableVisible = true;
     },
     /**
