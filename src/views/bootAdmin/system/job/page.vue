@@ -77,7 +77,7 @@
             <i class="fa fa-download"></i>
             <span>导出</span>
           </button>
-          <button type="button" class="el-button filter-item el-button--info el-button--mini">
+          <button type="button" @click="handlerLog" class="el-button filter-item el-button--info el-button--mini">
             <i class="el-icon-tickets"></i>
             <span>日志</span>
           </button>
@@ -314,6 +314,7 @@
 import { mapActions } from "vuex";
 import util from "@/libs/util.js";
 import { MessageBox } from "element-ui";
+import router from "@/router";
 
 export default {
   data() {
@@ -323,7 +324,7 @@ export default {
       searchInfo: {
         name: "",
         group: "",
-        status: "",
+        isEnabled: "",
         sortColumn: [],
         groupColumn: [],
         pageSize: 10,
@@ -568,6 +569,15 @@ export default {
         });
       });
     },
+    /**
+     * 日志
+     */
+    handlerLog(){
+      let _self=this;
+      router.push({
+        name: "job-log",
+      });
+    }
   },
 };
 </script>

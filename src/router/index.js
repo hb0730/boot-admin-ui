@@ -70,7 +70,15 @@ export function createRoutesInLayout(routes = []) {
             auth: true,
             title: '用户设置'
           }
-        },
+        }, {
+          path:'/boot/admin/monitor/log/job',
+          name:'job-log',
+          component: util.import('bootAdmin/monitor/log/job/index'),
+          meta: {
+            auth: true,
+            title: '调度日志'
+          }
+        }
       ]
     }
   ]

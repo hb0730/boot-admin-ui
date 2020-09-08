@@ -80,36 +80,39 @@ export const postUpdateByIdUrl = '/update'
 export const postDeleteUrl = '/delete';
 /////////数据字典///////////////////
 // 保存
-export const dictSaveUrl='/save';
+export const dictSaveUrl = '/save';
 //修改
-export const dictUpdateByIdUrl='/update'
+export const dictUpdateByIdUrl = '/update'
 //分页
-export const dictPageListUrl='/list/page'
+export const dictPageListUrl = '/list/page'
 //删除
-export const dictDeleteUrl='/delete'
+export const dictDeleteUrl = '/delete'
 //更新缓存
-export const dictUpdateCacheUrl='/cache/update'
+export const dictUpdateCacheUrl = '/cache/update'
 //获取缓存
-export const dictGetCacheUrl='/cache/get';
+export const dictGetCacheUrl = '/cache/get';
 ////数据字典项/////
 // 保存
-export const dictEntrySaveUrl='/save';
+export const dictEntrySaveUrl = '/save';
 //修改
-export const dictEntryUpdateByIdUrl='/update'
+export const dictEntryUpdateByIdUrl = '/update'
 //分页
-export const dictEntryPageListUrl='/list/page'
+export const dictEntryPageListUrl = '/list/page'
 //删除
-export const dictEntryDeleteUrl='/delete'
+export const dictEntryDeleteUrl = '/delete'
 /////定时任务/////
 //page
-export const jobListPageUrl='/list/page'
+export const jobListPageUrl = '/list/page'
 //列表
-export const jobListUrl='/list'
+export const jobListUrl = '/list'
 //保存
-export const jobSaveUrl='/save'
+export const jobSaveUrl = '/save'
 //修改
-export const jobUpdateByIdUrl='/update'
+export const jobUpdateByIdUrl = '/update'
 //删除
-export const jobDeleteUrl='/delete'
+export const jobDeleteUrl = '/delete'
 //立即执行
-export const jobExecUrl='/exec'
+export const jobExecUrl = '/exec'
+///////定时任务日志//////////
+//page
+export const jobLogListPageUrl = '/list/page';

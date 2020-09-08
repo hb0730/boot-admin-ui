@@ -17,3 +17,5 @@ export const dictServer = '/system/dict';
 export const dictEntryServer = '/system/dict/entry'
 // 定时任务
 export const jobServer='/system/job'
+//定时任务日志
+export const jobLogServer='/system/job/log'
