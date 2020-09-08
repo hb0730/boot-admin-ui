@@ -116,3 +116,8 @@ export const jobExecUrl = '/exec'
 ///////定时任务日志//////////
 //page
 export const jobLogListPageUrl = '/list/page';
+//////在线用户///////////////
+//page
+export const userOnlineListPageUrl = '/list/page'
+//logout 强制登出
+export const userOnlineLogoutUrl='/logout'
