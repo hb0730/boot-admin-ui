@@ -15,3 +15,5 @@ export const postServer = '/system/post'
 export const dictServer = '/system/dict';
 //数据字典项
 export const dictEntryServer = '/system/dict/entry'
+// 定时任务
+export const jobServer='/system/job'

@@ -100,3 +100,14 @@ export const dictEntryUpdateByIdUrl='/update'
 export const dictEntryPageListUrl='/list/page'
 //删除
 export const dictEntryDeleteUrl='/delete'
+/////定时任务/////
+//page
+export const jobListPageUrl='/list/page'
+//列表
+export const jobListUrl='/list'
+//保存
+export const jobSaveUrl='/save'
+//修改
+export const jobUpdateByIdUrl='/update'
+//删除
+export const jobDeleteUrl='/delete'

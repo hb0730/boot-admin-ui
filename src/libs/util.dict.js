@@ -46,8 +46,8 @@ dicts.getDictEntryValue = function (type, value) {
    let result = JSON.parse(JSON.stringify(info)).filter(function (item, index, array) {
       return item.type == type
    })
-   result = result[0].filter(function (item, index, array) {
-      return item.value = value;
+   result = result[0].entry.filter(function (item, index, array) {
+      return item.value == value;
    })
    return result[0];
 }
