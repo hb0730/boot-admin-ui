@@ -77,6 +77,10 @@
             <i class="fa fa-download"></i>
             <span>导出</span>
           </button>
+          <button type="button" class="el-button filter-item el-button--info el-button--mini">
+            <i class="el-icon-tickets"></i>
+            <span>日志</span>
+          </button>
         </div>
         <div class="avue-crud__right">
           <button
@@ -187,7 +191,13 @@
                 icon="fa fa-pencil"
                 size="mini"
               ></el-button>
-              <el-button title="立即执行" type="text" icon="fa fa-play-circle-o" size="mini"></el-button>
+              <el-button
+                title="立即执行"
+                @click="handlerExec(scope.row)"
+                type="text"
+                icon="fa fa-play-circle-o"
+                size="mini"
+              ></el-button>
               <el-button
                 title="删除"
                 @click="handlerDelete(scope.row)"
@@ -364,6 +374,7 @@ export default {
       "jobSave",
       "jobUpdate",
       "jobDelete",
+      "jobExec",
     ]),
     /**
      * 数据字典
@@ -545,6 +556,17 @@ export default {
           _self.handleDataDialogClose();
         });
       }
+    },
+    /**
+     * 立即执行
+     */
+    handlerExec(row) {
+      let _self = this;
+      MessageBox.confirm("是否执行", "执行", { type: "warning" }).then(() => {
+        _self.jobExec({ id: row.id }).then((result) => {
+          _self.$message.success("执行成功");
+        });
+      });
     },
   },
 };

@@ -111,3 +111,5 @@ export const jobSaveUrl='/save'
 export const jobUpdateByIdUrl='/update'
 //删除
 export const jobDeleteUrl='/delete'
+//立即执行
+export const jobExecUrl='/exec'

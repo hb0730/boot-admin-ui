@@ -73,5 +73,19 @@ export default {
                 })
             })
         },
+        /**
+         * 立即执行
+         * @param {context} dispatch 
+         * @param {*} id 
+         */
+        jobExec({ dispatch }, { id }) {
+            return new Promise((resolve, reject) => {
+                api.JOB_EXEC(id).then(result => {
+                    resolve(result);
+                }).catch(err => {
+                    reject(err);
+                })
+            })
+        }
     }
 }

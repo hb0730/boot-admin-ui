@@ -1,5 +1,5 @@
 import { baseServer, jobServer } from "@/api/baseServer"
-import { jobSaveUrl, jobUpdateByIdUrl, jobDeleteUrl, jobListPageUrl, jobListUrl } from "@/api/baseUrl"
+import { jobSaveUrl, jobUpdateByIdUrl, jobDeleteUrl, jobListPageUrl, jobListUrl, jobExecUrl } from "@/api/baseUrl"
 
 export default ({ https }) => ({
     /**
@@ -42,6 +42,14 @@ export default ({ https }) => ({
     JOB_DELETE(data) {
         let url = baseUrl(jobDeleteUrl);
         return https.httpPost({ url: url, data: data });
+    },
+    /**
+     * id
+     * @param {long} id 
+     */
+    JOB_EXEC(id) {
+        let url = baseUrl(jobExecUrl + '/' + id);
+        return https.httpGet({ url: url, params: null })
     }
 })
 
