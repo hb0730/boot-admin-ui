@@ -120,4 +120,7 @@ export const jobLogListPageUrl = '/list/page';
 //page
 export const userOnlineListPageUrl = '/list/page'
 //logout 强制登出
-export const userOnlineLogoutUrl='/logout'
+export const userOnlineLogoutUrl = '/logout'
+//////操作日志//////////
+//page
+export const operLogListPageUrl = '/list/page'
