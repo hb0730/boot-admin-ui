@@ -48,11 +48,15 @@
     <el-row :gutter="2">
       <div class="avue-crud__menu">
         <div class="avue-crud__left">
-          <button type="button" class="el-button filter-item el-button--danger el-button--mini">
+          <button
+            type="button"
+            @click="handleRemove"
+            class="el-button filter-item el-button--danger el-button--mini"
+          >
             <i class="fa fa-remove"></i>
             <span>删除</span>
           </button>
-          <button type="button" class="el-button filter-item el-button--danger el-button--mini">
+          <button type="button" @click="handleClean" class="el-button filter-item el-button--danger el-button--mini">
             <i class="fa fa-trash"></i>
             <span>清除</span>
           </button>
@@ -189,18 +193,19 @@
 <script>
 import util from "@/libs/util.js";
 import { mapActions } from "vuex";
+import { MessageBox } from "element-ui";
 export default {
   data() {
     return {
       position: "left",
       searchInfo: {
-        username:'',
-        operType:'',
-        description:'',
-        status:'',
-        startTime:'',
-        endTime:'',
-        time:[],
+        username: "",
+        operType: "",
+        description: "",
+        status: "",
+        startTime: "",
+        endTime: "",
+        time: [],
         sortColumn: [],
         groupColumn: [],
         pageSize: 10,
@@ -223,7 +228,11 @@ export default {
     _self.getPage();
   },
   methods: {
-    ...mapActions("bootAdmin/operLog", ["operLogListPage"]),
+    ...mapActions("bootAdmin/operLog", [
+      "operLogListPage",
+      "operLogDelete",
+      "operLogClean",
+    ]),
     /**
      * 初始化数据字典
      */
@@ -237,9 +246,9 @@ export default {
     getPage() {
       let _self = this;
       let params = JSON.parse(JSON.stringify(_self.searchInfo));
-      if(_self.searchInfo.time){
-        params.startTime=_self.searchInfo.time[0];
-        params.endTime=_self.searchInfo.time[0];
+      if (_self.searchInfo.time) {
+        params.startTime = _self.searchInfo.time[0];
+        params.endTime = _self.searchInfo.time[0];
       }
       _self.operLogListPage({ data: params }).then((result) => {
         _self.dataList = result.records;
@@ -255,6 +264,57 @@ export default {
       let _self = this;
       _self.searchInfo.pageNum = num;
       _self.getPage();
+    },
+    /**
+     * 删除
+     */
+    handleRemove() {
+      let _self = this;
+      const lists = _self.$refs.operLog.selection;
+      if (lists.length <= 0) {
+        _self.$message({
+          message: "请选择",
+          type: "warning",
+        });
+      } else {
+        const array = [];
+        lists.forEach((element) => {
+          array.push(element.id);
+        });
+        MessageBox.confirm("是否删除选中数据", "删除", {
+          type: "warning",
+        }).then(() => {
+          _self.delete(array);
+        });
+      }
+    },
+    delete(ids) {
+      let _self = this;
+      if (ids.length > 0) {
+        let params = JSON.parse(JSON.stringify(ids));
+        _self.operLogDelete({ data: params }).then((result) => {
+          _self.$message.success("删除成功");
+          _self.getPage();
+        });
+      }
+    },
+    /**
+     * 清空
+     */
+    handleClean() {
+      let _self = this;
+      MessageBox.confirm("是否删除选中数据", "删除", {
+        type: "warning",
+      }).then(() => {
+        _self.clean();
+      });
+    },
+    clean() {
+      let _self = this;
+      _self.operLogClean().then((result) => {
+        _self.$message.success("清除成功");
+        _self.getPage();
+      });
     },
   },
 };

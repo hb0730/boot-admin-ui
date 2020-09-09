@@ -124,3 +124,7 @@ export const userOnlineLogoutUrl = '/logout'
 //////操作日志//////////
 //page
 export const operLogListPageUrl = '/list/page'
+//删除
+export const operLogDeleteUrl='/delete'
+//清除
+export const operLogCleanUrl='/clean'
