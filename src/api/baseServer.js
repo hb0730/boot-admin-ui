@@ -23,3 +23,5 @@ export const jobLogServer='/system/job/log'
 export const userOnlineServer='/monitor/online/user'
 //操作日志
 export const operLogServer='/monitor/operation/log'
+//登录日志
+export const loginLogServer='/monitor/log/login'

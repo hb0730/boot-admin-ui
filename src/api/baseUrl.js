@@ -128,3 +128,10 @@ export const operLogListPageUrl = '/list/page'
 export const operLogDeleteUrl='/delete'
 //清除
 export const operLogCleanUrl='/clean'
+//////登录日志/////////
+//page
+export const loginLogListPageUrl='/list/page'
+//删除
+export const loginLogDeleteUrl='/delete'
+//清除
+export const loginLogCleanUrl='/clean'
