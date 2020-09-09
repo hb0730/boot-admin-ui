@@ -161,7 +161,7 @@
                     <el-tag
                       :type="scope.row.isEnabled === 1 ? 'success' : 'danger'"
                       disable-transitions
-                    >{{scope.row.isEnabled==1?'启动':'禁用'}}</el-tag>
+                    >{{getDictEntryInfo('sys_common_status',scope.row.isEnabled).label}}</el-tag>
                   </template>
                 </el-table-column>
                 <el-table-column
@@ -290,12 +290,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item
-              required
-              label="状态："
-              prop="isEnabled"
-            >
-              <el-radio-group :disabled="userInfo.isAdmin==1"  v-model="userInfo.isEnabled">
+            <el-form-item required label="状态：" prop="isEnabled">
+              <el-radio-group :disabled="userInfo.isAdmin==1" v-model="userInfo.isEnabled">
                 <el-radio
                   v-for="item in isEnabledOptions "
                   :key="Number(item.value)"
@@ -327,8 +323,13 @@
           </el-col>
         </el-row>
       </el-form>
-      <div slot="footer"  class="dialog-footer">
-        <el-button type="primary" :disabled="userInfo.isAdmin==1" @click="handlerSave" size="medium">保存</el-button>
+      <div slot="footer" class="dialog-footer">
+        <el-button
+          type="primary"
+          :disabled="userInfo.isAdmin==1"
+          @click="handlerSave"
+          size="medium"
+        >保存</el-button>
         <el-button size="medium" @click="handleDialogClose">取 消</el-button>
       </div>
     </el-dialog>
@@ -336,6 +337,7 @@
 </template>
 <script>
 import { mapActions } from "vuex";
+import util from "@/libs/util";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 import { MessageBox } from "element-ui";
@@ -369,10 +371,6 @@ export default {
         pageNum: 1,
         total: 0,
       },
-      isEnabledOptions: [
-        { label: "启用", value: 1 },
-        { label: "禁用", value: 0 },
-      ],
       /**
        * 岗位列表
        */
@@ -408,15 +406,8 @@ export default {
       },
       isUpdate: false,
       dialogTableVisible: false,
-      sexOptions: [
-        { label: "男", value: 1 },
-        { label: "女", value: 0 },
-        { label: "未知", value: -1 },
-      ],
-      isEnabledOptions: [
-        { label: "启用", value: 1 },
-        { label: "禁用", value: 0 },
-      ],
+      sexOptions: [],
+      isEnabledOptions: [],
     };
   },
   mounted() {
@@ -425,6 +416,7 @@ export default {
     _self.getPostList();
     _self.getRoleList();
     _self.getPage();
+    _self.initDict();
   },
   methods: {
     ...mapActions("bootAdmin/dept", ["deptTree"]),
@@ -436,6 +428,17 @@ export default {
       "userUpdate",
       "userDelete",
     ]),
+    /**
+     * 数据字典
+     */
+    initDict() {
+      let _self = this;
+      _self.isEnabledOptions = util.dict.getDictValue("sys_common_status");
+      _self.sexOptions = util.dict.getDictValue("sys_user_gender");
+    },
+    getDictEntryInfo(type, entryValue) {
+      return util.dict.getDictEntryValue(type, entryValue);
+    },
     /**
      * 分页查询
      */

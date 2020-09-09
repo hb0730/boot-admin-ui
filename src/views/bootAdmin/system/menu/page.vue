@@ -197,9 +197,18 @@
                   <el-tag
                     :type="scope.row.isEnabled === 1 ? 'primary' : 'warning'"
                     disable-transitions
-                  >{{scope.row.isEnabled=== 1 ? "启用":"禁用"}}</el-tag>
+                  >{{getDictEntryInfo("sys_common_status",scope.row.isEnabled).label}}</el-tag>
                 </template>
               </el-table-column>
+               <el-table-column
+                prop="sort"
+                label="排序"
+                sortable
+                resizable
+                :show-overflow-tooltip="true"
+                align="center"
+              >
+               </el-table-column>
               <el-table-column
                 label="操作"
                 sortable
@@ -299,6 +308,7 @@
 </template>
 <script>
 import { mapActions } from "vuex";
+import util from "@/libs/util.js"
 // https://www.vue-treeselect.cn/#vuex-support
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
@@ -339,8 +349,6 @@ export default {
         path: [{ required: true, message: "请输入菜单地址", trigger: "blur" }],
       },
       isEnabledOptions: [
-        { label: "启用", value: 1 },
-        { label: "禁用", value: 0 },
       ],
       isUpdate: false,
       /**
@@ -384,6 +392,7 @@ export default {
   mounted() {
     let _self = this;
     _self.getMenuTree();
+    _self.initDict();
   },
   methods: {
     ...mapActions("bootAdmin/menu", [
@@ -398,6 +407,16 @@ export default {
       "permissionUpdate",
       "permissionDelete",
     ]),
+    /**
+     * 数据字典
+     */
+    initDict(){
+      let _self=this;
+       _self.isEnabledOptions = util.dict.getDictValue("sys_common_status");
+    },
+    getDictEntryInfo(type, entryValue) {
+      return util.dict.getDictEntryValue(type, entryValue);
+    },
     /**
      * 获取菜单树
      */

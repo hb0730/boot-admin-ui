@@ -117,7 +117,7 @@
               <el-tag
                 :type="scope.row.isEnabled === 1 ? 'success' : 'danger'"
                 disable-transitions
-              >{{scope.row.isEnabled==1?'启动':'禁用'}}</el-tag>
+              >{{getDictEntryInfo('sys_common_status',scope.row.isEnabled).label}}</el-tag>
             </template>
           </el-table-column>
           <el-table-column
@@ -242,6 +242,7 @@
 </template>
 <script>
 import { mapActions } from "vuex";
+import util from "@/libs/util"
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 import { MessageBox } from "element-ui";
@@ -264,8 +265,6 @@ export default {
       },
       position: "left",
       isEnabledOptions: [
-        { label: "启用", value: 1 },
-        { label: "禁用", value: 0 },
       ],
 
       /**菜单树 */
@@ -302,6 +301,7 @@ export default {
     _self.getMenuTree();
     _self.getDeptTree();
     _self.getPage();
+    _self.initDict();
   },
   methods: {
     ...mapActions("bootAdmin/menu", ["queryPermissionTree"]),
@@ -313,6 +313,16 @@ export default {
       "roleDelete",
       "rolePermissionUpdate",
     ]),
+    /**
+     * 数据字典
+     */
+    initDict() {
+      let _self = this;
+      _self.isEnabledOptions = util.dict.getDictValue("sys_common_status");
+    },
+    getDictEntryInfo(type, entryValue) {
+      return util.dict.getDictEntryValue(type, entryValue);
+    },
     getPage() {
       let _self = this;
       let params = JSON.parse(JSON.stringify(_self.searchInfo));

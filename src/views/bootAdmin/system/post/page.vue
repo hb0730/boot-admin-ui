@@ -127,7 +127,7 @@
               <el-tag
                 :type="scope.row.isEnabled === 1 ? 'success' : 'danger'"
                 disable-transitions
-              >{{scope.row.isEnabled==1?'启动':'禁用'}}</el-tag>
+              >{{getDictEntryInfo('sys_common_status',scope.row.isEnabled).label}}</el-tag>
             </template>
           </el-table-column>
           <el-table-column
@@ -235,6 +235,7 @@
 </template>
 <script>
 import { mapActions } from "vuex";
+import util from "@/libs/util";
 import { MessageBox } from "element-ui";
 export default {
   data() {
@@ -251,10 +252,7 @@ export default {
         isEnabled: "",
       },
       position: "left",
-      isEnabledOptions: [
-        { label: "启用", value: 1 },
-        { label: "禁用", value: 0 },
-      ],
+      isEnabledOptions: [],
       // 岗位列表
       postList: [],
       dialogTableVisible: false,
@@ -279,6 +277,7 @@ export default {
   mounted() {
     let _self = this;
     _self.getPage();
+    _self.initDict();
   },
   methods: {
     ...mapActions("bootAdmin/post", [
@@ -287,6 +286,16 @@ export default {
       "postUpdate",
       "postDelete",
     ]),
+    /**
+     * 数据字典
+     */
+    initDict() {
+      let _self = this;
+      _self.isEnabledOptions = util.dict.getDictValue("sys_common_status");
+    },
+    getDictEntryInfo(type, entryValue) {
+      return util.dict.getDictEntryValue(type, entryValue);
+    },
     /**
      * 关闭弹出
      */

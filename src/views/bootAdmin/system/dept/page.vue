@@ -120,6 +120,7 @@
 </template>
 <script>
 import { mapActions } from "vuex";
+import util from "@/libs/util"
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 import { MessageBox } from "element-ui";
@@ -153,8 +154,6 @@ export default {
         ],
       },
       isEnabledOptions: [
-        { label: "启用", value: 1 },
-        { label: "禁用", value: 0 },
       ],
       isUpdate: false,
     };
@@ -162,6 +161,7 @@ export default {
   mounted() {
     let _self = this;
     _self.getTree();
+    _self.initDict();
   },
   methods: {
     ...mapActions("bootAdmin/dept", [
@@ -170,6 +170,16 @@ export default {
       "deptSave",
       "deptDelete",
     ]),
+     /**
+     * 数据字典
+     */
+    initDict(){
+      let _self=this;
+       _self.isEnabledOptions = util.dict.getDictValue("sys_common_status");
+    },
+    getDictEntryInfo(type, entryValue) {
+      return util.dict.getDictEntryValue(type, entryValue);
+    },
     getTree() {
       let _self = this;
       _self.deptTree().then((result) => {
