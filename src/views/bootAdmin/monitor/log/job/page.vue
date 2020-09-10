@@ -120,6 +120,14 @@
             :show-overflow-tooltip="true"
             align="center"
           ></el-table-column>
+           <el-table-column
+            prop="createTime"
+            label="开始时间"
+            sortable
+            resizable
+            :show-overflow-tooltip="true"
+            align="center"
+          ></el-table-column>
           <el-table-column
             prop="status"
             label="任务状态"
