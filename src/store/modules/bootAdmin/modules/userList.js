@@ -59,6 +59,20 @@ export default {
                 })
             })
         },
+        /**
+         * 重置密码
+         * @param {*} dispatch 
+         * @param {long} id
+         */
+        userRestPassword({dispatch},{id}){
+            return new Promise((resolve, reject) => {
+                api.USER_REST_PASSWORD(id).then(result => {
+                    resolve(result);
+                }).catch(err => {
+                    reject(err);
+                })
+            })
+        }
 
     }
 }

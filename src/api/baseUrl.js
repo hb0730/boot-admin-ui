@@ -18,6 +18,8 @@ export const userSaveUrl = '/save'
 export const userUpdateUrl = '/update'
 //删除
 export const userDeleteUrl = '/delete';
+//重置密码
+export const userRestPasswordUrl='/rest/password'
 
 /////////////菜单///////////////////////
 //当前用户菜单树

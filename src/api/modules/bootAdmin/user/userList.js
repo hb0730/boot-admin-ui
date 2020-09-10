@@ -1,5 +1,5 @@
 import { baseServer, userServer } from "@/api/baseServer"
-import { userPageUrl, userSaveUrl, userUpdateUrl, userDeleteUrl } from "@/api/baseUrl"
+import { userPageUrl, userSaveUrl, userUpdateUrl, userDeleteUrl, userRestPasswordUrl } from "@/api/baseUrl"
 
 export default ({ https }) => ({
     /**
@@ -34,6 +34,14 @@ export default ({ https }) => ({
     USER_DELETE(data) {
         let url = baseUrl(userDeleteUrl);
         return https.httpPost({ url: url, data: data });
+    },
+    /**
+     * 重置密码
+     * @param {long} id
+     */
+    USER_REST_PASSWORD(id) {
+        let url = baseUrl(userRestPasswordUrl+'/'+id);
+        return https.httpGet({ url: url, params: null })
     }
 })
 

@@ -195,7 +195,13 @@
                       icon="fa fa-trash"
                       size="mini"
                     ></el-button>
-                    <el-button title="重置密码" type="warning" icon="fa fa-key" size="mini"></el-button>
+                    <el-button
+                      title="重置密码"
+                      @click="handlerRestPassword(scope.row)"
+                      type="warning"
+                      icon="fa fa-key"
+                      size="mini"
+                    ></el-button>
                   </template>
                 </el-table-column>
               </el-table>
@@ -427,6 +433,7 @@ export default {
       "userSave",
       "userUpdate",
       "userDelete",
+      "userRestPassword",
     ]),
     /**
      * 数据字典
@@ -687,6 +694,23 @@ export default {
           _self.handleDialogClose();
         });
       }
+    },
+    /**
+     * 重置密码
+     */
+    handlerRestPassword(row) {
+      let _self = this;
+      MessageBox.confirm("是否重置当前数据密码", "重置", {
+        type: "warning",
+      }).then(() => {
+        _self.restPassword(row.id);
+      });
+    },
+    restPassword(id) {
+      let _self = this;
+      _self.userRestPassword({ id: id }).then((result) => {
+        _self.$message.success("重置成功");
+      });
     },
   },
 };
