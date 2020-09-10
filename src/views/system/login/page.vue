@@ -101,14 +101,24 @@ export default {
     this.timeInterval = setInterval(() => {
       this.refreshTime();
     }, 1000);
+    // 绑定enter事件
+    this.enterKeyup();
   },
   beforeDestroy() {
     clearInterval(this.timeInterval);
+    // 销毁enter事件
+    this.enterKeyupDestroyed();
   },
   methods: {
     ...mapActions("d2admin/account", ["login"]),
     refreshTime() {
       this.time = dayjs().format("HH:mm:ss");
+    },
+    enterKeyupDestroyed() {
+      document.removeEventListener("keyup", this.enterKey);
+    },
+    enterKeyup() {
+      document.addEventListener("keyup", this.enterKey);
     },
     /**
      * @description 接收选择一个用户快速登录的事件
@@ -118,6 +128,16 @@ export default {
       this.formLogin.username = user.username;
       this.formLogin.password = user.password;
       this.submit();
+    },
+    enterKey(event) {
+      const code = event.keyCode
+        ? event.keyCode
+        : event.which
+        ? event.which
+        : event.charCode;
+      if (code == 13) {
+        this.submit();
+      }
     },
     /**
      * @description 提交表单
