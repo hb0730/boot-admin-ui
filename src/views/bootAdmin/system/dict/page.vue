@@ -229,6 +229,14 @@
               align="center"
             ></el-table-column>
             <el-table-column
+              prop="description"
+              label="备注"
+              sortable
+              resizable
+              :show-overflow-tooltip="true"
+              align="center"
+            ></el-table-column>
+            <el-table-column
               label="操作"
               sortable
               resizable
@@ -329,6 +337,9 @@
             clearable
           ></el-input-number>
         </el-form-item>
+         <el-form-item label="备注" prop="description">
+          <el-input type="textarea" v-model="dictEntryInfo.description" placeholder="备注" clearable></el-input>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="handlerEntrySave" size="medium">保存</el-button>
@@ -390,6 +401,7 @@ export default {
         name: "",
         value: "",
         sort: 999,
+        description:'',
       },
       dictEntryRules: {
         name: [{ required: true, message: "请输入名称", trigger: "blur" }],
@@ -622,6 +634,7 @@ export default {
         name: "",
         value: "",
         sort: 999,
+        description:'',
       };
     },
     /**
