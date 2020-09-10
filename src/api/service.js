@@ -4,7 +4,7 @@ import Adapter from 'axios-mock-adapter'
 import { get } from 'lodash'
 import util from '@/libs/util'
 import { errorLog, errorCreate } from './tools'
-import { Message,MessageBox} from 'element-ui'
+import { Message,MessageBox,Notification } from 'element-ui'
 
 /**
  * @description 创建请求实例
@@ -39,18 +39,9 @@ function createService() {
             // [ 示例 ] code === 0 代表没有错误
             return dataAxios.data;
           case 'A0301':
-            // MessageBox.confirm('登录状态已过期，您可以继续留在该页面，或者重新登录',
-            //   '系统提示',
-            //   {
-            //     confirmButtonText: '重新登录',
-            //     cancelButtonText: '取消',
-            //     type: 'warning'
-            //   }).then(() => {
-            //     store.dispatch('d2admin/account/logout', {}, { root: true });
-            //   })
-            Message({
-              message:"身份验证失败,请重新登录",
-              type: 'warning'
+            Notification.error({
+              title: '身份验证失败',
+              message: '请重新登录'
             })
             store.dispatch('d2admin/account/logout', {confirm: false}, { root: true });
             break;
