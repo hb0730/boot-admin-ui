@@ -2,7 +2,7 @@
   <d2-container class="page">
     <el-form :inline="true" :model="searchInfo" class="demo-form-inline">
       <el-form-item>
-        <el-input v-model="searchInfo.jobName" placeholder="任务名称"></el-input>
+        <el-input v-model="searchInfo.jobName" placeholder="任务名称" clearable></el-input>
       </el-form-item>
       <el-form-item>
         <!-- <el-input v-model="searchInfo.group" placeholder="任务分组"></el-input> -->

@@ -23,10 +23,10 @@
         <el-row>
           <el-form :inline="true" :model="searchInfo" class="demo-form-inline">
             <el-form-item>
-              <el-input v-model="searchInfo.nickName" placeholder="用户名称"></el-input>
+              <el-input v-model="searchInfo.nickName" placeholder="用户昵称" clearable></el-input>
             </el-form-item>
             <el-form-item>
-              <el-input v-model="searchInfo.username" placeholder="用户账号"></el-input>
+              <el-input v-model="searchInfo.username" placeholder="用户账号" clearable></el-input>
             </el-form-item>
             <el-form-item>
               <el-select v-model="searchInfo.isEnabled" placeholder="用户状态" clearable>
