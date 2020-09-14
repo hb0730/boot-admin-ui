@@ -1,5 +1,5 @@
 import { baseServer, postServer } from "@/api/baseServer"
-import { postSaveUrl, postPageListUrl, postUpdateByIdUrl, postDeleteUrl, postListUrl } from "@/api/baseUrl"
+import { postSaveUrl, postPageListUrl, postUpdateByIdUrl, postDeleteUrl, postListUrl, postExportUrl } from "@/api/baseUrl"
 
 export default ({ https }) => ({
     /**
@@ -42,6 +42,14 @@ export default ({ https }) => ({
     POST_DELETE(ids) {
         let url = baseUrl(postDeleteUrl);
         return https.httpPost({ url: url, data: ids });
+    },
+    /**
+     * 导出
+     * @param  data 请求参数 
+     */
+    POST_EXCEL_EXPORT(data) {
+        let url = baseUrl(postExportUrl);
+        return https.httpExport({ url: url, data: data });
     }
 })
 

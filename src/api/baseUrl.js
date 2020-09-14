@@ -19,7 +19,7 @@ export const userUpdateUrl = '/update'
 //删除
 export const userDeleteUrl = '/delete';
 //重置密码
-export const userRestPasswordUrl='/rest/password'
+export const userRestPasswordUrl = '/rest/password'
 
 /////////////菜单///////////////////////
 //当前用户菜单树
@@ -80,6 +80,8 @@ export const postListUrl = '/list'
 export const postUpdateByIdUrl = '/update'
 //删除
 export const postDeleteUrl = '/delete';
+//导出
+export const postExportUrl = '/export'
 /////////数据字典///////////////////
 // 保存
 export const dictSaveUrl = '/save';
@@ -127,13 +129,13 @@ export const userOnlineLogoutUrl = '/logout'
 //page
 export const operLogListPageUrl = '/list/page'
 //删除
-export const operLogDeleteUrl='/delete'
+export const operLogDeleteUrl = '/delete'
 //清除
-export const operLogCleanUrl='/clean'
+export const operLogCleanUrl = '/clean'
 //////登录日志/////////
 //page
-export const loginLogListPageUrl='/list/page'
+export const loginLogListPageUrl = '/list/page'
 //删除
-export const loginLogDeleteUrl='/delete'
+export const loginLogDeleteUrl = '/delete'
 //清除
-export const loginLogCleanUrl='/clean'
+export const loginLogCleanUrl = '/clean'

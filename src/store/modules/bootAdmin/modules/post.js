@@ -35,7 +35,7 @@ export default {
          * @param {context} param0 
          * @param {*} data 
          */
-        postList({dispatch},{data}){
+        postList({ dispatch }, { data }) {
             return new Promise((resolve, reject) => {
                 api.POST_LIST(data).then(result => {
                     resolve(result);
@@ -49,9 +49,9 @@ export default {
          * @param {context} dispatch 
          * @param {*} {id,data} 
          */
-        postUpdate({dispatch},{id,data}){
+        postUpdate({ dispatch }, { id, data }) {
             return new Promise((resolve, reject) => {
-                api.POST_UPDATE_ID(id,data).then(result => {
+                api.POST_UPDATE_ID(id, data).then(result => {
                     resolve(result);
                 }).catch(err => {
                     reject(err)
@@ -63,13 +63,23 @@ export default {
          * @param {context} dispatch 
          * @param {array} data 
          */
-        postDelete({dispatch},{data}){
+        postDelete({ dispatch }, { data }) {
             return new Promise((resolve, reject) => {
                 api.POST_DELETE(data).then(result => {
                     resolve(result);
                 }).catch(err => {
                     reject(err)
                 })
+            })
+        },
+        /**
+         * 导出
+         * @param {context} dispatch 
+         * @param data 请求参数
+         */
+        postExport({ dispatch }, { data }) {
+            return new Promise((resolve, reject) => {
+                api.POST_EXCEL_EXPORT(data);
             })
         }
     }

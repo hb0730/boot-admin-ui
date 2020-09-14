@@ -65,7 +65,11 @@
               </button>
             </el-upload>
           </button>
-          <button type="button" class="el-button filter-item el-button--warning el-button--mini">
+          <button
+            type="button"
+            @click="handlerExport"
+            class="el-button filter-item el-button--warning el-button--mini"
+          >
             <i class="fa fa-download"></i>
             <span>导出</span>
           </button>
@@ -285,6 +289,7 @@ export default {
       "postPage",
       "postUpdate",
       "postDelete",
+      "postExport",
     ]),
     /**
      * 数据字典
@@ -460,6 +465,20 @@ export default {
       _self.postDelete({ data: params }).then((result) => {
         _self.$message.success("删除成功");
         _self.handleDialogClose();
+      });
+    },
+    /**
+     * 导出
+     */
+    handlerExport() {
+      let _self = this;
+      MessageBox.confirm("是否导出当前全部数据", "导出", {
+        type: "warning",
+      }).then(() => {
+        let params = JSON.parse(JSON.stringify(_self.searchInfo));
+        _self.postExport({ data: params }).then((result) => {
+          _self.$message.success("导出成功");
+        });
       });
     },
   },
