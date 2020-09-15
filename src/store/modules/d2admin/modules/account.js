@@ -128,8 +128,12 @@ export default {
      */
     updateCache({ dispatch }, { to = "/" }) {
       return new Promise(async resolve => {
+        // 先更新
+        await api.MENU_CURRENT_UPDATE().then(result=>{
         // 加载菜单
-        await dispatch('bootAdmin/menu/currentMenu', {}, { root: true })
+          dispatch('bootAdmin/menu/currentMenu', {}, { root: true })
+        })
+        //路由
         await api.MENU_CURRENT_ROUTER().then(result => {
           dispatch('bootAdmin/router/load', { focus: true, to: to, data: result }, { root: true })
         });

@@ -26,6 +26,8 @@ export const userRestPasswordUrl = '/rest/password'
 export const menuCurrentTreeUrl = "/get/current/tree";
 //当前菜单对应的路由
 export const menuCurrentRouterUrl = "/get/current/router"
+//更新当前用户缓存
+export const menuCurrentUpdateUrl = "/update/current"
 //菜单树
 export const menuQueryTreeUrl = "/query/tree"
 //菜单权限树

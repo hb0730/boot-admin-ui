@@ -17,6 +17,19 @@ export default {
             })
         },
         /**
+         * 更新当前用户
+         * @param {context} dispatch 
+         */
+        currentUpdate({dispatch}){
+            return new Promise((resolve, reject) => {
+                api.MENU_UPDATE_CURRENT().then(result => {
+                    resolve()
+                }).catch(error => {
+                    reject(error)
+                })
+            })
+        },
+        /**
          * 当前用户路由
          * @param {*} dispatch 
          */
