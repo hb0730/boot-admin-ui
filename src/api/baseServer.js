@@ -25,3 +25,5 @@ export const userOnlineServer='/monitor/online/user'
 export const operLogServer='/monitor/operation/log'
 //登录日志
 export const loginLogServer='/monitor/log/login'
+//mail
+export const mailServer='/message/mail'

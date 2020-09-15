@@ -141,3 +141,10 @@ export const loginLogListPageUrl = '/list/page'
 export const loginLogDeleteUrl = '/delete'
 //清除
 export const loginLogCleanUrl = '/clean'
+/////////mail/////////////////
+//info
+export const mailInfoUrl='/'
+// 保存
+export const mailSaveUrl='/save'
+//test
+export const mailTestUrl='/test'
