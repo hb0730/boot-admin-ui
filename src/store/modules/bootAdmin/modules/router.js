@@ -1,7 +1,6 @@
 import api from "@/api";
 import router, { createRoutesInLayout, routesOutLayout, resetRouter } from '@/router'
 import utils from '@/libs/util.js'
-import { result } from "lodash";
 const permission = {
     namespaced: true,
     state: {
@@ -40,7 +39,7 @@ const permission = {
             // 标记已经加载过动态路由
             commit('isLoadedSet', true)
         },
-        
+
     },
     mutations: {
         /**
@@ -103,6 +102,7 @@ export function getRoutes(menuSource) {
                         title: sourceItem.meta.title,
                         auth: sourceItem.meta.auth,
                         cache: sourceItem.meta.cache
+                        // cache: true
                     },
                     component: utils.import(sourceItem.component)
                 }

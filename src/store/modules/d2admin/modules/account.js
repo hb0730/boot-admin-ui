@@ -33,10 +33,10 @@ export default {
       util.cookies.set('token', res.accessToken)
       // 设置 vuex 用户信息
       await dispatch('d2admin/user/set', { name: res.nickName, user: res }, { root: true })
-      // 设置用户已经登陆
-      commit('isLoggedSet', true)
       // 用户登录后从持久化数据加载一系列的设置
       await dispatch('load')
+      // 设置用户已经登陆
+      commit('isLoggedSet', true)
       await dispatch('updateCache', { to: to })
     },
     /**
