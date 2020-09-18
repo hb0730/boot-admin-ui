@@ -126,6 +126,7 @@ export default {
         this.$refs.mailRef.resetFields();
       } else {
         _self.getInfo()
+        this.$refs.testRef.resetFields();
       }
     },
     handlerSave() {
@@ -144,7 +145,6 @@ export default {
       let _self = this;
       _self.mailInfo().then((result) => {
         _self.info = result;
-        this.$refs.mailRef.resetFields();
       });
     },
     save() {
