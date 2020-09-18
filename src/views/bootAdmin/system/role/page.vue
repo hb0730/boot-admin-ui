@@ -73,6 +73,7 @@
           <span>角色列表</span>
         </div>
         <el-table
+          v-loading="roleLoading"
           :data="roleList"
           style="width: 100%;"
           ref="roleListRef"
@@ -171,6 +172,7 @@
           </el-button>
         </div>
         <el-tree
+          v-loading="menuLoading"
           :data="menuTreeData"
           show-checkbox
           default-expand-all
@@ -242,7 +244,7 @@
 </template>
 <script>
 import { mapActions } from "vuex";
-import util from "@/libs/util"
+import util from "@/libs/util";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 import { MessageBox } from "element-ui";
@@ -250,6 +252,9 @@ export default {
   components: { Treeselect },
   data() {
     return {
+      //遮罩层
+      roleLoading: true,
+      menuLoading: true,
       /**
        * 检索条件
        */
@@ -264,8 +269,8 @@ export default {
         isEnabled: "",
       },
       position: "left",
-      isEnabledOptions: [
-      ],
+      //启用选项
+      isEnabledOptions: [],
 
       /**菜单树 */
       menuTreeData: [],
@@ -285,14 +290,18 @@ export default {
         isEnabled: 0,
         deptIds: [],
       },
+      //校验
       roleRules: {
         name: [{ required: true, message: "请输入名称", trigger: "blur" }],
         code: [{ required: true, message: "请输入标识符", trigger: "blur" }],
       },
+      //是否修改
       isUpdate: false,
       /**列表 */
       roleList: [],
+      //是否保存
       isMenuSave: true,
+      //当前树形选中的info
       clickCurrentData: {},
     };
   },
@@ -323,12 +332,17 @@ export default {
     getDictEntryInfo(type, entryValue) {
       return util.dict.getDictEntryValue(type, entryValue);
     },
+    /**
+     * 角色信息
+     */
     getPage() {
       let _self = this;
+      _self.roleLoading = true;
       let params = JSON.parse(JSON.stringify(_self.searchInfo));
       _self.rolePage({ data: params }).then((result) => {
         _self.roleList = result.records;
         _self.searchInfo.total = Number(result.total);
+        _self.roleLoading = false;
       });
     },
     /**
@@ -349,9 +363,11 @@ export default {
      * 菜单权限树
      */
     getMenuTree() {
-      let _selft = this;
-      _selft.queryPermissionTree().then((result) => {
-        _selft.menuTreeData = result;
+      let _self = this;
+      _self.menuLoading = true;
+      _self.queryPermissionTree().then((result) => {
+        _self.menuTreeData = result;
+        _self.menuLoading = false;
       });
     },
     /**组织树 */

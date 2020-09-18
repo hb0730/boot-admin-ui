@@ -34,7 +34,7 @@
                     <i slot="prepend" class="fa fa-keyboard-o"></i>
                   </el-input>
                 </el-form-item>
-                <el-button size="default" @click="submit" type="primary" class="button-login">登录</el-button>
+                <el-button size="default" @click="submit" type="primary" v-loading="loading" class="button-login">登录</el-button>
               </el-form>
             </el-card>
           </div>
@@ -71,6 +71,7 @@ export default {
   mixins: [localeMixin],
   data() {
     return {
+      loading: false,
       timeInterval: null,
       time: dayjs().format("HH:mm:ss"),
       // 表单
@@ -144,14 +145,21 @@ export default {
      */
     // 提交登录信息
     submit() {
-      this.$refs.loginForm.validate((valid) => {
+      let _self=this;
+      _self.loading=true;
+      _self.$refs.loginForm.validate((valid) => {
         if (valid) {
-          this.login({
-            username: this.formLogin.username,
-            password: this.formLogin.password,
-            to: this.$route.query.redirect || "/",
+          _self.login({
+            username: _self.formLogin.username,
+            password: _self.formLogin.password,
+            to: _self.$route.query.redirect || "/",
+          }).then(result=>{
+            _self.loading=false;
+          }).catch(err=>{
+             _self.loading=false;
           });
         } else {
+          _self.loading=false;
           // 登录表单校验失败
           this.$message.error("表单校验失败，请检查");
         }

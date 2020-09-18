@@ -111,6 +111,7 @@
             </div>
             <el-col :xs="10">
               <el-table
+                v-loading="loading"
                 :data="userList"
                 style="width: 100%;"
                 ref="userListRef"
@@ -356,14 +357,19 @@ export default {
   },
   data() {
     return {
+      // 遮罩层
+      loading: true,
+      // 树形过滤
       filterText: "",
       position: "left",
+      //树形
       deptTreeProps: {
         children: "children",
         label: "name",
       },
       // 部门树
       deptTreeData: [],
+      //当前树形信息
       currentDeptTreeData: {},
       // 用户检索信息
       searchInfo: {
@@ -385,6 +391,7 @@ export default {
       roleDataList: [],
       // 用户列表
       userList: [],
+      //用户信息
       userInfo: {
         id: "",
         username: "",
@@ -410,9 +417,13 @@ export default {
           { required: true, message: "请选择所属部门", trigger: "blur" },
         ],
       },
+      //是否修改
       isUpdate: false,
+      //是否显示面板
       dialogTableVisible: false,
+      //性别选项
       sexOptions: [],
+      //启用选项
       isEnabledOptions: [],
     };
   },
@@ -452,9 +463,11 @@ export default {
     getPage() {
       let _self = this;
       let params = JSON.parse(JSON.stringify(_self.searchInfo));
+      _self.loading = true;
       _self.userPage({ data: params }).then((result) => {
         _self.userList = result.records;
         _self.searchInfo.total = Number(result.total);
+        _self.loading = false;
       });
     },
     handleSizeChange(pageSize) {
