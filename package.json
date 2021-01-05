@@ -16,7 +16,7 @@
     "@d2-projects/vue-table-export": "^1.0.1",
     "@d2-projects/vue-table-import": "^1.0.0",
     "@riophae/vue-treeselect": "^0.4.0",
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "axios-mock-adapter": "^1.18.1",
     "better-scroll": "^1.15.2",
     "clipboard-polyfill": "^2.8.6",
