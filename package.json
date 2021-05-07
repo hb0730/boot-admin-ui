@@ -41,7 +41,7 @@
     "screenfull": "^5.0.2",
     "simplemde": "^1.11.2",
     "sortablejs": "^1.10.1",
-    "ua-parser-js": "^0.7.20",
+    "ua-parser-js": "^0.7.24",
     "v-charts": "^1.19.0",
     "vue": "^2.6.11",
     "vue-grid-layout": "^2.3.7",
