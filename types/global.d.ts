@@ -67,6 +67,7 @@ declare global {
     VITE_PUBLIC_PATH: string;
     VITE_PROXY_DOMAIN: string;
     VITE_PROXY_DOMAIN_REAL: string;
+    VITE_API_SERVER: string;
     VITE_ROUTER_HISTORY: string;
     VITE_LEGACY: boolean;
   }

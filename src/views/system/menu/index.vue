@@ -1,0 +1,224 @@
+<script setup lang="ts">
+import { onMounted, reactive, ref } from "vue";
+import { menuApi } from "/@/api/menu";
+import { Result } from "/@/api/model/domain";
+import { Menu, MenuTree } from "/@/api/model/menu_model";
+import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
+import { errorMessage, warnMessage } from "/@/utils/message";
+import { confirm } from "/@/utils/message/box";
+import type { ElTree } from "element-plus";
+
+import permissionList from "./list/permission.vue";
+import menuEdit from "./edit/menu.vue";
+
+const treeRef = ref<InstanceType<typeof ElTree>>();
+const checkedId = ref("");
+const treeProps = {
+  children: "children",
+  label: "title"
+};
+const pageData: {
+  isUpdate: boolean;
+  treeData: MenuTree[];
+  menuInfo: Menu;
+  position: string;
+  searchPermissionInfo: {
+    permission: string;
+    name: string;
+  };
+  permissionList: [];
+} = reactive({
+  isUpdate: false,
+  treeData: [],
+  menuInfo: {
+    id: "",
+    description: "",
+    parentId: "-1",
+    title: "",
+    enname: "",
+    path: "",
+    component: "",
+    icon: "",
+    sort: 999,
+    isEnabled: 0
+  },
+  position: "left",
+  searchPermissionInfo: {
+    permission: "",
+    name: ""
+  },
+  permissionList: []
+});
+const setData = (data?: Menu, isupdate = false) => {
+  pageData.isUpdate = isupdate;
+  if (data) {
+    pageData.menuInfo = data;
+  } else {
+    pageData.menuInfo = {
+      id: null,
+      parentId: "-1",
+      title: null,
+      enname: "",
+      path: "",
+      component: "",
+      icon: "",
+      description: "",
+      sort: 999,
+      isEnabled: 0
+    };
+  }
+};
+const getMenuTree = async () => {
+  const result: Result<MenuTree[]> = await menuApi.getMenuTree();
+  if (result.code === "0") {
+    pageData.treeData = result.data;
+  } else {
+    warnMessage(result.message);
+  }
+};
+const handleNodeChangeCheckEvent = (data, checked: boolean) => {
+  if (checked) {
+    checkedId.value = data.id;
+    setData(data, true);
+    treeRef.value!.setCheckedKeys([data.id], false);
+  } else {
+    if (checkedId.value == data.id) {
+      treeRef.value!.setCheckedKeys([data.id], false);
+    }
+  }
+};
+const addNew = () => {
+  setData(null, false);
+  const ids = treeRef.value!.getCheckedKeys();
+  if (ids.length != 0) {
+    pageData.menuInfo.parentId = ids[0].toString();
+  }
+};
+const handlerDelete = () => {
+  const ids = treeRef.value!.getCheckedKeys();
+  if (ids.length != 0) {
+    confirm("是否删除")
+      .then(() => {
+        deleteById(ids[0].toString());
+      })
+      .catch(() => {});
+  } else {
+    warnMessage("请选择");
+  }
+};
+const deleteById = async (id: string) => {
+  const result: Result<string> = await menuApi.deleteById(id);
+  if (result.code === "0") {
+    await getMenuTree();
+    setData(null, false);
+  } else {
+    errorMessage(result.message);
+  }
+};
+const handlerNewSaveSuccess = async () => {
+  await getMenuTree();
+};
+onMounted(() => {
+  getMenuTree();
+});
+</script>
+
+<template>
+  <div class="app-container">
+    <el-row>
+      <el-col :span="6">
+        <el-card shadow="never">
+          <el-row>
+            <el-col :span="24">
+              <el-button
+                type="primary"
+                size="large"
+                :icon="useRenderIcon('plus')"
+                @click="addNew"
+                plain
+                >新增</el-button
+              >
+              <el-button
+                type="danger"
+                size="large"
+                :icon="useRenderIcon('delete')"
+                @click="handlerDelete"
+                plain
+                >删除</el-button
+              >
+            </el-col>
+          </el-row>
+          <el-row style="padding-top: 10%">
+            <el-col>
+              <el-tree
+                :data="pageData.treeData"
+                :props="treeProps"
+                node-key="id"
+                show-checkbox
+                ref="treeRef"
+                check-strictly
+                :highlight-current="true"
+                :expand-on-click-node="true"
+                default-expand-all
+                @check-change="handleNodeChangeCheckEvent"
+              ></el-tree>
+            </el-col>
+          </el-row>
+        </el-card>
+      </el-col>
+      <el-col :span="8">
+        <el-card shadow="never">
+          <el-row></el-row>
+          <menuEdit
+            :tree-menu="pageData.treeData"
+            :is-update="pageData.isUpdate"
+            :menu-info="pageData.menuInfo"
+            :position="pageData.position"
+            @new-save-success="handlerNewSaveSuccess"
+          ></menuEdit>
+        </el-card>
+      </el-col>
+      <el-col :span="10">
+        <el-card shadow="never">
+          <el-row>
+            <el-col>
+              <el-form
+                :inline="true"
+                size="small"
+                :model="pageData.searchPermissionInfo"
+              >
+                <el-form-item label="标识">
+                  <el-input
+                    v-model="pageData.searchPermissionInfo.permission"
+                    clearable
+                    placeholder="标识"
+                  ></el-input>
+                </el-form-item>
+                <el-form-item label="名称">
+                  <el-input
+                    v-model="pageData.searchPermissionInfo.name"
+                    clearable
+                    placeholder="名称"
+                  ></el-input>
+                </el-form-item>
+                <el-form-item>
+                  <el-button
+                    type="primary"
+                    size="small"
+                    plain
+                    :icon="useRenderIcon('fa-search')"
+                    >搜索</el-button
+                  >
+                </el-form-item>
+              </el-form>
+            </el-col>
+          </el-row>
+
+          <permissionList></permissionList>
+        </el-card>
+      </el-col>
+    </el-row>
+  </div>
+</template>
+
+<style scoped></style>

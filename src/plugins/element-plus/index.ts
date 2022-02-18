@@ -34,7 +34,17 @@ import {
   ElCollapseItem,
   // 指令
   ElLoading,
-  ElInfiniteScroll
+  ElInfiniteScroll,
+  ElCheckbox,
+  ElCard,
+  ElTree,
+  ElForm,
+  ElFormItem,
+  ElInputNumber,
+  ElTable,
+  ElTableColumn,
+  ElSelect,
+  ElOption
 } from "element-plus";
 
 // Directives
@@ -72,7 +82,20 @@ const components = [
   ElAvatar,
   ElEmpty,
   ElCollapse,
-  ElCollapseItem
+  ElCollapseItem,
+  ElCheckbox,
+  ElCard,
+  ElTree,
+  ElForm,
+  ElFormItem,
+  ElInputNumber,
+  ElDropdown,
+  ElDropdownItem,
+  ElDropdownMenu,
+  ElTable,
+  ElTableColumn,
+  ElSelect,
+  ElOption
 ];
 
 export function useElementPlus(app: App) {

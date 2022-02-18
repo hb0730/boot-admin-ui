@@ -24,6 +24,8 @@ import Location from "@iconify-icons/ep/location";
 import Tickets from "@iconify-icons/ep/tickets";
 import OfficeBuilding from "@iconify-icons/ep/office-building";
 import Notebook from "@iconify-icons/ep/notebook";
+import Delete from "@iconify-icons/ep/delete";
+import Plus from "@iconify-icons/ep/plus";
 addIcon("check", Check);
 addIcon("menu", Menu);
 addIcon("home-filled", HomeFilled);
@@ -46,22 +48,29 @@ addIcon("location", Location);
 addIcon("tickets", Tickets);
 addIcon("office-building", OfficeBuilding);
 addIcon("notebook", Notebook);
+addIcon("delete", Delete);
+addIcon("plus", Plus);
 
 // remixicon
 import arrowRightSLine from "@iconify-icons/ri/arrow-right-s-line";
 import arrowLeftSLine from "@iconify-icons/ri/arrow-left-s-line";
 import logoutCircleRLine from "@iconify-icons/ri/logout-circle-r-line";
+import circlePlus from "@iconify-icons/akar-icons/circle-plus";
+
 addIcon("arrow-right-s-line", arrowRightSLine);
 addIcon("arrow-left-s-line", arrowLeftSLine);
 addIcon("logout-circle-r-line", logoutCircleRLine);
+addIcon("circlePlus", circlePlus);
 
 // Font Awesome 4
 import faUser from "@iconify-icons/fa/user";
 import faLock from "@iconify-icons/fa/lock";
 import faSignOut from "@iconify-icons/fa/sign-out";
+import faSearch from "@iconify-icons/fa/search";
 addIcon("fa-user", faUser);
 addIcon("fa-lock", faLock);
 addIcon("fa-sign-out", faSignOut);
+addIcon("fa-search", faSearch);
 
 // Iconify Icon在Vue里离线使用（用于内网环境）https://docs.iconify.design/icon-components/vue/offline.html
 export default defineComponent({

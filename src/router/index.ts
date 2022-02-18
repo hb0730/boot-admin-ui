@@ -5,7 +5,6 @@ import { constantRoutes } from "./modules";
 import { split, findIndex } from "lodash-es";
 import { transformI18n } from "/@/plugins/i18n";
 import remainingRouter from "./modules/remaining";
-import { storageSession } from "/@/utils/storage";
 import { Title } from "../../public/serverConfig.json";
 import { useMultiTagsStoreHook } from "/@/store/modules/multiTags";
 import { usePermissionStoreHook } from "/@/store/modules/permission";
@@ -17,6 +16,7 @@ import {
   findRouteByPath,
   handleAliveRoute
 } from "./utils";
+import { db } from "../utils/storage/db";
 
 // 创建路由实例
 export const router: Router = createRouter({
@@ -50,7 +50,7 @@ router.beforeEach((to: toRouteType, _from, next) => {
       handleAliveRoute(newMatched);
     }
   }
-  const name = storageSession.getItem("info");
+  const name = db.dbGet({ dbName: "sys", path: "userInfo", user: true });
   NProgress.start();
   const externalLink = to?.redirectedFrom?.fullPath;
   if (!externalLink)

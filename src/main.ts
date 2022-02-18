@@ -7,7 +7,7 @@ import { usI18n } from "../src/plugins/i18n";
 import { MotionPlugin } from "@vueuse/motion";
 import { useElementPlus } from "../src/plugins/element-plus";
 import { injectResponsiveStorage } from "/@/utils/storage/responsive";
-
+import { useIconPicker } from "./plugins/icon-picker";
 import "animate.css";
 import "virtual:windi.css";
 // 导入公共样式
@@ -37,7 +37,12 @@ app.component("FontIcon", FontIcon);
 getServerConfig(app).then(async config => {
   injectResponsiveStorage(app, config);
   setupStore(app);
-  app.use(router).use(MotionPlugin).use(useElementPlus).use(usI18n);
+  app
+    .use(router)
+    .use(MotionPlugin)
+    .use(useElementPlus)
+    .use(usI18n)
+    .use(useIconPicker);
   await router.isReady();
   app.mount("#app");
 });

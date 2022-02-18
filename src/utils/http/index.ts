@@ -1,6 +1,5 @@
 import Axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 import {
-  resultType,
   PureHttpError,
   RequestMethods,
   PureHttpResoponse,
@@ -8,21 +7,15 @@ import {
 } from "./types.d";
 import qs from "qs";
 import NProgress from "../progress";
-// import { loadEnv } from "@build/index";
-import { getToken } from "/@/utils/auth";
-import { useUserStoreHook } from "/@/store/modules/user";
+import { loadEnv } from "@build/index";
+import { tokenStoreHook } from "/@/store/modules/token";
 
 // 加载环境变量 VITE_PROXY_DOMAIN（开发环境）  VITE_PROXY_DOMAIN_REAL（打包后的线上环境）
-// const { VITE_PROXY_DOMAIN, VITE_PROXY_DOMAIN_REAL } = loadEnv();
+const { VITE_API_SERVER } = loadEnv();
 
 // 相关配置请参考：www.axios-js.com/zh-cn/docs/#axios-request-config-1
 const defaultConfig: AxiosRequestConfig = {
-  // baseURL:
-  //   process.env.NODE_ENV === "production"
-  //     ? VITE_PROXY_DOMAIN_REAL
-  //     : VITE_PROXY_DOMAIN,
-  // 当前使用mock模拟请求，将baseURL制空，如果你的环境用到了http请求，请删除下面的baseURL启用上面的baseURL，并将11行、16行代码注释取消
-  baseURL: "",
+  baseURL: VITE_API_SERVER,
   timeout: 10000,
   headers: {
     Accept: "application/json, text/plain, */*",
@@ -60,23 +53,11 @@ class PureHttp {
           PureHttp.initConfig.beforeRequestCallback($config);
           return $config;
         }
-        const token = getToken();
+
+        const token = tokenStoreHook().getToken();
         if (token) {
-          const data = JSON.parse(token);
-          const now = new Date().getTime();
-          const expired = parseInt(data.expires) - now <= 0;
-          if (expired) {
-            // token过期刷新
-            useUserStoreHook()
-              .refreshToken(data)
-              .then((res: resultType) => {
-                config.headers["Authorization"] = "Bearer " + res.accessToken;
-                return $config;
-              });
-          } else {
-            config.headers["Authorization"] = "Bearer " + data.accessToken;
-            return $config;
-          }
+          config.headers["Authorization"] = "Bearer " + token;
+          return $config;
         } else {
           return $config;
         }
@@ -147,10 +128,10 @@ class PureHttp {
   // 单独抽离的post工具函数
   public post<T>(
     url: string,
-    params?: T,
+    params?: any,
     config?: PureHttpRequestConfig
   ): Promise<T> {
-    return this.request<T>("post", url, params, config);
+    return this.request<T>("post", url, { data: params }, config);
   }
 
   // 单独抽离的get工具函数
@@ -159,7 +140,7 @@ class PureHttp {
     params?: T,
     config?: PureHttpRequestConfig
   ): Promise<T> {
-    return this.request<T>("get", url, params, config);
+    return this.request<T>("get", url, { params: params }, config);
   }
 }
 

@@ -1,25 +1,25 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { useRouter } from "vue-router";
-import { initRouter } from "/@/router/utils";
-import { storageSession } from "/@/utils/storage";
+import { onMounted, ref } from "vue";
 import { addClass, removeClass } from "/@/utils/operate";
 import bg from "/@/assets/login/bg.png";
 import avatar from "/@/assets/login/avatar.svg?component";
 import illustration from "/@/assets/login/illustration.svg?component";
-
-const router = useRouter();
-
-let user = ref("admin");
-let pwd = ref("123456");
+import { warnMessage } from "/@/utils/message";
+import { tokenStoreHook } from "/@/store/modules/token";
+let user = ref("");
+let pwd = ref("");
+let remember = ref(false);
 
 const onLogin = (): void => {
-  storageSession.setItem("info", {
-    username: "admin",
-    accessToken: "eyJhbGciOiJIUzUxMiJ9.test"
+  if (user.value == "" || pwd.value == "") {
+    warnMessage("请输入用户名/密码");
+    return;
+  }
+  tokenStoreHook().login({
+    username: user.value,
+    password: pwd.value,
+    remember: remember.value
   });
-  initRouter("admin").then(() => {});
-  router.push("/");
 };
 
 function onUserFocus() {
@@ -39,11 +39,17 @@ function onPwdBlur() {
   if (pwd.value.length === 0)
     removeClass(document.querySelector(".pwd"), "focus");
 }
+onMounted(() => {
+  const login = tokenStoreHook().getRemember();
+  user.value = login.username;
+  pwd.value = login.password;
+  remember.value = login.remember;
+});
 </script>
 
 <template>
   <img :src="bg" class="wave" />
-  <div class="login-container">
+  <div class="login-container" @keyup.enter="onLogin">
     <div class="img">
       <illustration />
     </div>
@@ -123,6 +129,9 @@ function onPwdBlur() {
               @blur="onPwdBlur"
             />
           </div>
+        </div>
+        <div>
+          <el-checkbox v-model="remember" label="记住我"></el-checkbox>
         </div>
         <button
           class="btn"

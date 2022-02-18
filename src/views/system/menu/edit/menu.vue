@@ -1,0 +1,194 @@
+<script setup lang="ts">
+import { ElForm } from "element-plus";
+import { reactive, PropType, toRef, watch, ref, toRaw } from "vue";
+import { menuApi } from "/@/api/menu";
+import { Result } from "/@/api/model/domain";
+import { Menu, MenuTree } from "/@/api/model/menu_model";
+import VueSelectTree from "/@/components/tree-select/index.vue";
+import { warnMessage } from "/@/utils/message";
+
+const menuFormRef = ref<InstanceType<typeof ElForm>>();
+const isEnabledOptions = reactive([
+  { value: 1, label: "启用" },
+  { value: 0, label: "禁用" }
+]);
+
+const menuRules = reactive({
+  title: [{ required: true, message: "请输入菜单名称", trigger: "blur" }],
+  enname: [{ required: true, message: "请输入路由标题", trigger: "blur" }],
+  path: [{ required: true, message: "请输入菜单地址", trigger: "blur" }]
+});
+const props = defineProps({
+  treeMenu: Object as PropType<MenuTree[]>,
+  position: {
+    require: false,
+    default: "left",
+    type: String
+  },
+  isUpdate: {
+    require: true,
+    default: false,
+    type: Boolean
+  },
+  menuInfo: Object as PropType<Menu>
+});
+const emit = defineEmits<{ (e: "newSaveSuccess"): void }>();
+const menuInfo = toRef(props, "menuInfo");
+const isUpdate = toRef(props, "isUpdate");
+const position = toRef(props, "position");
+const treeMenu = toRef(props, "treeMenu");
+const handlerAddNew = () => {
+  menuFormRef.value!.validate(isValidate => {
+    if (isValidate) {
+      addNew();
+    } else {
+      warnMessage("表单校验失败");
+    }
+  });
+};
+const addNew = async () => {
+  const value = toRaw(menuInfo.value);
+  const result: Result<string> = await menuApi.newSave(value);
+  if (result.code === "0") {
+    menuFormRef.value!.resetFields();
+    emit("newSaveSuccess");
+  } else {
+    warnMessage(result.message);
+  }
+};
+const handlerUpdate = () => {
+  menuFormRef.value!.validate(isValidate => {
+    if (isValidate) {
+      update();
+    } else {
+      warnMessage("表单校验失败");
+    }
+  });
+};
+const update = async () => {
+  const value = toRaw(menuInfo.value);
+  const result: Result<string> = await menuApi.updateById(value.id, value);
+  if (result.code === "0") {
+    menuFormRef.value!.resetFields();
+    emit("newSaveSuccess");
+  } else {
+    warnMessage(result.message);
+  }
+};
+const nodeClick = node => {
+  if (node) {
+    menuInfo.value.parentId = node.id;
+  } else {
+    menuInfo.value.parentId = null;
+  }
+};
+watch(
+  () => {
+    return props.isUpdate;
+  },
+  () => {
+    if (!props.isUpdate) {
+      setTimeout(() => {
+        menuFormRef.value!.resetFields();
+      }, 0);
+    }
+  }
+);
+</script>
+
+<template>
+  <div>
+    <el-row style="padding-top: 10%">
+      <el-col>
+        <el-form
+          ref="menuFormRef"
+          :model="menuInfo"
+          label-width="auto"
+          center
+          :label-position="position"
+          :rules="menuRules"
+          size="large"
+        >
+          <el-form-item label="上级菜单: ">
+            <VueSelectTree
+              v-model="menuInfo.parentId"
+              placeholder="顶级节点"
+              :options="treeMenu"
+              @nodeClick="nodeClick"
+              style="width: 100%"
+            >
+            </VueSelectTree>
+          </el-form-item>
+          <el-form-item required label="菜单名称: " prop="title">
+            <el-input v-model="menuInfo.title" clearable></el-input>
+          </el-form-item>
+          <el-form-item required label="路由标题: " prop="enname">
+            <el-input v-model="menuInfo.enname" clearable></el-input>
+          </el-form-item>
+          <el-form-item required label="菜单地址: " prop="path">
+            <el-input v-model="menuInfo.path" clearable></el-input>
+          </el-form-item>
+          <el-form-item label="路由地址: " prop="component">
+            <el-input v-model="menuInfo.component" clearable></el-input>
+          </el-form-item>
+          <el-form-item label="图标: " prop="icon">
+            <e-icon-picker
+              style="width: 100%"
+              v-model="menuInfo.icon"
+              clearable
+            />
+          </el-form-item>
+          <el-form-item label="排序: " prop="sort">
+            <el-input-number
+              style="width: 100%"
+              controls-position="right"
+              v-model="menuInfo.sort"
+              placeholder="排序"
+              clearable
+            ></el-input-number>
+          </el-form-item>
+          <el-form-item label="备注: " prop="description">
+            <el-input
+              type="textarea"
+              v-model="menuInfo.description"
+              placeholder="备注"
+              clearable
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="是否启用: " prop="isEnabled">
+            <el-radio-group v-model="menuInfo.isEnabled">
+              <el-radio
+                v-for="item in isEnabledOptions"
+                :key="Number(item.value)"
+                :label="Number(item.value)"
+                >{{ item.label }}</el-radio
+              >
+            </el-radio-group>
+          </el-form-item>
+        </el-form>
+        <div>
+          <el-button
+            type="primary"
+            size="default"
+            plain
+            class="footer-button"
+            v-if="!isUpdate"
+            @click="handlerAddNew"
+            >新增</el-button
+          >
+          <el-button
+            type="primary"
+            size="default"
+            plain
+            class="footer-button"
+            @click="handlerUpdate"
+            v-if="isUpdate"
+            >修改</el-button
+          >
+        </div>
+      </el-col>
+    </el-row>
+  </div>
+</template>
+
+<style scoped></style>
