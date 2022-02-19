@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { onMounted, reactive, ref } from "vue";
 import { menuApi } from "/@/api/menu";
-import { Result } from "/@/api/model/domain";
+import { Page, Result } from "/@/api/model/domain";
 import { Menu, MenuTree } from "/@/api/model/menu_model";
+import { Permission, Query } from "/@/api/model/permission_model";
 import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
 import { errorMessage, warnMessage } from "/@/utils/message";
 import { confirm } from "/@/utils/message/box";
@@ -10,6 +11,7 @@ import type { ElTree } from "element-plus";
 
 import permissionList from "./list/permission.vue";
 import menuEdit from "./edit/menu.vue";
+import { permissionApi } from "/@/api/permission";
 
 const treeRef = ref<InstanceType<typeof ElTree>>();
 const checkedId = ref("");
@@ -22,11 +24,8 @@ const pageData: {
   treeData: MenuTree[];
   menuInfo: Menu;
   position: string;
-  searchPermissionInfo: {
-    permission: string;
-    name: string;
-  };
-  permissionList: [];
+  searchPermissionInfo: Query;
+  permissionList: Permission[];
 } = reactive({
   isUpdate: false,
   treeData: [],
@@ -43,11 +42,28 @@ const pageData: {
     isEnabled: 0
   },
   position: "left",
+  permissionList: [],
+  /**
+   * 权限检索
+   */
   searchPermissionInfo: {
-    permission: "",
-    name: ""
+    sortColumn: [],
+    groupColumn: [],
+    pageSize: 10,
+    pageNum: 1,
+    total: 0
   },
-  permissionList: []
+  /**
+   * 权限表单信息
+   */
+  permissionInfo: {
+    id: "",
+    menuId: "",
+    permission: "",
+    description: "",
+    isEnabled: 0,
+    sort: 999
+  }
 });
 const setData = (data?: Menu, isupdate = false) => {
   pageData.isUpdate = isupdate;
@@ -76,15 +92,28 @@ const getMenuTree = async () => {
     warnMessage(result.message);
   }
 };
+const getMenuPermission = async (id: string) => {
+  const result: Result<Page<Permission[]>> =
+    await permissionApi.getMenuPermission(id, pageData.searchPermissionInfo);
+  if (result.code === "0") {
+    pageData.permissionList = result.data.records;
+    pageData.searchPermissionInfo.total = Number(result.data.total);
+  } else {
+    warnMessage(result.message);
+  }
+};
 const handleNodeChangeCheckEvent = (data, checked: boolean) => {
   if (checked) {
     checkedId.value = data.id;
     setData(data, true);
+    getMenuPermission(data.id);
+    pageData.searchPermissionInfo.menuId = data.id;
     treeRef.value!.setCheckedKeys([data.id], false);
   } else {
     if (checkedId.value == data.id) {
       treeRef.value!.setCheckedKeys([data.id], false);
     }
+    pageData.searchPermissionInfo.menuId = undefined;
   }
 };
 const addNew = () => {
@@ -117,6 +146,33 @@ const deleteById = async (id: string) => {
 };
 const handlerNewSaveSuccess = async () => {
   await getMenuTree();
+};
+const sizeChange = (pageSize: number) => {
+  const ids = treeRef.value!.getCheckedKeys();
+  if (ids.length != 0) {
+    pageData.searchPermissionInfo.pageSize = pageSize;
+    getMenuPermission(ids[0].toString());
+  }
+};
+const currentChange = (pageNum: number) => {
+  const ids = treeRef.value!.getCheckedKeys();
+  if (ids.length != 0) {
+    pageData.searchPermissionInfo.pageNum = pageNum;
+    getMenuPermission(ids[0].toString());
+  }
+};
+const refreshTable = () => {
+  const ids = treeRef.value!.getCheckedKeys();
+  if (ids.length != 0) {
+    getMenuPermission(ids[0].toString());
+  }
+};
+const handlerPermissionSearch = () => {
+  const ids = treeRef.value!.getCheckedKeys();
+  if (ids.length != 0) {
+    pageData.searchPermissionInfo.pageNum = 1;
+    getMenuPermission(ids[0].toString());
+  }
 };
 onMounted(() => {
   getMenuTree();
@@ -206,6 +262,7 @@ onMounted(() => {
                     type="primary"
                     size="small"
                     plain
+                    @click="handlerPermissionSearch"
                     :icon="useRenderIcon('fa-search')"
                     >搜索</el-button
                   >
@@ -214,7 +271,14 @@ onMounted(() => {
             </el-col>
           </el-row>
 
-          <permissionList></permissionList>
+          <permissionList
+            :table-data="pageData.permissionList"
+            :search-model="pageData.searchPermissionInfo"
+            :tree-menu-data="pageData.treeData"
+            @current-change="currentChange"
+            @size-change="sizeChange"
+            @refresh="refreshTable"
+          ></permissionList>
         </el-card>
       </el-col>
     </el-row>

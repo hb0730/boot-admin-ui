@@ -44,7 +44,9 @@ import {
   ElTable,
   ElTableColumn,
   ElSelect,
-  ElOption
+  ElOption,
+  ElPagination,
+  ElDialog
 } from "element-plus";
 
 // Directives
@@ -95,7 +97,9 @@ const components = [
   ElTable,
   ElTableColumn,
   ElSelect,
-  ElOption
+  ElOption,
+  ElPagination,
+  ElDialog
 ];
 
 export function useElementPlus(app: App) {
