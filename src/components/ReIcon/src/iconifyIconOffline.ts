@@ -26,6 +26,7 @@ import OfficeBuilding from "@iconify-icons/ep/office-building";
 import Notebook from "@iconify-icons/ep/notebook";
 import Delete from "@iconify-icons/ep/delete";
 import Plus from "@iconify-icons/ep/plus";
+import UserFilled from "@iconify-icons/ep/user-filled";
 addIcon("check", Check);
 addIcon("menu", Menu);
 addIcon("home-filled", HomeFilled);
@@ -50,6 +51,7 @@ addIcon("office-building", OfficeBuilding);
 addIcon("notebook", Notebook);
 addIcon("delete", Delete);
 addIcon("plus", Plus);
+addIcon("user-filled", UserFilled);
 
 // remixicon
 import arrowRightSLine from "@iconify-icons/ri/arrow-right-s-line";
@@ -69,12 +71,18 @@ import faSignOut from "@iconify-icons/fa/sign-out";
 import faSearch from "@iconify-icons/fa/search";
 import faTrash from "@iconify-icons/fa/trash";
 import faRefresh from "@iconify-icons/fa/refresh";
+import faUpload from "@iconify-icons/fa/upload";
+import faDownload from "@iconify-icons/fa/download";
+import faKey from "@iconify-icons/fa/key";
 addIcon("fa-user", faUser);
 addIcon("fa-lock", faLock);
 addIcon("fa-sign-out", faSignOut);
 addIcon("fa-search", faSearch);
 addIcon("fa-trash", faTrash);
 addIcon("fa-refresh", faRefresh);
+addIcon("fa-upload", faUpload);
+addIcon("fa-download", faDownload);
+addIcon("fa-key", faKey);
 
 // Iconify Icon在Vue里离线使用（用于内网环境）https://docs.iconify.design/icon-components/vue/offline.html
 export default defineComponent({

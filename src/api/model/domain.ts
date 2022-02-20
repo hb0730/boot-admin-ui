@@ -6,7 +6,31 @@ export interface Result<T> {
   message: string;
   data: T;
 }
+export interface BaseClass {
+  /**
+   * 创建者
+   */
+  createUserId?: string;
+  /**
+   * 创建时间
+   */
+  createTime?: string;
 
+  /**
+   * 修改者
+   */
+  updateUserId?: string;
+
+  /**
+   * 修改时间
+   */
+  updateTime?: string;
+
+  /**
+   * 是否启用
+   */
+  isEnabled?: number;
+}
 /**
  * page结构体
  */

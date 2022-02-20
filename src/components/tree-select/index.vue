@@ -15,7 +15,7 @@
         ref="selectTree"
         default-expand-all
         :data="options"
-        :props="defaultProps"
+        :props="dataProps"
         @node-click="handleNodeClick"
       />
     </el-option>
@@ -23,7 +23,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch, onMounted } from "vue";
+import { defineComponent, ref, watch, onMounted, PropType } from "vue";
+export interface DataProps {
+  id?: string;
+  value?: string;
+  children?: string;
+  label?: string;
+  disabled?: string;
+  isLeaf?: string;
+}
 
 export default defineComponent({
   name: "mySelect",
@@ -32,6 +40,17 @@ export default defineComponent({
     disabled: {
       type: Boolean,
       default: false
+    },
+    dataProps: {
+      type: Object as PropType<DataProps>,
+      default: () => ({
+        id: "id",
+        value: "id",
+        children: "children",
+        label: "title",
+        disabled: "disabled",
+        isLeaf: "isLeaf"
+      })
     },
     options: {
       type: Array,
@@ -45,7 +64,8 @@ export default defineComponent({
       function find(arr, value) {
         for (let i = 0; i < arr.length; i++) {
           if (arr[i].id == value) {
-            res = arr[i].title;
+            //
+            res = arr[i][props.dataProps.label];
           }
           if (arr[i].children && arr[i].children.length) {
             find(arr[i].children, value);
@@ -70,10 +90,10 @@ export default defineComponent({
 
     const optionValue = ref("");
     function handleNodeClick(node) {
-      optionValue.value = node.title;
+      optionValue.value = node[props.dataProps.label];
       mySelect.value.blur();
       context.emit("nodeClick", node);
-      context.emit("update:modelValue", node.id);
+      context.emit("update:modelValue", node[props.dataProps.value]);
     }
     function handleVisibleChange(_) {}
     function handlerClear() {
@@ -85,12 +105,6 @@ export default defineComponent({
       handleNodeClick,
       handleVisibleChange,
       handlerClear,
-      defaultProps: {
-        children: "children",
-        label: "title",
-        disabled: "disabled",
-        isLeaf: "isLeaf"
-      },
       optionValue
     };
   }

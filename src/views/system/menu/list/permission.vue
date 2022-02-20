@@ -211,7 +211,7 @@ const permissionDelete = async (ids: string[]) => {
             size="small"
             @click="handlerDelete"
             :icon="useRenderIcon('fa-trash')"
-            >修改</el-button
+            >删除</el-button
           >
         </div>
         <div class="avue-crud__right">
