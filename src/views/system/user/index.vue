@@ -12,7 +12,7 @@ import UserList from "./list/index.vue";
 import UserEdit from "./edit/index.vue";
 import { Post, PostQuery } from "/@/api/model/post_model";
 import { Role, RoleQuery } from "/@/api/model/role_model";
-import { RoleApi } from "/@/api/role";
+import { roleApi } from "/@/api/role";
 const pageData = reactive<{
   isUpdate: boolean;
   dialogVisible: boolean;
@@ -135,7 +135,7 @@ const getPost = async () => {
 };
 const getRoleList = async () => {
   const query: RoleQuery = { isEnabled: 1 };
-  const result: Result<Role[]> = await RoleApi.getList(query);
+  const result: Result<Role[]> = await roleApi.getList(query);
   if (result.code === "0") {
     pageData.roleDataList = result.data;
   }

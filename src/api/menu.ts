@@ -1,6 +1,11 @@
 import BaseRequest from "./base";
 import { Result } from "./model/domain";
-import { Menu, MenuTree, RouterModel } from "./model/menu_model";
+import {
+  Menu,
+  MenuPermissionTree,
+  MenuTree,
+  RouterModel
+} from "./model/menu_model";
 
 enum API {
   currentRouter = "/get/current/router",
@@ -8,7 +13,8 @@ enum API {
   save = "/save",
   updateById = "/update/:id",
   delete = "/delete/:id",
-  deleteBatch = "/delete"
+  deleteBatch = "/delete",
+  menu_permission_tree = "/query/tree/permission"
 }
 class MenuAPI extends BaseRequest {
   private static BASE_API = "/api/v3/system/menu";
@@ -50,6 +56,13 @@ class MenuAPI extends BaseRequest {
    */
   deleteById(id: string): Promise<Result<string>> {
     return this.delete(API.delete.replace(":id", id));
+  }
+  /**
+   * 菜单权限树
+   * @returns 菜单权限树
+   */
+  getMenuPermissionTree(): Promise<Result<MenuPermissionTree[]>> {
+    return this.get<Result<MenuPermissionTree[]>>(API.menu_permission_tree);
   }
 }
 export const menuApi = new MenuAPI();

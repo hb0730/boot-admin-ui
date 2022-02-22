@@ -4,9 +4,11 @@ export interface Dept {
   leader: string;
   phone: string;
   email: string;
-  parentId: String;
+  parentId: string;
   sort: number;
   ancestors: string;
+  description: string;
+  isEnabled: number;
 }
 export interface DeptTree extends Dept {
   children: DeptTree[];

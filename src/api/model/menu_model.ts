@@ -31,3 +31,22 @@ export interface Menu {
 export interface MenuTree extends Menu {
   children: MenuTree[];
 }
+
+export interface MenuPermissionTree {
+  /**
+   * id
+   */
+  id: string;
+  /**
+   * 名称
+   */
+  name: string;
+  /**
+   * 是否为权限
+   */
+  isPermission: boolean;
+  /**
+   * 子集
+   */
+  children: MenuPermissionTree[];
+}

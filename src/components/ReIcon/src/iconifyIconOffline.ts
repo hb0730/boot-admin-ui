@@ -74,6 +74,8 @@ import faRefresh from "@iconify-icons/fa/refresh";
 import faUpload from "@iconify-icons/fa/upload";
 import faDownload from "@iconify-icons/fa/download";
 import faKey from "@iconify-icons/fa/key";
+import faCheck from "@iconify-icons/fa/check";
+import faEdit from "@iconify-icons/fa/edit";
 addIcon("fa-user", faUser);
 addIcon("fa-lock", faLock);
 addIcon("fa-sign-out", faSignOut);
@@ -83,6 +85,8 @@ addIcon("fa-refresh", faRefresh);
 addIcon("fa-upload", faUpload);
 addIcon("fa-download", faDownload);
 addIcon("fa-key", faKey);
+addIcon("fa-check", faCheck);
+addIcon("fa-edit", faEdit);
 
 // Iconify Icon在Vue里离线使用（用于内网环境）https://docs.iconify.design/icon-components/vue/offline.html
 export default defineComponent({
