@@ -1,28 +1,30 @@
+.el-icon i {
+  width: 20px;
+  text-align: center;
+  font-size: 16px;
+}
 .el-card {
   .footer-button {
     float: right;
   }
 }
 .filter-item {
-  display: inline-block;
-  vertical-align: middle;
+  display: inline-block !important;
+  vertical-align: middle !important;
 }
 
 .el-dialog__body {
-  overflow: auto;
+  overflow: auto !important;
 }
-
 .dialog-main-tree {
-  max-height: 400px;
-  overflow-y: auto;
+  max-height: 400px !important;
+  overflow-y: auto !important;
 }
-
-.el-table th.el-table__cell {
-  word-break: break-word;
-  color: rgba(0, 0, 0, 0.85);
-  background-color: #fafafa;
+.el-table th {
+  word-break: break-word !important;
+  color: rgba(0, 0, 0, 0.85) !important;
+  background-color: #fafafa !important;
 }
-
 .avue-crud__menu {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -41,18 +43,15 @@
 .demo-table-expand {
   font-size: 0;
 }
-
 .demo-table-expand label {
   width: 70px;
   color: #99a9bf;
 }
-
 .demo-table-expand .el-form-item {
   margin-right: 0;
   margin-bottom: 0;
   width: 50%;
 }
-
 .demo-table-expand span {
   display: block;
   word-break: break-all;

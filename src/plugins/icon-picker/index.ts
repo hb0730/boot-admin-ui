@@ -4,7 +4,7 @@ import "e-icon-picker/lib/symbol.js"; //基本彩色图标库
 import "e-icon-picker/lib/index.css"; // 基本样式，包含基本图标
 // import "e-icon-picker/src/js/fontAwesome.js";
 // import "e-icon-picker/lib/fontawesome/all-6.0.0.data.js"; //font-awesome 图标库
-// import "font-awesome/css/font-awesome.css";
+import "font-awesome/css/font-awesome.css";
 import "e-icon-picker/lib/ele/icon.css"; //element-plus 图标库
 
 export function useIconPicker(app: App) {
