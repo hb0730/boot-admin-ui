@@ -189,7 +189,7 @@ onMounted(() => {
           <el-input
             placeholder="输入关键字进行过滤"
             v-model="pageData.filterText"
-            :prefix-icon="useRenderIcon('fa-search')"
+            :prefix-icon="useRenderIcon('iconify-fa-search')"
             size="large"
           >
           </el-input>
@@ -249,7 +249,7 @@ onMounted(() => {
                   plain
                   size="large"
                   @click="handlerSearch"
-                  :icon="useRenderIcon('fa-search')"
+                  :icon="useRenderIcon('iconify-fa-search')"
                   >查询</el-button
                 >
               </el-form-item>

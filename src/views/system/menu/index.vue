@@ -189,7 +189,7 @@ onMounted(() => {
               <el-button
                 type="primary"
                 size="large"
-                :icon="useRenderIcon('plus')"
+                :icon="useRenderIcon('iconify-plus')"
                 @click="addNew"
                 plain
                 >新增</el-button
@@ -197,7 +197,7 @@ onMounted(() => {
               <el-button
                 type="danger"
                 size="large"
-                :icon="useRenderIcon('delete')"
+                :icon="useRenderIcon('iconify-delete')"
                 @click="handlerDelete"
                 plain
                 >删除</el-button
@@ -263,7 +263,7 @@ onMounted(() => {
                     size="small"
                     plain
                     @click="handlerPermissionSearch"
-                    :icon="useRenderIcon('fa-search')"
+                    :icon="useRenderIcon('iconify-fa-search')"
                     >搜索</el-button
                   >
                 </el-form-item>

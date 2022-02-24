@@ -196,21 +196,21 @@ const permissionDelete = async (ids: string[]) => {
             type="success"
             size="small"
             @click="handlerAddNew"
-            :icon="useRenderIcon('plus')"
+            :icon="useRenderIcon('iconify-plus')"
             >新增</el-button
           >
           <el-button
             type="primary"
             size="small"
             @click="handlerEdit"
-            :icon="useRenderIcon('edit')"
+            :icon="useRenderIcon('iconify-edit')"
             >修改</el-button
           >
           <el-button
             type="danger"
             size="small"
             @click="handlerDelete"
-            :icon="useRenderIcon('fa-trash')"
+            :icon="useRenderIcon('iconify-fa-trash')"
             >删除</el-button
           >
         </div>
@@ -219,7 +219,7 @@ const permissionDelete = async (ids: string[]) => {
             size="small"
             title="刷新"
             circle
-            :icon="useRenderIcon('fa-refresh')"
+            :icon="useRenderIcon('iconify-fa-refresh')"
             @click="handlerRefreshTable"
           ></el-button>
         </div>

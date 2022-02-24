@@ -133,7 +133,7 @@ onMounted(() => {
               <el-button
                 type="primary"
                 size="large"
-                :icon="useRenderIcon('fa-check')"
+                :icon="useRenderIcon('iconify-fa-check')"
                 @click="handlerSave"
                 plain
                 >添加</el-button
@@ -141,7 +141,7 @@ onMounted(() => {
               <el-button
                 type="danger"
                 size="large"
-                :icon="useRenderIcon('fa-trash')"
+                :icon="useRenderIcon('iconify-fa-trash')"
                 @click="handlerDelete"
                 plain
                 >删除</el-button

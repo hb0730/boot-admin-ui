@@ -97,26 +97,29 @@ const handlerRestPassword = data => {
         <div class="avue-crud__left">
           <el-button
             type="success"
-            size="small"
+            size="default"
             @click="addNew"
-            :icon="useRenderIcon('plus')"
+            :icon="useRenderIcon('iconify-plus')"
             >新增</el-button
           >
           <el-button
             type="primary"
-            size="small"
+            size="default"
             @click="update"
-            :icon="useRenderIcon('edit')"
+            :icon="useRenderIcon('iconify-edit')"
             >修改</el-button
           >
           <el-button
             type="danger"
-            size="small"
-            :icon="useRenderIcon('fa-trash')"
+            size="default"
+            :icon="useRenderIcon('iconify-fa-trash')"
             @click="handlerDelete"
             >删除</el-button
           >
-          <button class="el-button el-button--small" style="padding: 0 0 0 0px">
+          <button
+            class="el-button el-button--default"
+            style="padding: 0 0 0 0px"
+          >
             <el-upload
               ref="upload"
               class="upload-demo"
@@ -126,26 +129,26 @@ const handlerRestPassword = data => {
             >
               <el-button
                 type="info"
-                size="small"
-                :icon="useRenderIcon('fa-upload')"
+                size="default"
+                :icon="useRenderIcon('iconify-fa-upload')"
                 >上传</el-button
               >
             </el-upload>
           </button>
 
           <el-button
-            size="small"
+            size="default"
             type="warning"
-            :icon="useRenderIcon('fa-download')"
+            :icon="useRenderIcon('iconify-fa-download')"
             >导出</el-button
           >
         </div>
         <div class="avue-crud__right">
           <el-button
-            size="small"
+            size="default"
             title="刷新"
             circle
-            :icon="useRenderIcon('fa-refresh')"
+            :icon="useRenderIcon('iconify-fa-refresh')"
             @click="handlerRefresh"
           ></el-button>
         </div>
@@ -228,7 +231,7 @@ const handlerRestPassword = data => {
                 title="重置密码"
                 @click="handlerRestPassword(scope.row)"
                 type="warning"
-                :icon="useRenderIcon('fa-key')"
+                :icon="useRenderIcon('iconify-fa-key')"
                 size="small"
               ></el-button>
             </template>
