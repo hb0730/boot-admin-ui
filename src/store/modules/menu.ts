@@ -37,6 +37,19 @@ export const menuStore = defineStore({
           return Promise.resolve([]);
         }
       });
+    },
+    async updateCurrentMenu(): Promise<any> {
+      await menuApi.updateCurrent();
+      const self = this;
+      return menuApi.getCurrentRouter().then(result => {
+        if (result.code === "0") {
+          self.setMenu(result.data);
+          return Promise.resolve(result.data);
+        } else {
+          warnMessage(result.message);
+          return Promise.resolve([]);
+        }
+      });
     }
   }
 });

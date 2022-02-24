@@ -8,9 +8,10 @@ import { warnMessage } from "/@/utils/message";
 import { cookies } from "/@/utils/storage/cookie";
 import dayjs from "dayjs";
 import router from "/@/router";
-import { initRouter } from "/@/router/utils";
+import { handleAliveRoute, initRouter } from "/@/router/utils";
 import { dictStoreHook } from "./dict";
-import { getCache } from "/@/api/dict_cache";
+import { getCache, updateCache } from "/@/api/dict_cache";
+import { menuStoreHook } from "./menu";
 
 export const tokenStore = defineStore({
   id: "token-store",
@@ -23,6 +24,11 @@ export const tokenStore = defineStore({
     },
     setUserId(userId: string) {
       cookies.set("uuid", userId);
+    },
+    getCurrentUserInfo(): LoginUser {
+      return JSON.parse(
+        db.dbGet({ dbName: "sys", path: "userInfo", user: true })
+      );
     },
     /**
      *设置缓存信息
@@ -85,6 +91,23 @@ export const tokenStore = defineStore({
         Promise.resolve(error);
       }
     },
+    async logout() {
+      const self = this;
+      return authAPi.logout().then(result => {
+        if (result.code === "0") {
+          //移除cookie token, user cache
+          self.logoutAfter();
+          cookies.remove("token");
+          cookies.remove("uuid");
+        }
+        return result;
+      });
+    },
+    logoutAfter() {
+      db.dbSet({ dbName: "sys", path: "userInfo", user: true, value: "" });
+      db.dbSet({ dbName: "sys", path: "menu", user: true, value: "" });
+      db.dbSet({ dbName: "sys", path: "dict", user: false, value: "" });
+    },
     loginAfter(loginUser: LoginUser) {
       db.dbSet({
         dbName: "sys",
@@ -96,11 +119,18 @@ export const tokenStore = defineStore({
       initRouter(loginUser.username).then(() => {});
       router.push("/");
     },
-    updateCache() {
-      //数据字典
-      getCache().then(result => {
-        dictStoreHook().set(result.data);
+    async updateCache(): Promise<void> {
+      await menuStoreHook()
+        .updateCurrentMenu()
+        .then(result => {
+          handleAliveRoute(result);
+        });
+      await updateCache().then(() => {
+        getCache().then(result => {
+          dictStoreHook().set(result.data);
+        });
       });
+      return Promise.resolve();
     }
   }
 });

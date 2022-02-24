@@ -14,6 +14,8 @@ import { getParentPaths, findRouteByPath } from "/@/router/utils";
 import { usePermissionStoreHook } from "/@/store/modules/permission";
 import globalization from "/@/assets/svg/globalization.svg?component";
 import { ref, watch, nextTick, onMounted, getCurrentInstance } from "vue";
+import { successMessage } from "/@/utils/message";
+import { tokenStoreHook } from "/@/store/modules/token";
 
 const route = useRoute();
 const { locale } = useI18n();
@@ -79,6 +81,14 @@ function translationEn() {
   locale.value = "en";
   handleResize(menuRef.value);
 }
+const currentSetting = async () => {};
+const updateCache = async () => {
+  tokenStoreHook()
+    .updateCache()
+    .then(() => {
+      successMessage("更新成功");
+    });
+};
 </script>
 
 <template>
@@ -170,6 +180,18 @@ function translationEn() {
         </span>
         <template #dropdown>
           <el-dropdown-menu class="logout">
+            <el-dropdown-item @click="currentSetting">
+              <el-icon style="margin: 5px">
+                <component :is="useRenderIcon('el-icon-setting')"></component>
+              </el-icon>
+              用户设置
+            </el-dropdown-item>
+            <el-dropdown-item @click="updateCache">
+              <el-icon style="margin: 5px">
+                <component :is="useRenderIcon('fa fa-trash')"></component>
+              </el-icon>
+              清理缓存
+            </el-dropdown-item>
             <el-dropdown-item @click="logout">
               <IconifyIconOffline
                 icon="logout-circle-r-line"

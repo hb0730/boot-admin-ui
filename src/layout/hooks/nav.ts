@@ -3,15 +3,18 @@ import { router } from "/@/router";
 import { emitter } from "/@/utils/mitt";
 import { routeMetaType } from "../types";
 import { transformI18n } from "/@/plugins/i18n";
-import { storageSession } from "/@/utils/storage";
 import { useAppStoreHook } from "/@/store/modules/app";
 import { Title } from "../../../public/serverConfig.json";
 import { useEpThemeStoreHook } from "/@/store/modules/epTheme";
+import { tokenStoreHook } from "../../store/modules/token";
+import { Result } from "/@/api/model/domain";
+import { warnMessage } from "/@/utils/message";
 
 export function useNav() {
   const pureApp = useAppStoreHook();
+  const tokenStore = tokenStoreHook();
   // 用户名
-  const usename: string = storageSession.getItem("info")?.username;
+  const usename: string = tokenStore.getCurrentUserInfo()?.username;
 
   // 设置国际化选中后的样式
   const getDropdownItemStyle = computed(() => {
@@ -35,9 +38,15 @@ export function useNav() {
   }
 
   // 退出登录
-  function logout() {
-    storageSession.removeItem("info");
-    router.push("/login");
+  async function logout() {
+    // storageSession.removeItem("info");
+    // router.push("/login");
+    const result: Result<string> = await tokenStoreHook().logout();
+    if (result.code === "0") {
+      router.push("/login");
+    } else {
+      warnMessage(result.message);
+    }
   }
 
   function backHome() {

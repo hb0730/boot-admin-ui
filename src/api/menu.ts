@@ -14,7 +14,8 @@ enum API {
   updateById = "/update/:id",
   delete = "/delete/:id",
   deleteBatch = "/delete",
-  menu_permission_tree = "/query/tree/permission"
+  menu_permission_tree = "/query/tree/permission",
+  update_current_cache = "/update/current"
 }
 class MenuAPI extends BaseRequest {
   private static BASE_API = "/api/v3/system/menu";
@@ -26,6 +27,9 @@ class MenuAPI extends BaseRequest {
    */
   getMenuTree(): Promise<Result<MenuTree[]>> {
     return this.get<Result<MenuTree[]>>(API.queryTree);
+  }
+  updateCurrent(): Promise<Result<string>> {
+    return this.get<Result<string>>(API.update_current_cache);
   }
   /**
    * 获取当前用户router
