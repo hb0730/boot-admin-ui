@@ -14,7 +14,7 @@ export function useNav() {
   const pureApp = useAppStoreHook();
   const tokenStore = tokenStoreHook();
   // 用户名
-  const usename: string = tokenStore.getCurrentUserInfo()?.username;
+  const usename: string = tokenStore.getCurrentUserInfo()?.nickName;
 
   // 设置国际化选中后的样式
   const getDropdownItemStyle = computed(() => {
