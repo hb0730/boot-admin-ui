@@ -1,5 +1,6 @@
+// import BaseRequest from "./base";
 import BaseRequest from "./base";
-import { Dict, DictQuery } from "./model/dict_model";
+import { Dict, DictCache, DictQuery } from "./model/dict_model";
 import { Page, Result } from "./model/domain";
 enum API {
   BASE_URL = "/api/v3/system/dict",
@@ -8,7 +9,9 @@ enum API {
   save = "/save",
   update = "/update/:id",
   delete = "/delete/:id",
-  deleteBatch = "/delete"
+  deleteBatch = "/delete",
+  getCache = "/cache/get",
+  updateCache = "/cache/update"
 }
 class DictAPI extends BaseRequest {
   getBaseUrl(): String {
@@ -31,6 +34,12 @@ class DictAPI extends BaseRequest {
   }
   deleteBatch(ids: string[]): Promise<Result<string>> {
     return this.post<Result<string>>(API.deleteBatch, ids);
+  }
+  getCache(): Promise<Result<DictCache[]>> {
+    return this.get<Result<DictCache[]>>(API.getCache);
+  }
+  updateCache(): Promise<Result<string>> {
+    return this.get<Result<string>>(API.updateCache);
   }
 }
 

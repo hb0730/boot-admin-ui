@@ -3,7 +3,7 @@ import { downloadFileBlob } from "../utils/file";
 import { http } from "../utils/http";
 import { PureHttpResoponse, RequestMethods } from "../utils/http/types";
 
-class BaseRequest {
+export default class BaseRequest {
   getBaseUrl(): String {
     return "";
   }
@@ -122,4 +122,3 @@ class BaseRequest {
     );
   }
 }
-export default BaseRequest;

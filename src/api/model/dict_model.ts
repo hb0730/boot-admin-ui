@@ -47,3 +47,13 @@ export interface DictEntry extends BaseClass {
    */
   sort: number;
 }
+
+export interface DictCache {
+  type: string;
+  entry: DictEntryCache[];
+}
+
+export interface DictEntryCache {
+  label: string;
+  value: string;
+}

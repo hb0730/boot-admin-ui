@@ -9,6 +9,8 @@ import { cookies } from "/@/utils/storage/cookie";
 import dayjs from "dayjs";
 import router from "/@/router";
 import { initRouter } from "/@/router/utils";
+import { dictStoreHook } from "./dict";
+import { getCache } from "/@/api/dict_cache";
 
 export const tokenStore = defineStore({
   id: "token-store",
@@ -90,8 +92,15 @@ export const tokenStore = defineStore({
         value: JSON.stringify(loginUser),
         user: true
       });
+      this.updateCache();
       initRouter(loginUser.username).then(() => {});
       router.push("/");
+    },
+    updateCache() {
+      //数据字典
+      getCache().then(result => {
+        dictStoreHook().set(result.data);
+      });
     }
   }
 });

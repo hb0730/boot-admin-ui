@@ -212,7 +212,7 @@ function resolvePath(routePath) {
     popper-append-to-body
   >
     <template #title>
-      <el-icon v-show="props.item.meta.icon" :class="props.item.meta.icon">
+      <el-icon v-show="props.item.meta.icon">
         <component
           :is="useRenderIcon(props.item.meta && props.item.meta.icon)"
         ></component>
