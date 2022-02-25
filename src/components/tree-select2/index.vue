@@ -1,168 +1,122 @@
 <template>
   <el-select
-    ref="mySelect"
+    ref="selectRef"
+    v-model="value"
+    :placeholder="placeholder"
     v-bind="$attrs"
-    v-model="optionValue"
-    :multiple="multiple"
-    :disabled="disabled"
     clearable
-    @visible-change="handleVisibleChange"
-    @clear="handlerClear"
+    @remove-tag="removeTag"
+    :multiple="multiple"
   >
-    <el-option :value="optionValue" :label="optionValue" class="options">
-      <el-tree
-        id="tree-option"
-        ref="selectTree"
-        default-expand-all
-        :expand-on-click-node="!multiple"
-        :data="options"
-        :props="dataProps"
-        @node-click="handleNodeClick"
-      />
-    </el-option>
+    <el-option value="" />
+    <el-tree
+      ref="treeOptionRef"
+      :show-checkbox="multiple"
+      :check-strictly="true"
+      default-expand-all
+      highlight-current
+      accordion
+      node-key="id"
+      check-on-click-node
+      :data="options"
+      :props="defaultProps"
+      @check="checkNode"
+    ></el-tree>
   </el-select>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch, onMounted, PropType } from "vue";
-export interface DataProps {
-  id?: string;
-  value?: string;
-  children?: string;
-  label?: string;
-  disabled?: string;
-  isLeaf?: string;
-}
-
+import type { ElSelect, ElTree } from "element-plus";
+import { defineComponent, onMounted, PropType, ref, watch } from "vue";
 export default defineComponent({
-  name: "mySelectV2",
+  name: "TreeSelectV2",
   props: {
-    modelValue: { type: [String, Array], default: "" },
-    disabled: {
+    modelValue: {
+      required: true,
+      type: Array as PropType<string[]>,
+      default: () => {
+        return [];
+      }
+    },
+    multiple: {
+      required: false,
       type: Boolean,
       default: false
     },
-    multiple: { type: Boolean, default: false },
-    dataProps: {
-      type: Object as PropType<DataProps>,
-      default: () => ({
-        id: "id",
-        value: "id",
-        children: "children",
-        label: "title",
-        disabled: "disabled",
-        isLeaf: "isLeaf"
-      })
+    placeholder: {
+      type: String,
+      default: () => {
+        return "请选择";
+      }
     },
+    // 节点数据
     options: {
       type: Array,
-      default: () => []
+      default: () => {
+        return [];
+      }
+    },
+    // 设置lable value属性
+    defaultProps: {
+      type: Object,
+      default: () => {
+        return {
+          id: "id",
+          value: "id",
+          children: "children",
+          label: "title",
+          disabled: "disabled",
+          isLeaf: "isLeaf"
+        };
+      }
+    },
+    // 默认勾选的节点
+    defaultCheckNodes: {
+      type: Array, // 已经分配的资源
+      default: () => {
+        return [];
+      }
     }
   },
-  emits: ["nodeClick", "update:modelValue"],
+  emits: ["input"],
   setup(props, context) {
-    function getLable(arr, value) {
-      let res = "";
-      function find(arr, value) {
-        for (let i = 0; i < arr.length; i++) {
-          if (arr[i].id == value) {
-            //
-            res = arr[i][props.dataProps.label];
-          }
-          if (arr[i].children && arr[i].children.length) {
-            find(arr[i].children, value);
-          }
-        }
-      }
-      find(arr, value);
-      return value + " " + res;
-    }
+    const value = ref([]);
+    const selectRef = ref<InstanceType<typeof ElSelect>>();
+    const treeOptionRef = ref<InstanceType<typeof ElTree>>();
+    onMounted(() => {
+      value.value = props.modelValue;
+      treeOptionRef.value!.setCheckedKeys(value.value);
+    });
     watch(
       () => {
         return props.modelValue;
       },
       () => {
-        if (props.modelValue instanceof Array) {
-          var values: string[] = [];
-          for (var val in props.modelValue) {
-            values.push(getLable(props.options, val));
-          }
-          optionValue.value = values;
-        } else {
-          optionValue.value = getLable(props.options, props.modelValue);
-        }
+        value.value = props.modelValue;
       }
     );
-    onMounted(() => {
-      if (props.modelValue instanceof Array) {
-        var values: string[] = [];
-        for (var val in props.modelValue) {
-          values.push(getLable(props.options, val));
-        }
-        optionValue.value = values;
-      } else {
-        optionValue.value = getLable(props.options, props.modelValue);
-      }
-    });
-    const mySelect = ref();
-
-    const optionValue = ref("") || ref<String[]>();
-    function handleNodeClick(node) {
-      optionValue.value = node[props.dataProps.label];
-      mySelect.value.blur();
-      context.emit("nodeClick", node);
-      context.emit("update:modelValue", node[props.dataProps.value]);
+    // 删除tag时，
+    function removeTag(val) {
+      // 取消勾选
+      treeOptionRef.value!.setChecked(val, false, false);
+      context.emit("input", value.value);
     }
-    function handleVisibleChange(_) {}
-    function handlerClear() {
-      context.emit("nodeClick", null);
-      context.emit("update:modelValue", "");
+    // 勾选节点，
+    function checkNode(node) {
+      node.value = node.id;
+      node.currentLabel = node.label;
+      selectRef.value!.options;
+      selectRef.value!.handleOptionSelect(node, true);
+      context.emit("input", value.value);
     }
-    return {
-      mySelect,
-      handleNodeClick,
-      handleVisibleChange,
-      handlerClear,
-      optionValue
-    };
+    return { selectRef, treeOptionRef, value, removeTag, checkNode };
   }
 });
 </script>
-
 <style scoped>
+/* 去除tree上面的一行高度 */
 .el-scrollbar .el-scrollbar__view .el-select-dropdown__item {
   height: auto;
-  max-height: 274px;
   padding: 0;
-  overflow: hidden;
-  overflow-y: auto;
-}
-
-.el-select-dropdown__item.selected {
-  font-weight: normal;
-}
-
-ul li :deep(.el-tree .el-tree-node__content) {
-  height: auto;
-  padding: 0 20px;
-}
-
-.el-tree-node__label {
-  font-weight: normal;
-}
-
-.el-tree :deep(.is-current .el-tree-node__label) {
-  color: #409eff;
-  font-weight: 700;
-}
-
-.el-tree :deep(.is-current .el-tree-node__children .el-tree-node__label) {
-  color: #606266;
-  font-weight: normal;
-}
-
-.selectInput {
-  padding: 0 5px;
-  box-sizing: border-box;
 }
 </style>
