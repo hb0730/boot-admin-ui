@@ -10,7 +10,6 @@ import PermissionTree from "../permission/index.vue";
 import RoleEdit from "../edit/index.vue";
 import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
 import { deptApi } from "/@/api/dept";
-import { Result } from "/@/api/model/domain";
 import { DeptTree } from "/@/api/model/dept_model";
 import { menuApi } from "/@/api/menu";
 import { MenuPermissionTree } from "/@/api/model/menu_model";
@@ -81,17 +80,10 @@ const initRoleInfo = (data: Role) => {
   }
 };
 const getDeptTree = async () => {
-  const result: Result<DeptTree[]> = await deptApi.getTreDept();
-  if (result.code === "0") {
-    pageData.deptTreeData = result.data;
-  }
+  pageData.deptTreeData = await deptApi.getTreDept();
 };
 const getMenuTree = async () => {
-  const result: Result<MenuPermissionTree[]> =
-    await menuApi.getMenuPermissionTree();
-  if (result.code === "0") {
-    pageData.permissionList = result.data;
-  }
+  pageData.permissionList = await menuApi.getMenuPermissionTree();
 };
 const handleSelectionChange = val => {
   pageData.selection = val;
@@ -137,13 +129,9 @@ const roleDelete = async (ids: string[]) => {
   if (ids.length <= 0) {
     return;
   }
-  const result: Result<string> = await roleApi.deleteBatch(ids);
-  if (result.code === "0") {
-    successMessage("操作成功");
-    handlerEditRefresh();
-  } else {
-    warnMessage(result.message);
-  }
+  await roleApi.deleteBatch(ids);
+  successMessage("操作成功");
+  handlerEditRefresh();
 };
 const handlerEditRefresh = () => {
   pageData.dialogVisible = false;

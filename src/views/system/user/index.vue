@@ -2,12 +2,11 @@
 import { onMounted, reactive } from "vue";
 import { deptApi } from "/@/api/dept";
 import { DeptTree } from "/@/api/model/dept_model";
-import { Page, Result } from "/@/api/model/domain";
+import { Page } from "/@/api/model/domain";
 import { User, UserQuery } from "/@/api/model/user_model";
 import { userApi } from "/@/api/user";
 import { postApi } from "/@/api/post";
 import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
-import { warnMessage } from "/@/utils/message";
 import UserList from "./list/index.vue";
 import UserEdit from "./edit/index.vue";
 import { Post, PostQuery } from "/@/api/model/post_model";
@@ -110,35 +109,20 @@ const treeNodeClick = (data, _) => {
   getPage();
 };
 const getTreeDept = async () => {
-  const result: Result<DeptTree[]> = await deptApi.getTreDept();
-  if (result.code === "0") {
-    pageData.deptTreeData = result.data;
-  }
+  pageData.deptTreeData = await deptApi.getTreDept();
 };
 const getPage = async () => {
-  const result: Result<Page<User[]>> = await userApi.getUserPage(
-    pageData.searchInfo
-  );
-  if (result.code === "0") {
-    pageData.userList = result.data.records;
-    pageData.searchInfo.total = Number(result.data.total);
-  } else {
-    warnMessage(result.message);
-  }
+  const result: Page<User[]> = await userApi.getUserPage(pageData.searchInfo);
+  pageData.userList = result.records;
+  pageData.searchInfo.total = Number(result.total);
 };
 const getPost = async () => {
   const query: PostQuery = { isEnabled: 1 };
-  const result: Result<Post[]> = await postApi.getList(query);
-  if (result.code === "0") {
-    pageData.postDataList = result.data;
-  }
+  pageData.postDataList = await postApi.getList(query);
 };
 const getRoleList = async () => {
   const query: RoleQuery = { isEnabled: 1 };
-  const result: Result<Role[]> = await roleApi.getList(query);
-  if (result.code === "0") {
-    pageData.roleDataList = result.data;
-  }
+  pageData.roleDataList = await roleApi.getList(query);
 };
 const handlerAddNew = () => {
   initUserInfo(null);

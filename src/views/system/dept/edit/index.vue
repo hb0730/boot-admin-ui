@@ -8,7 +8,6 @@ import VueSelectTree from "/@/components/tree-select/index.vue";
 import { ElForm } from "element-plus";
 import { warnMessage } from "/@/utils/message";
 import { deptApi } from "/@/api/dept";
-import { Result } from "/@/api/model/domain";
 const formRef = ref<InstanceType<typeof ElForm>>();
 const treeProps = reactive({
   id: "id",
@@ -68,23 +67,12 @@ const handlerSave = () => {
   });
 };
 const deptSave = async () => {
-  const result: Result<string> = await deptApi.save(deptInfo.value);
-  if (result.code === "0") {
-    emit("refreshDept");
-  } else {
-    warnMessage(result.message);
-  }
+  await deptApi.save(deptInfo.value);
+  emit("refreshDept");
 };
 const deptUpdate = async () => {
-  const result: Result<string> = await deptApi.updateById(
-    deptInfo.value.id,
-    deptInfo.value
-  );
-  if (result.code === "0") {
-    emit("refreshDept");
-  } else {
-    warnMessage(result.message);
-  }
+  await deptApi.updateById(deptInfo.value.id, deptInfo.value);
+  emit("refreshDept");
 };
 watch(
   () => {

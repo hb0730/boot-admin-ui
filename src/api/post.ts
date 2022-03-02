@@ -1,5 +1,5 @@
 import BaseRequest from "./base";
-import { Page, Result } from "./model/domain";
+import { Page } from "./model/domain";
 import { Post, PostQuery } from "./model/post_model";
 enum API {
   BASE_URL = "/api/v3/system/post",
@@ -20,23 +20,23 @@ class PostAPI extends BaseRequest {
    * @param query 查询参数
    * @returns page list
    */
-  getPage(query?: PostQuery): Promise<Result<Page<Post[]>>> {
-    return this.post<Result<Page<Post[]>>>(API.page, query);
+  getPage(query?: PostQuery): Promise<Page<Post[]>> {
+    return this.post<Page<Post[]>>(API.page, query);
   }
-  getList(query?: PostQuery): Promise<Result<Post[]>> {
-    return this.post<Result<Post[]>>(API.list, query);
+  getList(query?: PostQuery): Promise<Post[]> {
+    return this.post<Post[]>(API.list, query);
   }
-  save(vo: Post): Promise<Result<string>> {
-    return this.post<Result<string>>(API.save, vo);
+  save(vo: Post): Promise<string> {
+    return this.post<string>(API.save, vo);
   }
-  updateById(id: string, vo: Post): Promise<Result<string>> {
-    return this.put<Result<string>>(API.update.replace(":id", id), vo);
+  updateById(id: string, vo: Post): Promise<string> {
+    return this.put<string>(API.update.replace(":id", id), vo);
   }
-  deleteBatch(ids: string[]): Promise<Result<string>> {
-    return this.post<Result<string>>(API.deleteBatch, ids);
+  deleteBatch(ids: string[]): Promise<string> {
+    return this.post<string>(API.deleteBatch, ids);
   }
-  uploadFile(files: any[]): Promise<Result<string>> {
-    return this.uploadFileRequest<Result<string>>(API.upload, files);
+  uploadFile(files: any[]): Promise<string> {
+    return this.uploadFileRequest<string>(API.upload, files);
   }
   exportFile(query?: PostQuery): Promise<void> {
     return this.downloadFileRequest("post", API.export, { data: query });

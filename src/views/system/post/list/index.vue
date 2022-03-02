@@ -10,7 +10,6 @@ import { ElTable, ElUpload } from "element-plus";
 import { successMessage, warnMessage } from "/@/utils/message";
 import { confirm } from "/@/utils/message/box";
 import { postApi } from "/@/api/post";
-import { Result } from "/@/api/model/domain";
 const postListRef = ref<InstanceType<typeof ElTable>>();
 const uploadRef = ref<InstanceType<typeof ElUpload>>();
 const emit = defineEmits<{
@@ -110,12 +109,8 @@ const postDelete = async (ids: string[]) => {
   if (ids.length <= 0) {
     return;
   }
-  const result: Result<string> = await postApi.deleteBatch(ids);
-  if (result.code === "0") {
-    handlerRefresh();
-  } else {
-    warnMessage(result.message);
-  }
+  await postApi.deleteBatch(ids);
+  handlerRefresh();
 };
 const handlerExport = () => {
   confirm("是否导出当前全部数据")
@@ -126,14 +121,10 @@ const handlerExport = () => {
 };
 const handlerUpload = async val => {
   const fileData: File[] = [val.file];
-  const result: Result<string> = await postApi.uploadFile(fileData);
-  if (result.code === "0") {
-    successMessage("导入成功");
-    handlerRefresh();
-    uploadRef.value.clearFiles();
-  } else {
-    warnMessage(result.message);
-  }
+  await postApi.uploadFile(fileData);
+  successMessage("导入成功");
+  handlerRefresh();
+  uploadRef.value.clearFiles();
 };
 </script>
 <template>

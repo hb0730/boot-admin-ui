@@ -8,7 +8,6 @@ import { ElForm } from "element-plus";
 import { toRef, PropType, reactive, Ref, ref } from "vue";
 import { jobApi } from "/@/api/job";
 import { DictEntryCache } from "/@/api/model/dict_model";
-import { Result } from "/@/api/model/domain";
 import { Job } from "/@/api/model/job_model";
 import { successMessage, warnMessage } from "/@/utils/message";
 const jobRef = ref<InstanceType<typeof ElForm>>();
@@ -73,25 +72,14 @@ const handlerSave = () => {
   });
 };
 const save = async () => {
-  const result: Result<string> = await jobApi.save(jobInfo.value);
-  if (result.code === "0") {
-    successMessage("保存成功");
-    handleDialogClose();
-  } else {
-    warnMessage(result.message);
-  }
+  await jobApi.save(jobInfo.value);
+  successMessage("保存成功");
+  handleDialogClose();
 };
 const update = async () => {
-  const result: Result<string> = await jobApi.updateById(
-    jobInfo.value.id,
-    jobInfo.value
-  );
-  if (result.code === "0") {
-    successMessage("保存成功");
-    handleDialogClose();
-  } else {
-    warnMessage(result.message);
-  }
+  await jobApi.updateById(jobInfo.value.id, jobInfo.value);
+  successMessage("保存成功");
+  handleDialogClose();
 };
 </script>
 

@@ -9,6 +9,7 @@ import qs from "qs";
 import NProgress from "../progress";
 import { loadEnv } from "@build/index";
 import { tokenStoreHook } from "/@/store/modules/token";
+import { ElMessage, ElNotification } from "element-plus";
 
 // 加载环境变量 VITE_PROXY_DOMAIN（开发环境）  VITE_PROXY_DOMAIN_REAL（打包后的线上环境）
 const { VITE_API_SERVER } = loadEnv();
@@ -85,7 +86,29 @@ class PureHttp {
           PureHttp.initConfig.beforeResponseCallback(response);
           return response.data;
         }
-        return response.data;
+        // return response.data;
+        // dataAxios 是 axios 返回数据中的 data
+        const dataAxios = response.data;
+        const { code } = dataAxios;
+        switch (code) {
+          case "0":
+            return dataAxios.data;
+          case "A0301":
+            ElNotification.error({
+              title: "身份验证失败",
+              message: "请重新登录"
+            });
+            tokenStoreHook().logout();
+            break;
+          default:
+            // 不是正确的 code
+            ElMessage({
+              message: `${dataAxios.message}: ${dataAxios.data} ${response.config.url}`,
+              type: "error",
+              duration: 5 * 1000
+            });
+            break;
+        }
       },
       (error: PureHttpError) => {
         const $error = error;

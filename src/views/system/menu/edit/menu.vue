@@ -2,7 +2,6 @@
 import { ElForm } from "element-plus";
 import { reactive, PropType, toRef, watch, ref, toRaw } from "vue";
 import { menuApi } from "/@/api/menu";
-import { Result } from "/@/api/model/domain";
 import { Menu, MenuTree } from "/@/api/model/menu_model";
 import VueSelectTree from "/@/components/tree-select/index.vue";
 import { warnMessage } from "/@/utils/message";
@@ -48,13 +47,9 @@ const handlerAddNew = () => {
 };
 const addNew = async () => {
   const value = toRaw(menuInfo.value);
-  const result: Result<string> = await menuApi.newSave(value);
-  if (result.code === "0") {
-    menuFormRef.value!.resetFields();
-    emit("newSaveSuccess");
-  } else {
-    warnMessage(result.message);
-  }
+  await menuApi.newSave(value);
+  menuFormRef.value!.resetFields();
+  emit("newSaveSuccess");
 };
 const handlerUpdate = () => {
   menuFormRef.value!.validate(isValidate => {
@@ -67,13 +62,9 @@ const handlerUpdate = () => {
 };
 const update = async () => {
   const value = toRaw(menuInfo.value);
-  const result: Result<string> = await menuApi.updateById(value.id, value);
-  if (result.code === "0") {
-    menuFormRef.value!.resetFields();
-    emit("newSaveSuccess");
-  } else {
-    warnMessage(result.message);
-  }
+  await menuApi.updateById(value.id, value);
+  menuFormRef.value!.resetFields();
+  emit("newSaveSuccess");
 };
 const nodeClick = node => {
   if (node) {

@@ -11,7 +11,6 @@ import { ElTree } from "element-plus";
 import { Role } from "/@/api/model/role_model";
 import { successMessage, warnMessage } from "/@/utils/message";
 import { roleApi } from "/@/api/role";
-import { Result } from "/@/api/model/domain";
 const permissionTreeRef = ref<InstanceType<typeof ElTree>>();
 const emit = defineEmits<{
   (e: "refresh"): void;
@@ -68,16 +67,9 @@ const updatePermission = async permission => {
   if (permission.length <= 0) {
     return;
   }
-  const result: Result<string> = await roleApi.updateRolePermission(
-    currentRole.value.id,
-    permission
-  );
-  if (result.code === "0") {
-    successMessage("保存成功");
-    emit("refresh");
-  } else {
-    warnMessage(result.message);
-  }
+  await roleApi.updateRolePermission(currentRole.value.id, permission);
+  successMessage("保存成功");
+  emit("refresh");
 };
 </script>
 

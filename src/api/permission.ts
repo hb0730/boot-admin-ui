@@ -1,5 +1,5 @@
 import BaseRequest from "./base";
-import { Page, Result } from "./model/domain";
+import { Page } from "./model/domain";
 import { Query, Permission } from "./model/permission_model";
 enum API {
   BASE_URL = "/api/v3/system/permission",
@@ -17,8 +17,8 @@ class PermissionAPI extends BaseRequest {
    * @param vo 参数
    * @returns 响应
    */
-  save(vo: Permission): Promise<Result<string>> {
-    return this.post<Result<string>>(API.save, vo);
+  save(vo: Permission): Promise<string> {
+    return this.post<string>(API.save, vo);
   }
   /**
    * 获取参数对应的权限信息
@@ -29,8 +29,8 @@ class PermissionAPI extends BaseRequest {
   getMenuPermission(
     menuId: string,
     query?: Query
-  ): Promise<Result<Page<Permission[]>>> {
-    return this.post<Result<Page<Permission[]>>>(
+  ): Promise<Page<Permission[]>> {
+    return this.post<Page<Permission[]>>(
       API.menu_permission.replace(":menuId", menuId),
       query
     );
@@ -41,16 +41,16 @@ class PermissionAPI extends BaseRequest {
    * @param vo 更新参数
    * @returns 响应
    */
-  updateById(id: string, vo: Permission): Promise<Result<string>> {
-    return this.put<Result<string>>(API.update_id.replace(":id", id), vo);
+  updateById(id: string, vo: Permission): Promise<string> {
+    return this.put<string>(API.update_id.replace(":id", id), vo);
   }
   /**
    * 批量删除
    * @param ids id集合
    * @returns 响应
    */
-  deleteBatch(ids: string[]): Promise<Result<string>> {
-    return this.post<Result<string>>(API.delete_batch, ids);
+  deleteBatch(ids: string[]): Promise<string> {
+    return this.post<string>(API.delete_batch, ids);
   }
 }
 export const permissionApi = new PermissionAPI();

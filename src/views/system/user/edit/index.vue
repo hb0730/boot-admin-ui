@@ -2,7 +2,6 @@
 import { ElForm } from "element-plus";
 import { reactive, toRef, PropType, ref, watch, toRaw } from "vue";
 import { DeptTree } from "/@/api/model/dept_model";
-import { Result } from "/@/api/model/domain";
 import { Post } from "/@/api/model/post_model";
 import { Role } from "/@/api/model/role_model";
 import { User } from "/@/api/model/user_model";
@@ -96,25 +95,14 @@ const handlerSave = () => {
   });
 };
 const saveUser = async () => {
-  const result: Result<string> = await userApi.saveUser(toRaw(userInfo.value));
-  if (result.code === "0") {
-    successMessage("成功");
-    emit("closeDialog");
-  } else {
-    warnMessage(result.message);
-  }
+  await userApi.saveUser(toRaw(userInfo.value));
+  successMessage("成功");
+  emit("closeDialog");
 };
 const updateUser = async () => {
-  const result: Result<string> = await userApi.updateUserById(
-    userInfo.value.id,
-    toRaw(userInfo.value)
-  );
-  if (result.code === "0") {
-    successMessage("成功");
-    emit("closeDialog");
-  } else {
-    warnMessage(result.message);
-  }
+  await userApi.updateUserById(userInfo.value.id, toRaw(userInfo.value));
+  successMessage("成功");
+  emit("closeDialog");
 };
 </script>
 

@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { onMounted, reactive, ref } from "vue";
 import { menuApi } from "/@/api/menu";
-import { Page, Result } from "/@/api/model/domain";
+import { Page } from "/@/api/model/domain";
 import { Menu, MenuTree } from "/@/api/model/menu_model";
 import { Permission, Query } from "/@/api/model/permission_model";
 import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
-import { errorMessage, warnMessage } from "/@/utils/message";
+import { warnMessage } from "/@/utils/message";
 import { confirm } from "/@/utils/message/box";
 import type { ElTree } from "element-plus";
 
@@ -85,22 +85,15 @@ const setData = (data?: Menu, isupdate = false) => {
   }
 };
 const getMenuTree = async () => {
-  const result: Result<MenuTree[]> = await menuApi.getMenuTree();
-  if (result.code === "0") {
-    pageData.treeData = result.data;
-  } else {
-    warnMessage(result.message);
-  }
+  pageData.treeData = await menuApi.getMenuTree();
 };
 const getMenuPermission = async (id: string) => {
-  const result: Result<Page<Permission[]>> =
-    await permissionApi.getMenuPermission(id, pageData.searchPermissionInfo);
-  if (result.code === "0") {
-    pageData.permissionList = result.data.records;
-    pageData.searchPermissionInfo.total = Number(result.data.total);
-  } else {
-    warnMessage(result.message);
-  }
+  const result: Page<Permission[]> = await permissionApi.getMenuPermission(
+    id,
+    pageData.searchPermissionInfo
+  );
+  pageData.permissionList = result.records;
+  pageData.searchPermissionInfo.total = Number(result.total);
 };
 const handleNodeChangeCheckEvent = (data, checked: boolean) => {
   if (checked) {
@@ -136,13 +129,9 @@ const handlerDelete = () => {
   }
 };
 const deleteById = async (id: string) => {
-  const result: Result<string> = await menuApi.deleteById(id);
-  if (result.code === "0") {
-    await getMenuTree();
-    setData(null, false);
-  } else {
-    errorMessage(result.message);
-  }
+  await menuApi.deleteById(id);
+  await getMenuTree();
+  setData(null, false);
 };
 const handlerNewSaveSuccess = async () => {
   await getMenuTree();

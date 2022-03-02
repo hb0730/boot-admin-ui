@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { onMounted, reactive } from "vue";
 import PostList from "./list/index.vue";
-import { Page, Result } from "/@/api/model/domain";
+import { Page } from "/@/api/model/domain";
 import { Post, PostQuery } from "/@/api/model/post_model";
 import { postApi } from "/@/api/post";
 import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
-import { warnMessage } from "/@/utils/message";
 const isEnabledOptions = reactive([
   { value: 1, label: "启用" },
   { value: 0, label: "禁用" }
@@ -30,15 +29,9 @@ const pageData = reactive<{
   }
 });
 const getPage = async () => {
-  const result: Result<Page<Post[]>> = await postApi.getPage(
-    pageData.searchInfo
-  );
-  if (result.code === "0") {
-    pageData.postList = result.data.records;
-    pageData.searchInfo.total = Number(result.data.total);
-  } else {
-    warnMessage(result.message);
-  }
+  const result: Page<Post[]> = await postApi.getPage(pageData.searchInfo);
+  pageData.postList = result.records;
+  pageData.searchInfo.total = Number(result.total);
 };
 const handlerRefresh = () => {
   getPage();

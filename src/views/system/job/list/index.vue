@@ -13,7 +13,6 @@ import JobEdit from "../edit/index.vue";
 import { successMessage, warnMessage } from "/@/utils/message";
 import { confirm } from "/@/utils/message/box";
 import { jobApi } from "/@/api/job";
-import { Result } from "/@/api/model/domain";
 import router from "/@/router";
 const emit = defineEmits<{
   (e: "refresh", pageSize: number, pageNum: number): void;
@@ -98,12 +97,8 @@ const handlerUpdate = () => {
 const handlerExec = (data: Job) => {
   confirm("是否执行")
     .then(async () => {
-      const result: Result<string> = await jobApi.exec(data.id);
-      if (result.code === "0") {
-        successMessage("执行成功");
-      } else {
-        warnMessage(result.message);
-      }
+      await jobApi.exec(data.id);
+      successMessage("执行成功");
     })
     .catch(() => {});
 };
@@ -134,13 +129,9 @@ const jobDelete = async (ids: string[]) => {
   if (ids.length <= 0) {
     return;
   }
-  const result: Result<string> = await jobApi.deleteBatch(ids);
-  if (result.code === "0") {
-    successMessage("删除成功");
-    handlerRefresh();
-  } else {
-    warnMessage(result.message);
-  }
+  await jobApi.deleteBatch(ids);
+  successMessage("删除成功");
+  handlerRefresh();
 };
 const handlerRefresh = () => {
   pageData.isUpdate = false;

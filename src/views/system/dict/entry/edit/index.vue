@@ -7,7 +7,6 @@ import { Dict, DictEntry } from "/@/api/model/dict_model";
 import { ElForm } from "element-plus";
 import { successMessage, warnMessage } from "/@/utils/message";
 import { dictEntryApi } from "/@/api/dist_entry";
-import { Result } from "/@/api/model/domain";
 const dictEntryFormRef = ref<InstanceType<typeof ElForm>>();
 const emit = defineEmits<{
   (e: "refresh"): void;
@@ -60,25 +59,14 @@ const handlerSave = () => {
   });
 };
 const save = async () => {
-  const result: Result<string> = await dictEntryApi.save(dictEntryInfo.value);
-  if (result.code === "0") {
-    successMessage("保存成功");
-    handleDialogClose();
-  } else {
-    warnMessage(result.message);
-  }
+  await dictEntryApi.save(dictEntryInfo.value);
+  successMessage("保存成功");
+  handleDialogClose();
 };
 const update = async () => {
-  const result: Result<string> = await dictEntryApi.updateById(
-    dictEntryInfo.value.id,
-    dictEntryInfo.value
-  );
-  if (result.code === "0") {
-    successMessage("保存成功");
-    handleDialogClose();
-  } else {
-    warnMessage(result.message);
-  }
+  await dictEntryApi.updateById(dictEntryInfo.value.id, dictEntryInfo.value);
+  successMessage("保存成功");
+  handleDialogClose();
 };
 </script>
 

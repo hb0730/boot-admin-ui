@@ -5,10 +5,10 @@ export default { name: "DictEntryList" };
 import { toRef, reactive, watch, PropType } from "vue";
 import { dictEntryApi } from "/@/api/dist_entry";
 import { Dict, DictEntry, DictEntryQuery } from "/@/api/model/dict_model";
-import { Page, Result } from "/@/api/model/domain";
+import { Page } from "/@/api/model/domain";
 import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
 import DictEntryEdit from "../edit/index.vue";
-import { successMessage, warnMessage } from "/@/utils/message";
+import { successMessage } from "/@/utils/message";
 import { confirm } from "/@/utils/message/box";
 const pageData = reactive<{
   entryDataList: DictEntry[];
@@ -50,15 +50,11 @@ const parent = toRef(props, "parent");
 const sizeChange = (pageSize: number) => {};
 const currentChange = (pageNum: number) => {};
 const getPage = async () => {
-  const result: Result<Page<DictEntry[]>> = await dictEntryApi.getPage(
+  const result: Page<DictEntry[]> = await dictEntryApi.getPage(
     pageData.searchEntryInfo
   );
-  if (result.code === "0") {
-    pageData.entryDataList = result.data.records;
-    pageData.searchEntryInfo.total = Number(result.data.total);
-  } else {
-    warnMessage(result.message);
-  }
+  pageData.entryDataList = result.records;
+  pageData.searchEntryInfo.total = Number(result.total);
 };
 const initDictEntry = (data: DictEntry) => {
   if (data) {
@@ -100,13 +96,9 @@ const handlerDictEntryDelete = async (ids: string[]) => {
   if (ids.length <= 0) {
     return;
   }
-  const result: Result<string> = await dictEntryApi.deleteBatch(ids);
-  if (result.code === "0") {
-    successMessage("删除成功");
-    getPage();
-  } else {
-    warnMessage(result.message);
-  }
+  await dictEntryApi.deleteBatch(ids);
+  successMessage("删除成功");
+  getPage();
 };
 watch(
   () => {

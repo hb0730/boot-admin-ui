@@ -1,6 +1,6 @@
 import BaseRequest from "./base";
 import { DictEntry, DictEntryQuery } from "./model/dict_model";
-import { Page, Result } from "./model/domain";
+import { Page } from "./model/domain";
 enum API {
   BASE_URL = "/api/v3/system/dict/entry",
   page = "/list/page",
@@ -14,23 +14,23 @@ class DictEntryAPI extends BaseRequest {
   getBaseUrl(): String {
     return API.BASE_URL;
   }
-  getPage(query?: DictEntryQuery): Promise<Result<Page<DictEntry[]>>> {
-    return this.post<Result<Page<DictEntry[]>>>(API.page, query);
+  getPage(query?: DictEntryQuery): Promise<Page<DictEntry[]>> {
+    return this.post<Page<DictEntry[]>>(API.page, query);
   }
-  getList(query?: DictEntryQuery): Promise<Result<DictEntry[]>> {
-    return this.post<Result<DictEntry[]>>(API.list, query);
+  getList(query?: DictEntryQuery): Promise<DictEntry[]> {
+    return this.post<DictEntry[]>(API.list, query);
   }
-  save(vo: DictEntry): Promise<Result<string>> {
-    return this.post<Result<string>>(API.save, vo);
+  save(vo: DictEntry): Promise<string> {
+    return this.post<string>(API.save, vo);
   }
-  updateById(id: string, vo: DictEntry): Promise<Result<string>> {
-    return this.put<Result<string>>(API.update.replace(":id", id), vo);
+  updateById(id: string, vo: DictEntry): Promise<string> {
+    return this.put<string>(API.update.replace(":id", id), vo);
   }
-  deleteById(id: string): Promise<Result<string>> {
-    return this.delete<Result<string>>(API.delete.replace(":id", id));
+  deleteById(id: string): Promise<string> {
+    return this.delete<string>(API.delete.replace(":id", id));
   }
-  deleteBatch(ids: string[]): Promise<Result<string>> {
-    return this.post<Result<string>>(API.deleteBatch, ids);
+  deleteBatch(ids: string[]): Promise<string> {
+    return this.post<string>(API.deleteBatch, ids);
   }
 }
 export const dictEntryApi = new DictEntryAPI();

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ElTable } from "element-plus";
 import { PropType, reactive, ref, Ref, toRef } from "vue";
-import { Result } from "/@/api/model/domain";
 import { User, UserQuery } from "/@/api/model/user_model";
 import { userApi } from "/@/api/user";
 import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
@@ -58,16 +57,12 @@ const handlerDelete = () => {
 };
 const deleteByIds = async (ids: string[]) => {
   if (ids.length > 0) {
-    const result: Result<string> = await userApi.deleteBatchById(ids);
-    if (result.code === "0") {
-      emit(
-        "handlerRefresh",
-        searchModel.value.pageSize,
-        searchModel.value.pageNum
-      );
-    } else {
-      warnMessage(result.message);
-    }
+    await userApi.deleteBatchById(ids);
+    emit(
+      "handlerRefresh",
+      searchModel.value.pageSize,
+      searchModel.value.pageNum
+    );
   }
 };
 const handlerRefresh = () => {
@@ -79,12 +74,8 @@ const handleSelectionChange = val => {
 const handlerRestPassword = data => {
   confirm("是否重置当前用户密码")
     .then(async () => {
-      const result: Result<string> = await userApi.restPassword(data.id);
-      if (result.code === "0") {
-        successMessage("重置成功");
-      } else {
-        warnMessage(result.message);
-      }
+      await userApi.restPassword(data.id);
+      successMessage("重置成功");
     })
     .catch(() => {});
 };

@@ -1,5 +1,5 @@
 import BaseRequest from "./base";
-import { Page, Result } from "./model/domain";
+import { Page } from "./model/domain";
 import { Role, RoleQuery } from "./model/role_model";
 enum API {
   BASE_URL = "/api/v3/system/role",
@@ -15,34 +15,31 @@ class RoleAPI extends BaseRequest {
   getBaseUrl(): String {
     return API.BASE_URL;
   }
-  getList(query?: RoleQuery): Promise<Result<Role[]>> {
-    return this.post<Result<Role[]>>(API.list, query);
+  getList(query?: RoleQuery): Promise<Role[]> {
+    return this.post<Role[]>(API.list, query);
   }
   /**
    * 分页查询
    * @param query 分页查询参数
    * @returns 分页列表
    */
-  getPage(query?: RoleQuery): Promise<Result<Page<Role[]>>> {
-    return this.post<Result<Page<Role[]>>>(API.page, query);
+  getPage(query?: RoleQuery): Promise<Page<Role[]>> {
+    return this.post<Page<Role[]>>(API.page, query);
   }
-  save(vo: Role): Promise<Result<string>> {
-    return this.post<Result<string>>(API.save, vo);
+  save(vo: Role): Promise<string> {
+    return this.post<string>(API.save, vo);
   }
-  update(id: string, vo: Role): Promise<Result<string>> {
-    return this.put<Result<string>>(API.update.replace(":id", id), vo);
+  update(id: string, vo: Role): Promise<string> {
+    return this.put<string>(API.update.replace(":id", id), vo);
   }
-  deleteById(id: string): Promise<Result<string>> {
-    return this.delete<Result<string>>(API.delete.replace(":id", id));
+  deleteById(id: string): Promise<string> {
+    return this.delete<string>(API.delete.replace(":id", id));
   }
-  deleteBatch(ids: string[]): Promise<Result<string>> {
-    return this.post<Result<string>>(API.deleteBatch, ids);
+  deleteBatch(ids: string[]): Promise<string> {
+    return this.post<string>(API.deleteBatch, ids);
   }
-  updateRolePermission(
-    id: string,
-    permission: string[]
-  ): Promise<Result<string>> {
-    return this.post<Result<string>>(
+  updateRolePermission(id: string, permission: string[]): Promise<string> {
+    return this.post<string>(
       API.update_role_permission.replace(":id", id),
       permission
     );

@@ -1,5 +1,5 @@
 import BaseRequest from "./base";
-import { Page, Result } from "./model/domain";
+import { Page } from "./model/domain";
 import { Job, JobQuery } from "./model/job_model";
 enum API {
   BASE_URL = "/api/v3/system/job",
@@ -15,26 +15,26 @@ class JobAPI extends BaseRequest {
   getBaseUrl(): String {
     return API.BASE_URL;
   }
-  list(query?: JobQuery): Promise<Result<Job[]>> {
-    return this.post<Result<Job[]>>(API.list, query);
+  list(query?: JobQuery): Promise<Job[]> {
+    return this.post<Job[]>(API.list, query);
   }
-  page(query?: JobQuery): Promise<Result<Page<Job[]>>> {
-    return this.post<Result<Page<Job[]>>>(API.page, query);
+  page(query?: JobQuery): Promise<Page<Job[]>> {
+    return this.post<Page<Job[]>>(API.page, query);
   }
-  save(vo: Job): Promise<Result<string>> {
-    return this.post<Result<string>>(API.save, vo);
+  save(vo: Job): Promise<string> {
+    return this.post<string>(API.save, vo);
   }
-  updateById(id: string, vo: Job): Promise<Result<string>> {
-    return this.put<Result<string>>(API.update.replace(":id", id), vo);
+  updateById(id: string, vo: Job): Promise<string> {
+    return this.put<string>(API.update.replace(":id", id), vo);
   }
-  deleteById(id: string): Promise<Result<string>> {
-    return this.delete<Result<string>>(API.deleteById.replace(":id", id));
+  deleteById(id: string): Promise<string> {
+    return this.delete<string>(API.deleteById.replace(":id", id));
   }
-  deleteBatch(ids: string[]): Promise<Result<string>> {
-    return this.post<Result<string>>(API.deleteBatch, ids);
+  deleteBatch(ids: string[]): Promise<string> {
+    return this.post<string>(API.deleteBatch, ids);
   }
-  exec(id: string): Promise<Result<string>> {
-    return this.get<Result<string>>(API.exec.replace(":id", id));
+  exec(id: string): Promise<string> {
+    return this.get<string>(API.exec.replace(":id", id));
   }
 }
 

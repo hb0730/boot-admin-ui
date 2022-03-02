@@ -1,5 +1,5 @@
 import BaseRequest from "./base";
-import { Page, Result } from "./model/domain";
+import { Page } from "./model/domain";
 import { UserQuery, User } from "./model/user_model";
 enum API {
   BASE_URL = "api/v3/system/user/info",
@@ -18,20 +18,20 @@ class UserAPI extends BaseRequest {
    * @param query 查询参数
    * @returns 查询结果
    */
-  getUserPage(query: UserQuery): Promise<Result<Page<User[]>>> {
-    return this.post<Result<Page<User[]>>>(API.page, query);
+  getUserPage(query: UserQuery): Promise<Page<User[]>> {
+    return this.post<Page<User[]>>(API.page, query);
   }
-  saveUser(vo: User): Promise<Result<string>> {
-    return this.post<Result<string>>(API.save, vo);
+  saveUser(vo: User): Promise<string> {
+    return this.post<string>(API.save, vo);
   }
-  updateUserById(id: string, vo: User): Promise<Result<string>> {
-    return this.put<Result<string>>(API.updateById.replace(":id", id), vo);
+  updateUserById(id: string, vo: User): Promise<string> {
+    return this.put<string>(API.updateById.replace(":id", id), vo);
   }
-  deleteBatchById(ids: string[]): Promise<Result<string>> {
-    return this.post<Result<string>>(API.deleteBatch, ids);
+  deleteBatchById(ids: string[]): Promise<string> {
+    return this.post<string>(API.deleteBatch, ids);
   }
-  restPassword(id: string): Promise<Result<string>> {
-    return this.get<Result<string>>(API.restPassword.replace(":id", id));
+  restPassword(id: string): Promise<string> {
+    return this.get<string>(API.restPassword.replace(":id", id));
   }
 }
 export const userApi = new UserAPI();

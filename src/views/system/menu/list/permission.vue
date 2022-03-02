@@ -7,7 +7,6 @@ import VueSelectTree from "/@/components/tree-select/index.vue";
 import { MenuTree } from "/@/api/model/menu_model";
 import type { ElForm, ElTable } from "element-plus";
 import { permissionApi } from "/@/api/permission";
-import { Result } from "/@/api/model/domain";
 import { confirm } from "/@/utils/message/box";
 
 const permissionFormRef = ref<InstanceType<typeof ElForm>>();
@@ -136,25 +135,15 @@ const handlerSave = () => {
   });
 };
 const permissionSave = async () => {
-  const result: Result<string> = await permissionApi.save(
-    pageData.permissionInfo
-  );
-  if (result.code === "0") {
-    handleDialogClose();
-  } else {
-    warnMessage(result.message);
-  }
+  await permissionApi.save(pageData.permissionInfo);
+  handleDialogClose();
 };
 const permissionUpdate = async () => {
-  const result: Result<string> = await permissionApi.updateById(
+  await permissionApi.updateById(
     pageData.permissionInfo.id,
     pageData.permissionInfo
   );
-  if (result.code === "0") {
-    handleDialogClose();
-  } else {
-    warnMessage(result.message);
-  }
+  handleDialogClose();
 };
 const handlerDelete = () => {
   if (pageData.selection.length <= 0) {
@@ -174,13 +163,9 @@ const handlerDelete = () => {
 };
 const permissionDelete = async (ids: string[]) => {
   if (ids.length > 0) {
-    const result: Result<string> = await permissionApi.deleteBatch(ids);
-    if (result.code === "0") {
-      successMessage("删除成功");
-      emit("refresh");
-    } else {
-      warnMessage(result.message);
-    }
+    await permissionApi.deleteBatch(ids);
+    successMessage("删除成功");
+    emit("refresh");
   } else {
     warnMessage("请选择");
   }

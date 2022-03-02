@@ -9,7 +9,6 @@ import TreeSelectV2 from "/@/components/tree-select2/index.vue";
 import { ElForm } from "element-plus";
 import { successMessage, warnMessage } from "/@/utils/message";
 import { roleApi } from "/@/api/role";
-import { Result } from "/@/api/model/domain";
 const roleFormRef = ref<InstanceType<typeof ElForm>>();
 const treeProps = reactive({
   id: "id",
@@ -73,24 +72,13 @@ const handlerSave = () => {
   });
 };
 const update = async () => {
-  const result: Result<string> = await roleApi.update(
-    roleInfo.value.id,
-    roleInfo.value
-  );
-  if (result.code === "0") {
-    handleDialogClose();
-  } else {
-    warnMessage(result.message);
-  }
+  await roleApi.update(roleInfo.value.id, roleInfo.value);
+  handleDialogClose();
 };
 const save = async () => {
-  const result: Result<string> = await roleApi.save(roleInfo.value);
-  if (result.code === "0") {
-    successMessage("保存成功");
-    handleDialogClose();
-  } else {
-    warnMessage(result.message);
-  }
+  await roleApi.save(roleInfo.value);
+  successMessage("保存成功");
+  handleDialogClose();
 };
 </script>
 

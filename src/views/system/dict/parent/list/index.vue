@@ -7,7 +7,7 @@ import { dictApi } from "/@/api/dict";
 import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
 import DictParentEdit from "../edit/index.vue";
 import { Dict, DictQuery } from "/@/api/model/dict_model";
-import { Page, Result } from "/@/api/model/domain";
+import { Page } from "/@/api/model/domain";
 import { successMessage, warnMessage } from "/@/utils/message";
 import { confirm } from "/@/utils/message/box";
 const emit = defineEmits<{ (e: "rowClick", v: string, data: Dict) }>();
@@ -55,15 +55,9 @@ const handlerSearch = () => {
   getPage();
 };
 const getPage = async () => {
-  const result: Result<Page<Dict[]>> = await dictApi.getPage(
-    pageData.searchInfo
-  );
-  if (result.code === "0") {
-    pageData.dictDataList = result.data.records;
-    pageData.searchInfo.total = Number(result.data.total);
-  } else {
-    warnMessage(result.message);
-  }
+  const result: Page<Dict[]> = await dictApi.getPage(pageData.searchInfo);
+  pageData.dictDataList = result.records;
+  pageData.searchInfo.total = Number(result.total);
 };
 const handleSelectionChange = val => {
   pageData.selection = val;
@@ -123,13 +117,9 @@ const dictDelete = async (ids: string[]) => {
   if (ids.length <= 0) {
     return;
   }
-  const result: Result<string> = await dictApi.deleteBatch(ids);
-  if (result.code === "0") {
-    successMessage("删除成功");
-    getPage();
-  } else {
-    warnMessage(result.message);
-  }
+  await dictApi.deleteBatch(ids);
+  successMessage("删除成功");
+  getPage();
 };
 const handlerRefresh = () => {
   pageData.dictDialogVisible = false;

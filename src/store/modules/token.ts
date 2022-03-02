@@ -3,8 +3,6 @@ import { store } from "/@/store";
 import { db } from "/@/utils/storage/db";
 import { authAPi } from "/@/api/auth";
 import { LoginUser } from "/@/api/model/auth_model";
-import { Result } from "/@/api/model/domain";
-import { warnMessage } from "/@/utils/message";
 import { cookies } from "/@/utils/storage/cookie";
 import dayjs from "dayjs";
 import router from "/@/router";
@@ -73,20 +71,13 @@ export const tokenStore = defineStore({
       //set remember cache
       this.setRemember({ username, password, remember }, remember);
       try {
-        const result: Result<LoginUser> = await authAPi.login({
+        const result: LoginUser = await authAPi.login({
           username: username,
           password: password
         });
-        if (result.code === "0") {
-          this.setToken(
-            result.data.accessToken,
-            dayjs(result.data.expireTime).date()
-          );
-          this.setUserId(result.data.id);
-          this.loginAfter(result.data);
-        } else {
-          warnMessage(result.message);
-        }
+        this.setToken(result.accessToken, dayjs(result.expireTime).date());
+        this.setUserId(result.id);
+        this.loginAfter(result);
       } catch (error) {
         Promise.resolve(error);
       }
@@ -94,12 +85,10 @@ export const tokenStore = defineStore({
     async logout() {
       const self = this;
       return authAPi.logout().then(result => {
-        if (result.code === "0") {
-          //移除cookie token, user cache
-          self.logoutAfter();
-          cookies.remove("token");
-          cookies.remove("uuid");
-        }
+        //移除cookie token, user cache
+        self.logoutAfter();
+        cookies.remove("token");
+        cookies.remove("uuid");
         return result;
       });
     },
@@ -127,7 +116,7 @@ export const tokenStore = defineStore({
         });
       await updateCache().then(() => {
         getCache().then(result => {
-          dictStoreHook().set(result.data);
+          dictStoreHook().set(result);
         });
       });
       return Promise.resolve();

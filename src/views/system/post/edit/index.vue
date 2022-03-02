@@ -7,7 +7,6 @@ import { Post } from "/@/api/model/post_model";
 import { ElForm } from "element-plus";
 import { successMessage, warnMessage } from "/@/utils/message";
 import { postApi } from "/@/api/post";
-import { Result } from "/@/api/model/domain";
 const postForm = ref<InstanceType<typeof ElForm>>();
 const emit = defineEmits<{
   (e: "refresh"): void;
@@ -60,25 +59,14 @@ const handlerSave = () => {
   });
 };
 const save = async () => {
-  const result: Result<string> = await postApi.save(postInfo.value);
-  if (result.code === "0") {
-    successMessage("保存成功");
-    handleDialogClose();
-  } else {
-    warnMessage(result.message);
-  }
+  await postApi.save(postInfo.value);
+  successMessage("保存成功");
+  handleDialogClose();
 };
 const update = async () => {
-  const result: Result<string> = await postApi.updateById(
-    postInfo.value.id,
-    postInfo.value
-  );
-  if (result.code === "0") {
-    successMessage("保存成功");
-    handleDialogClose();
-  } else {
-    warnMessage(result.message);
-  }
+  await postApi.updateById(postInfo.value.id, postInfo.value);
+  successMessage("保存成功");
+  handleDialogClose();
 };
 </script>
 

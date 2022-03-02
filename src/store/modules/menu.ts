@@ -2,7 +2,6 @@ import { defineStore } from "pinia";
 import { store } from "..";
 import { db } from "/@/utils/storage/db";
 import { menuApi } from "/@/api/menu";
-import { warnMessage } from "/@/utils/message";
 
 export const menuStore = defineStore({
   id: "menu-store",
@@ -29,26 +28,16 @@ export const menuStore = defineStore({
         return Promise.resolve(JSON.parse(menu));
       }
       return menuApi.getCurrentRouter().then(result => {
-        if (result.code === "0") {
-          self.setMenu(result.data);
-          return Promise.resolve(result.data);
-        } else {
-          warnMessage(result.message);
-          return Promise.resolve([]);
-        }
+        self.setMenu(result);
+        return Promise.resolve(result);
       });
     },
     async updateCurrentMenu(): Promise<any> {
       await menuApi.updateCurrent();
       const self = this;
       return menuApi.getCurrentRouter().then(result => {
-        if (result.code === "0") {
-          self.setMenu(result.data);
-          return Promise.resolve(result.data);
-        } else {
-          warnMessage(result.message);
-          return Promise.resolve([]);
-        }
+        self.setMenu(result);
+        return Promise.resolve(result);
       });
     }
   }

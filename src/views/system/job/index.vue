@@ -6,8 +6,7 @@ import JobList from "./list/index.vue";
 import { jobApi } from "/@/api/job";
 import { Job, JobQuery } from "/@/api/model/job_model";
 import { DictEntryCache } from "/@/api/model/dict_model";
-import { Page, Result } from "/@/api/model/domain";
-import { warnMessage } from "/@/utils/message";
+import { Page } from "/@/api/model/domain";
 const pageData = reactive<{
   position: string;
   dataList: Job[];
@@ -36,13 +35,9 @@ const getDict = () => {
   pageData.isEnabledOptions = dictStoreHook().getEntry("sys_common_status");
 };
 const getPage = async () => {
-  const result: Result<Page<Job[]>> = await jobApi.page(pageData.searchInfo);
-  if (result.code === "0") {
-    pageData.dataList = result.data.records;
-    pageData.searchInfo.total = Number(result.data.total);
-  } else {
-    warnMessage(result.message);
-  }
+  const result: Page<Job[]> = await jobApi.page(pageData.searchInfo);
+  pageData.dataList = result.records;
+  pageData.searchInfo.total = Number(result.total);
 };
 const handlerRefresh = (pageSize: number, pageNum: number) => {
   pageData.searchInfo.pageNum = pageNum;

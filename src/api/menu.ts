@@ -1,5 +1,4 @@
 import BaseRequest from "./base";
-import { Result } from "./model/domain";
 import {
   Menu,
   MenuPermissionTree,
@@ -25,24 +24,24 @@ class MenuAPI extends BaseRequest {
   /**
    * 获取菜单属性
    */
-  getMenuTree(): Promise<Result<MenuTree[]>> {
-    return this.get<Result<MenuTree[]>>(API.queryTree);
+  getMenuTree(): Promise<MenuTree[]> {
+    return this.get<MenuTree[]>(API.queryTree);
   }
-  updateCurrent(): Promise<Result<string>> {
-    return this.get<Result<string>>(API.update_current_cache);
+  updateCurrent(): Promise<string> {
+    return this.get<string>(API.update_current_cache);
   }
   /**
    * 获取当前用户router
    */
-  getCurrentRouter(): Promise<Result<RouterModel[]>> {
-    return this.get<Result<RouterModel[]>>(API.currentRouter);
+  getCurrentRouter(): Promise<RouterModel[]> {
+    return this.get<RouterModel[]>(API.currentRouter);
   }
   /**
    *新增
    * @param vo 新增参数
    */
-  newSave(vo: Menu): Promise<Result<string>> {
-    return this.post<Result<string>>(API.save, vo);
+  newSave(vo: Menu): Promise<string> {
+    return this.post<string>(API.save, vo);
   }
   /**
    * 根据id更新
@@ -50,23 +49,23 @@ class MenuAPI extends BaseRequest {
    * @param vo  更新参数
    * @returns  响应参数
    */
-  updateById(id: string, vo: Menu): Promise<Result<string>> {
-    return this.put<Result<string>>(API.updateById.replace(":id", id), vo);
+  updateById(id: string, vo: Menu): Promise<string> {
+    return this.put<string>(API.updateById.replace(":id", id), vo);
   }
   /**
    *根据id删除
    * @param id id
    * @returns result
    */
-  deleteById(id: string): Promise<Result<string>> {
+  deleteById(id: string): Promise<string> {
     return this.delete(API.delete.replace(":id", id));
   }
   /**
    * 菜单权限树
    * @returns 菜单权限树
    */
-  getMenuPermissionTree(): Promise<Result<MenuPermissionTree[]>> {
-    return this.get<Result<MenuPermissionTree[]>>(API.menu_permission_tree);
+  getMenuPermissionTree(): Promise<MenuPermissionTree[]> {
+    return this.get<MenuPermissionTree[]>(API.menu_permission_tree);
   }
 }
 export const menuApi = new MenuAPI();

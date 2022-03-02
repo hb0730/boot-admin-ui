@@ -4,7 +4,6 @@ import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
 import DeptEdit from "./edit/index.vue";
 import { Dept, DeptTree } from "/@/api/model/dept_model";
 import { deptApi } from "/@/api/dept";
-import { Result } from "/@/api/model/domain";
 import { warnMessage } from "/@/utils/message";
 import { ElTree } from "element-plus";
 import { confirm } from "/@/utils/message/box";
@@ -39,12 +38,7 @@ const pageData = reactive<{
   }
 });
 const getTree = async () => {
-  const result: Result<DeptTree[]> = await deptApi.getTreDept();
-  if (result.code === "0") {
-    pageData.treeData = result.data;
-  } else {
-    warnMessage(result.message);
-  }
+  pageData.treeData = await deptApi.getTreDept();
 };
 const initDeptInfo = (data: Dept) => {
   if (data) {
@@ -111,12 +105,8 @@ const handlerDelete = () => {
     .catch(() => {});
 };
 const deptDelete = async (id: string) => {
-  const result: Result<string> = await deptApi.deleteById(id);
-  if (result.code === "0") {
-    handlerRefreshDept();
-  } else {
-    warnMessage(result.message);
-  }
+  await deptApi.deleteById(id);
+  handlerRefreshDept();
 };
 onMounted(() => {
   getTree();

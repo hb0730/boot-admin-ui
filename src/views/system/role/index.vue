@@ -3,9 +3,8 @@ import { onMounted, reactive } from "vue";
 import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
 import RoleList from "./list/index.vue";
 import { Role, RoleQuery } from "/@/api/model/role_model";
-import { Page, Result } from "/@/api/model/domain";
+import { Page } from "/@/api/model/domain";
 import { roleApi } from "/@/api/role";
-import { warnMessage } from "/@/utils/message";
 const isEnabledOptions = reactive([
   { label: "启用", value: 1 },
   { label: "禁用", value: 0 }
@@ -39,15 +38,9 @@ const pageData = reactive<{
   roleList: []
 });
 const getPage = async () => {
-  const result: Result<Page<Role[]>> = await roleApi.getPage(
-    pageData.searchInfo
-  );
-  if (result.code === "0") {
-    pageData.roleList = result.data.records;
-    pageData.searchInfo.total = Number(result.data.total);
-  } else {
-    warnMessage(result.message);
-  }
+  const result: Page<Role[]> = await roleApi.getPage(pageData.searchInfo);
+  pageData.roleList = result.records;
+  pageData.searchInfo.total = Number(result.total);
 };
 const handlerRefresh = (pageNum: number, pageSize: number) => {
   pageData.searchInfo.pageNum = pageNum;
