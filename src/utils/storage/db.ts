@@ -1,9 +1,9 @@
 import { LocalStorage, LowSync } from "lowdb";
-// import { chain, cloneDeep } from "lodash-es";
 import lodash from "lodash";
 import { storageLocal } from ".";
 import { cookies } from "./cookie";
-import { getConfig } from "/@/config";
+// import { getConfig } from "/@/config";
+import { Title, Version } from "../../../public/serverConfig.json";
 type Data = {
   database: {};
   sys: {};
@@ -13,20 +13,17 @@ type Data = {
  */
 class DB {
   private db: LowSync<Data>;
-  private static env = getConfig();
-  constructor() {
-    this.db = new LowSync<Data>(
-      new LocalStorage<Data>(`${DB.env.Title}-${DB.env.Version}`)
-    );
+  public constructor() {
+    this.db = new LowSync<Data>(new LocalStorage<Data>(`${Title}-${Version}`));
     this.db.read();
     this.initialization();
     this.db.chain = lodash.chain(this.db.data);
-    console.log(this.db);
   }
   private initialization() {
-    this.db.data = storageLocal.getItem(
-      `${DB.env.Title}-${DB.env.Version}`
-    ) || { database: {}, sys: {} };
+    this.db.data = storageLocal.getItem(`${Title}-${Version}`) || {
+      database: {},
+      sys: {}
+    };
     this.db.write();
   }
   /**

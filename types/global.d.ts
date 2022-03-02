@@ -1,3 +1,4 @@
+import { ExpChain } from "lodash";
 import type {
   ComponentRenderProxy,
   VNode,
@@ -122,6 +123,6 @@ declare global {
 }
 declare module "lowdb/lib/LowSync" {
   interface LowSync<T> {
-    chain: lodash.ObjectChain<T>;
+    chain: ExpChain<T>;
   }
 }
