@@ -1,10 +1,15 @@
+import { iconType } from "./types";
 import { h, defineComponent, Component } from "vue";
-import { FontIcon } from "../index";
-import iconifyIconOffline from "./iconifyIconOffline";
+import { IconifyIconOffline, FontIcon } from "../index";
 import iconPicker from "./iconPicker";
 
-// 支持fontawesome4、5+、iconfont、remixicon、element-plus的icons、自定义svg
-export function useRenderIcon(icon: string): Component {
+/**
+ * 支持fontawesome4、5+、iconfont、remixicon、element-plus的icons、自定义svg
+ * @param icon 必传 string 图标
+ * @param attrs 可选 iconType 属性
+ * @returns Component
+ */
+export function useRenderIcon(icon: string, attrs?: iconType): Component {
   // iconfont
   const ifReg = /^IF-/;
   const iconifyReg = /^iconify-/;
@@ -22,7 +27,8 @@ export function useRenderIcon(icon: string): Component {
       render() {
         return h(FontIcon, {
           icon: iconName,
-          iconType
+          iconType,
+          ...attrs
         });
       }
     });
@@ -30,7 +36,7 @@ export function useRenderIcon(icon: string): Component {
     // svg
     return icon;
   } else if (iconifyReg.test(icon)) {
-    // iconfont
+    // iconify
     const name = icon.split(iconifyReg)[1];
     const iconName = name.slice(
       0,
@@ -39,8 +45,9 @@ export function useRenderIcon(icon: string): Component {
     return defineComponent({
       name: "Icon",
       render() {
-        return h(iconifyIconOffline, {
-          icon: iconName
+        return h(IconifyIconOffline, {
+          icon: iconName,
+          ...attrs
         });
       }
     });
@@ -51,13 +58,5 @@ export function useRenderIcon(icon: string): Component {
         return h(iconPicker, { icon: icon });
       }
     });
-    // return defineComponent({
-    //   name: "Icon",
-    //   render() {
-    //     return h(IconifyIconOffline, {
-    //       icon: icon
-    //     });
-    //   }
-    // });
   }
 }

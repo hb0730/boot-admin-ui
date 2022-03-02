@@ -58,11 +58,13 @@ import arrowRightSLine from "@iconify-icons/ri/arrow-right-s-line";
 import arrowLeftSLine from "@iconify-icons/ri/arrow-left-s-line";
 import logoutCircleRLine from "@iconify-icons/ri/logout-circle-r-line";
 import circlePlus from "@iconify-icons/akar-icons/circle-plus";
+import nodeTree from "@iconify-icons/ri/node-tree";
 
+addIcon("circlePlus", circlePlus);
 addIcon("arrow-right-s-line", arrowRightSLine);
 addIcon("arrow-left-s-line", arrowLeftSLine);
 addIcon("logout-circle-r-line", logoutCircleRLine);
-addIcon("circlePlus", circlePlus);
+addIcon("node-tree", nodeTree);
 
 // Font Awesome 4
 import faUser from "@iconify-icons/fa/user";

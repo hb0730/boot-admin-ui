@@ -126,21 +126,21 @@ class PureHttp {
   }
 
   // 单独抽离的post工具函数
-  public post<T>(
-    url: string,
-    params?: any,
-    config?: PureHttpRequestConfig
-  ): Promise<T> {
-    return this.request<T>("post", url, { data: params }, config);
-  }
-
-  // 单独抽离的get工具函数
-  public get<T>(
+  public post<T, P>(
     url: string,
     params?: T,
     config?: PureHttpRequestConfig
-  ): Promise<T> {
-    return this.request<T>("get", url, { params: params }, config);
+  ): Promise<P> {
+    return this.request<P>("post", url, params, config);
+  }
+
+  // 单独抽离的get工具函数
+  public get<T, P>(
+    url: string,
+    params?: T,
+    config?: PureHttpRequestConfig
+  ): Promise<P> {
+    return this.request<P>("get", url, params, config);
   }
 }
 

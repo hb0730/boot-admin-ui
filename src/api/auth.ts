@@ -13,14 +13,14 @@ class AuthAPI {
    * @returns 返回信息
    */
   login(login: Login): Promise<Result<LoginUser>> {
-    return http.post<Result<LoginUser>>(API.login, login);
+    return http.post<any, Result<LoginUser>>(API.login, { data: login });
   }
   /**
    *登录
    * @returns
    */
   logout(): Promise<Result<string>> {
-    return http.post<Result<string>>(API.logout);
+    return http.post<any, Result<string>>(API.logout);
   }
 }
 export const authAPi = new AuthAPI();

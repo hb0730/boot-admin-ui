@@ -48,6 +48,13 @@ watch(
   }
 );
 
+watch(
+  () => route.path,
+  () => {
+    menuSelect(route.path, routers);
+  }
+);
+
 function translationCh() {
   instance.locale = { locale: "zh" };
   locale.value = "zh";

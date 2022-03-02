@@ -4,6 +4,7 @@ import { emitter } from "/@/utils/mitt";
 import { routeMetaType } from "../types";
 import { transformI18n } from "/@/plugins/i18n";
 import { useAppStoreHook } from "/@/store/modules/app";
+import { remainingPaths } from "/@/router/modules/index";
 import { Title } from "../../../public/serverConfig.json";
 import { useEpThemeStoreHook } from "/@/store/modules/epTheme";
 import { tokenStoreHook } from "../../store/modules/token";
@@ -76,6 +77,7 @@ export function useNav() {
   }
 
   function menuSelect(indexPath: string, routers): void {
+    if (isRemaining(indexPath)) return;
     let parentPath = "";
     const parentPathIndex = indexPath.lastIndexOf("/");
     if (parentPathIndex > 0) {
@@ -100,6 +102,11 @@ export function useNav() {
       });
     }
     findCurrentRoute(indexPath, routers);
+  }
+
+  // 判断路径是否参与菜单
+  function isRemaining(path: string): boolean {
+    return remainingPaths.includes(path);
   }
 
   return {
