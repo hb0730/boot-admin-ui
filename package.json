@@ -2,10 +2,6 @@
   "name": "pure-admin-thin",
   "version": "3.0",
   "private": true,
-  "engines": {
-    "node": ">= 16",
-    "pnpm": ">= 6"
-  },
   "scripts": {
     "dev": "cross-env --max_old_space_size=4096 vite",
     "serve": "pnpm dev",
