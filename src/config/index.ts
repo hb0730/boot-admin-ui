@@ -30,10 +30,16 @@ const getConfig = (key?: string): ServerConfigs => {
 // 获取项目动态全局配置
 export const getServerConfig = async (app: App): Promise<undefined> => {
   app.config.globalProperties.$config = getConfig();
+  let prefix = "";
+  if (`${VITE_PUBLIC_PATH}` === "/") {
+    prefix = "/";
+  } else {
+    prefix = `${VITE_PUBLIC_PATH}/`;
+  }
   return axios({
     baseURL: "",
     method: "get",
-    url: `${VITE_PUBLIC_PATH}serverConfig.json`
+    url: `${prefix}serverConfig.json`
   })
     .then(({ data: config }) => {
       let $config = app.config.globalProperties.$config;

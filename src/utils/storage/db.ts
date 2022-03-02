@@ -1,5 +1,6 @@
 import { LocalStorage, LowSync } from "lowdb";
-import { chain, cloneDeep } from "lodash-es";
+// import { chain, cloneDeep } from "lodash-es";
+import lodash from "lodash";
 import { storageLocal } from ".";
 import { cookies } from "./cookie";
 import { getConfig } from "/@/config";
@@ -17,9 +18,10 @@ class DB {
     this.db = new LowSync<Data>(
       new LocalStorage<Data>(`${DB.env.Title}-${DB.env.Version}`)
     );
+    this.db.read();
     this.initialization();
-    // @ts-ignore
-    this.db.chain = chain(this.db.data);
+    this.db.chain = lodash.chain(this.db.data);
+    console.log(this.db);
   }
   private initialization() {
     this.db.data = storageLocal.getItem(
@@ -43,11 +45,9 @@ class DB {
     const currentPath = `${dbName}.${user ? `user.${uuid}` : "public"}${
       path ? `.${path}` : ""
     }`;
-    // @ts-ignore
     const value = this.db.chain.get(currentPath).value();
     // @ts-ignore
     if (!(value !== undefined && validator(value))) {
-      // @ts-ignore
       this.db.chain.set(currentPath, defaultValue).value();
       this.db.write();
     }
@@ -65,7 +65,6 @@ class DB {
       path,
       user
     });
-    // @ts-ignore
     this.db.chain.set(currentPath, value).value();
     this.db.write();
   }
@@ -82,11 +81,10 @@ class DB {
     defaultValue = "",
     user = false
   }): any {
-    // @ts-ignore
     const values = this.db.chain
       .get(this.pathInit({ dbName, path, user, defaultValue }))
       .value();
-    return cloneDeep(values);
+    return lodash.cloneDeep(values);
   }
 }
 

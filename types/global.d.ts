@@ -120,3 +120,8 @@ declare global {
     }
   }
 }
+declare module "lowdb/lib/LowSync" {
+  interface LowSync<T> {
+    chain: lodash.ObjectChain<T>;
+  }
+}

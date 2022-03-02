@@ -218,8 +218,6 @@ function addAsyncRoutes(arrRoutes: Array<RouteRecordRaw>) {
   arrRoutes.forEach((v: RouteRecordRaw) => {
     if (v.redirect) {
       v.component = Layout;
-    } else if (v.component) {
-      v.component = fileImport(v.component);
     } else {
       const index = modulesRoutesKeys.findIndex(ev => ev.includes(v.path));
       v.component = modulesRoutes[modulesRoutesKeys[index]];
@@ -231,7 +229,7 @@ function addAsyncRoutes(arrRoutes: Array<RouteRecordRaw>) {
   return arrRoutes;
 }
 export const fileImport = file => {
-  return () => import(`../views/${file}.vue`);
+  return () => import(`/@/views/${file}.vue`);
 };
 
 // 获取路由历史模式 https://next.router.vuejs.org/zh/guide/essentials/history-mode.html
