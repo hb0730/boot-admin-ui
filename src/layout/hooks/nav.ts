@@ -8,8 +8,6 @@ import { remainingPaths } from "/@/router/modules/index";
 import { Title } from "../../../public/serverConfig.json";
 import { useEpThemeStoreHook } from "/@/store/modules/epTheme";
 import { tokenStoreHook } from "../../store/modules/token";
-import { Result } from "/@/api/model/domain";
-import { warnMessage } from "/@/utils/message";
 
 export function useNav() {
   const pureApp = useAppStoreHook();
@@ -42,12 +40,8 @@ export function useNav() {
   async function logout() {
     // storageSession.removeItem("info");
     // router.push("/login");
-    const result: Result<string> = await tokenStoreHook().logout();
-    if (result.code === "0") {
-      router.push("/login");
-    } else {
-      warnMessage(result.message);
-    }
+    await tokenStoreHook().logout();
+    router.push("/login");
   }
 
   function backHome() {
