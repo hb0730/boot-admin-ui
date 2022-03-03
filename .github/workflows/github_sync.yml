@@ -9,7 +9,7 @@ jobs:
       - name: git-sync
         uses: wei/git-sync@v3
         with:
-          source_repo: "https://hb0730:${{secrets.GITHUB_TOKEN}}@github.com/hb0730/pure-admin-thin"
+          source_repo: "https://hb0730:${{ secrets.GITHUB_TOKEN }}@github.com/hb0730/pure-admin-thin.git"
           source_branch: "v2"
-          destination_repo: "https://hb0730:${{secrets.GITHUB_TOKEN}}@github.com/hb0730/boot-admin-ui"
+          destination_repo: "https://hb0730:${{ secrets.GITHUB_TOKEN }}@github.com/hb0730/boot-admin-ui.git"
           destination_branch: "v4"
