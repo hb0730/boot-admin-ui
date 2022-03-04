@@ -1,23 +1,19 @@
 <script setup lang="ts">
 import { onMounted, reactive } from "vue";
-import { dictStoreHook } from "/@/store/modules/dict";
-import { getDictEntryInfo } from "/@/utils/dict";
-import { operLogApi } from "/@/api/oper_log";
-import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
+import { loginLogApi } from "/@/api/login_log";
 import { Page } from "/@/api/model/domain";
-import { OperLogModel } from "/@/api/model/oper_log_model";
+import { LoginLogModel } from "/@/api/model/login_log_model";
+import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
 import { successMessage, warnMessage } from "/@/utils/message";
 import { confirm } from "/@/utils/message/box";
 const pageData = reactive({
   position: "left",
   searchInfo: {
     username: "",
-    operType: "",
-    description: "",
+    loginIp: "",
     status: null,
-    startTime: null,
-    endTime: null,
-    time: [],
+    startTime: "",
+    endTime: "",
     sortColumn: [],
     groupColumn: [],
     pageSize: 10,
@@ -33,9 +29,6 @@ const pageData = reactive({
   dataList: [],
   selection: []
 });
-const getDict = () => {
-  pageData.businessType = dictStoreHook().getEntry("sys_oper_type");
-};
 const getPage = async () => {
   if (pageData.dateTimePicker && pageData.dateTimePicker.length > 0) {
     pageData.searchInfo.startTime = pageData.dateTimePicker[0] + " 00:00:00";
@@ -44,7 +37,7 @@ const getPage = async () => {
     pageData.searchInfo.startTime = null;
     pageData.searchInfo.endTime = null;
   }
-  const result: Page<OperLogModel[]> = await operLogApi.page(
+  const result: Page<LoginLogModel[]> = await loginLogApi.page(
     pageData.searchInfo
   );
   pageData.dataList = result.records;
@@ -72,7 +65,7 @@ const handleRemove = () => {
       pageData.selection.forEach(item => {
         ids.push(item.id);
       });
-      operLogApi.deleteBatch(ids).then(() => {
+      loginLogApi.deleteBatch(ids).then(() => {
         successMessage("删除成功");
         getPage();
       });
@@ -82,7 +75,7 @@ const handleRemove = () => {
 const handleClean = () => {
   confirm("是否清除所有数据")
     .then(() => {
-      operLogApi.clean().then(() => {
+      loginLogApi.clean().then(() => {
         successMessage("删除成功");
         getPage();
       });
@@ -90,7 +83,6 @@ const handleClean = () => {
     .catch(() => {});
 };
 onMounted(() => {
-  getDict();
   getPage();
 });
 </script>
@@ -104,30 +96,16 @@ onMounted(() => {
       :label-position="pageData.position"
     >
       <el-form-item>
-        <el-select
-          v-model="pageData.searchInfo.operType"
-          placeholder="操作类型"
-          clearable
-        >
-          <el-option
-            v-for="item in pageData.businessType"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item>
         <el-input
           v-model="pageData.searchInfo.username"
-          placeholder="操作用户"
+          placeholder="登录账号"
           clearable
         ></el-input>
       </el-form-item>
       <el-form-item>
         <el-input
-          v-model="pageData.searchInfo.description"
-          placeholder="描述"
+          v-model="pageData.searchInfo.loginIp"
+          placeholder="登录ip"
           clearable
         ></el-input>
       </el-form-item>
@@ -161,8 +139,8 @@ onMounted(() => {
       <el-form-item>
         <el-button
           plain
-          size="default"
           @click="handleCurrentChange(1)"
+          size="default"
           :icon="useRenderIcon('fa fa-search')"
           >查询</el-button
         >
@@ -197,8 +175,8 @@ onMounted(() => {
             size="small"
             title="刷新"
             circle
-            @click="getPage"
             :icon="useRenderIcon('iconify-fa-refresh')"
+            @click="getPage"
           ></el-button>
         </div>
       </div>
@@ -208,35 +186,11 @@ onMounted(() => {
           style="width: 100%"
           ref="operLog"
           border
-          size="large"
           :fit="true"
+          size="large"
           :header-cell-style="{ 'text-align': 'center' }"
           @selection-change="handleSelectionChange"
         >
-          <el-table-column type="expand">
-            <template v-slot="props">
-              <el-form label-position="right" inline>
-                <el-form-item label="请求地址: ">
-                  <span>{{ props.row.requestUrl }}</span>
-                </el-form-item>
-                <el-form-item label="请求方式: ">
-                  <span>{{ props.row.requestMethod }}</span>
-                </el-form-item>
-                <el-form-item label="操作方法: ">
-                  <span>{{ props.row.operMethod }}</span>
-                </el-form-item>
-                <el-form-item label="请求参数: ">
-                  <span>{{ props.row.requestParams }}</span>
-                </el-form-item>
-                <el-form-item label="响应参数: ">
-                  <span>{{ props.row.requestResult }}</span>
-                </el-form-item>
-                <el-form-item label="错误信息: ">
-                  <span>{{ props.row.errorMessage }}</span>
-                </el-form-item>
-              </el-form>
-            </template>
-          </el-table-column>
           <el-table-column
             sortable
             resizable
@@ -246,35 +200,31 @@ onMounted(() => {
           ></el-table-column>
           <el-table-column
             prop="username"
-            label="操作人员"
+            label="登录账号"
             sortable
             resizable
             :show-overflow-tooltip="true"
             align="center"
           ></el-table-column>
           <el-table-column
-            prop="operIp"
-            label="操作ip"
+            prop="loginIp"
+            label="登录ip"
             sortable
             resizable
             :show-overflow-tooltip="true"
             align="center"
           ></el-table-column>
           <el-table-column
-            prop="businessType"
-            label="操作类型"
+            prop="browser"
+            label="浏览器"
             sortable
             resizable
             :show-overflow-tooltip="true"
             align="center"
-          >
-            <template #default="scope">{{
-              getDictEntryInfo(pageData.businessType, scope.row.operType).label
-            }}</template>
-          </el-table-column>
+          ></el-table-column>
           <el-table-column
-            prop="description"
-            label="描述"
+            prop="os"
+            label="操作系统"
             sortable
             resizable
             :show-overflow-tooltip="true"
@@ -282,13 +232,13 @@ onMounted(() => {
           ></el-table-column>
           <el-table-column
             prop="status"
-            label="操作状态"
+            label="登录状态"
             sortable
             resizable
             :show-overflow-tooltip="true"
             align="center"
           >
-            <template #default="scope">
+            <template v-slot="scope">
               <el-tag
                 :type="scope.row.status === 1 ? 'success' : 'danger'"
                 disable-transitions
@@ -297,8 +247,16 @@ onMounted(() => {
             </template>
           </el-table-column>
           <el-table-column
+            prop="message"
+            label="登录信息"
+            sortable
+            resizable
+            :show-overflow-tooltip="true"
+            align="center"
+          ></el-table-column>
+          <el-table-column
             prop="createTime"
-            label="操作时间"
+            label="登录时间"
             sortable
             resizable
             :show-overflow-tooltip="true"
