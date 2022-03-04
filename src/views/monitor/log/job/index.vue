@@ -6,8 +6,7 @@ import JobLogList from "./list/index.vue";
 import { jobLogApi } from "/@/api/job_log";
 import { JobLog, JobLogQuery } from "/@/api/model/job_log_model";
 import { DictEntryCache } from "/@/api/model/dict_model";
-import { Page, Result } from "/@/api/model/domain";
-import { warnMessage } from "/@/utils/message";
+import { Page } from "/@/api/model/domain";
 const pageData = reactive<{
   searchInfo: JobLogQuery;
   groupOptions: DictEntryCache[];
@@ -46,15 +45,9 @@ const getPage = async () => {
     pageData.searchInfo.endTime = null;
   }
 
-  const result: Result<Page<JobLog[]>> = await jobLogApi.getPage(
-    pageData.searchInfo
-  );
-  if (result.code === "0") {
-    pageData.dataList = result.data.records;
-    pageData.searchInfo.total = Number(result.data.total);
-  } else {
-    warnMessage(result.message);
-  }
+  const result: Page<JobLog[]> = await jobLogApi.getPage(pageData.searchInfo);
+  pageData.dataList = result.records;
+  pageData.searchInfo.total = Number(result.total);
 };
 const handlerSearch = () => {
   pageData.searchInfo.pageNum = 1;
