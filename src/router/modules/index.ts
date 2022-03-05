@@ -11,9 +11,10 @@ import {
   formatFlatteningRoutes
 } from "../utils";
 import { buildHierarchyTree } from "/@/utils/tree";
+import currentUser from "./currentUser";
 
 // 原始静态路由（未做任何处理）
-const routes = [homeRouter];
+const routes = [homeRouter, currentUser];
 
 // 导出处理后的静态路由（三级及以上的路由全部拍成二级）
 export const constantRoutes: Array<RouteRecordRaw> = formatTwoStageRoutes(

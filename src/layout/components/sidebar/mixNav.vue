@@ -16,6 +16,7 @@ import globalization from "/@/assets/svg/globalization.svg?component";
 import { ref, watch, nextTick, onMounted, getCurrentInstance } from "vue";
 import { successMessage } from "/@/utils/message";
 import { tokenStoreHook } from "/@/store/modules/token";
+import router from "/@/router";
 
 const route = useRoute();
 const { locale } = useI18n();
@@ -81,7 +82,9 @@ function translationEn() {
   locale.value = "en";
   handleResize(menuRef.value);
 }
-const currentSetting = async () => {};
+const currentSetting = async () => {
+  router.push("/system/user/current");
+};
 const updateCache = async () => {
   tokenStoreHook()
     .updateCache()

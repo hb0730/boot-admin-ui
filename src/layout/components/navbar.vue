@@ -14,6 +14,7 @@ import globalization from "/@/assets/svg/globalization.svg?component";
 import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
 import { tokenStoreHook } from "/@/store/modules/token";
 import { successMessage } from "/@/utils/message";
+import router from "/@/router";
 const route = useRoute();
 const { locale } = useI18n();
 const instance =
@@ -44,7 +45,9 @@ function translationEn() {
   instance.locale = { locale: "en" };
   locale.value = "en";
 }
-const currentSetting = async () => {};
+const currentSetting = async () => {
+  router.push("/system/user/current");
+};
 const updateCache = async () => {
   tokenStoreHook()
     .updateCache()
