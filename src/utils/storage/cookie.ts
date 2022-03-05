@@ -1,9 +1,7 @@
 import { merge } from "lodash-es";
 import Cookies from "js-cookie";
-import { getConfig } from "/@/config";
-
+import { Title, Version } from "../../../public/serverConfig.json";
 class JsCookies {
-  private static env = getConfig();
   constructor() {}
   /**
    *  存储 cookie 值
@@ -16,11 +14,7 @@ class JsCookies {
       expires: 1
     };
     merge(currentCookieSetting, cookieSetting);
-    Cookies.set(
-      `${JsCookies.env.Title}-${JsCookies.env.Version}-${name}`,
-      value,
-      currentCookieSetting
-    );
+    Cookies.set(`${Title}-${Version}-${name}`, value, currentCookieSetting);
   }
   /**
    * 拿到 cookie 值
@@ -28,9 +22,7 @@ class JsCookies {
    * @returns
    */
   get(name = "default") {
-    return Cookies.get(
-      `${JsCookies.env.Title}-${JsCookies.env.Version}-${name}`
-    );
+    return Cookies.get(`${Title}-${Version}-${name}`);
   }
   /**
    * 拿到 cookie 全部的值
@@ -44,7 +36,7 @@ class JsCookies {
    * @param name
    */
   remove(name = "default") {
-    Cookies.remove(`${JsCookies.env.Title}-${JsCookies.env.Version}-${name}`);
+    Cookies.remove(`${Title}-${Version}-${name}`);
   }
 }
 

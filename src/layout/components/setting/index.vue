@@ -28,6 +28,7 @@ import { toggleTheme } from "@zougt/vite-plugin-theme-preprocessor/dist/browser-
 
 import dayIcon from "/@/assets/svg/day.svg?component";
 import darkIcon from "/@/assets/svg/dark.svg?component";
+import { tokenStoreHook } from "/@/store/modules/token";
 
 const router = useRouter();
 const { isSelect } = useCssModule();
@@ -145,6 +146,7 @@ const multiTagsCacheChange = () => {
 
 // 清空缓存并返回登录页
 function onReset() {
+  tokenStoreHook().logout();
   router.push("/login");
   const { Grey, Weak, MultiTagsCache, EpThemeColor, Layout } = getConfig();
   useAppStoreHook().setLayout(Layout);
