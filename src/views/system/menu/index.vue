@@ -9,8 +9,8 @@ import { warnMessage } from "/@/utils/message";
 import { confirm } from "/@/utils/message/box";
 import type { ElTree } from "element-plus";
 
-import permissionList from "./list/permission.vue";
-import menuEdit from "./edit/menu.vue";
+import PermissionList from "./list/permission.vue";
+import MenuEdit from "./edit/menu.vue";
 import { permissionApi } from "/@/api/permission";
 
 const treeRef = ref<InstanceType<typeof ElTree>>();
@@ -33,6 +33,11 @@ const pageData: {
     id: "",
     description: "",
     parentId: "-1",
+    external: 0,
+    iframe: 0,
+    cache: 0,
+    hidden: 1,
+    i18n: 0,
     title: "",
     enname: "",
     path: "",
@@ -73,6 +78,11 @@ const setData = (data?: Menu, isupdate = false) => {
     pageData.menuInfo = {
       id: null,
       parentId: "-1",
+      external: 0,
+      iframe: 0,
+      cache: 0,
+      hidden: 1,
+      i18n: 0,
       title: null,
       enname: "",
       path: "",

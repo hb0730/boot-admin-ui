@@ -19,6 +19,11 @@ export interface Menu {
   id: string;
   title: string;
   enname: string;
+  external: number;
+  iframe: number;
+  cache: number;
+  hidden: number;
+  i18n: number;
   parentId: string;
   path: string;
   component: string;

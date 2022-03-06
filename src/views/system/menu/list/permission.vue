@@ -1,3 +1,6 @@
+<script lang="ts">
+export default { name: "PermissionList" };
+</script>
 <script setup lang="ts">
 import { reactive, PropType, toRef, ref, Ref } from "vue";
 import { Permission, Query } from "/@/api/model/permission_model";
