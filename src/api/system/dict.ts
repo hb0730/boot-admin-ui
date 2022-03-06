@@ -1,9 +1,9 @@
 // import BaseRequest from "./base";
-import BaseRequest from "./base";
-import { Dict, DictCache, DictQuery } from "./model/dict_model";
-import { Page } from "./model/domain";
+import BaseRequest from "../base";
+import { Dict, DictCache, DictQuery } from "../model/system/dict_model";
+import { Page } from "../model/domain";
 enum API {
-  BASE_URL = "/api/v3/system/dict",
+  BASE_URL = "/system/dict",
   page = "/list/page",
   list = "/list",
   save = "/save",

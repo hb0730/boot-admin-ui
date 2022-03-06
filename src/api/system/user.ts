@@ -1,8 +1,13 @@
-import BaseRequest from "./base";
-import { Page } from "./model/domain";
-import { UserQuery, User, UserInfo, UpdatePassword } from "./model/user_model";
+import BaseRequest from "../base";
+import { Page } from "../model/domain";
+import {
+  UserQuery,
+  User,
+  UserInfo,
+  UpdatePassword
+} from "../model/system/user_model";
 enum API {
-  BASE_URL = "api/v3/system/user/info",
+  BASE_URL = "/system/user/info",
   info = "/:id",
   page = "/list/page",
   save = "/save",

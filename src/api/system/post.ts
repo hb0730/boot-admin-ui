@@ -1,8 +1,8 @@
-import BaseRequest from "./base";
-import { Page } from "./model/domain";
-import { Post, PostQuery } from "./model/post_model";
+import BaseRequest from "../base";
+import { Page } from "../model/domain";
+import { Post, PostQuery } from "../model/system/post_model";
 enum API {
-  BASE_URL = "/api/v3/system/post",
+  BASE_URL = "/system/post",
   list = "/list",
   page = "/list/page",
   save = "/save",

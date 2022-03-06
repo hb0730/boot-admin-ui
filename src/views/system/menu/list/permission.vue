@@ -3,13 +3,13 @@ export default { name: "PermissionList" };
 </script>
 <script setup lang="ts">
 import { reactive, PropType, toRef, ref, Ref } from "vue";
-import { Permission, Query } from "/@/api/model/permission_model";
+import { Permission, Query } from "/@/api/model/system/permission_model";
 import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
 import { successMessage, warnMessage } from "/@/utils/message";
 import VueSelectTree from "/@/components/tree-select/index.vue";
-import { MenuTree } from "/@/api/model/menu_model";
+import { MenuTree } from "/@/api/model/system/menu_model";
 import type { ElForm, ElTable } from "element-plus";
-import { permissionApi } from "/@/api/permission";
+import { permissionApi } from "/@/api/system/permission";
 import { confirm } from "/@/utils/message/box";
 
 const permissionFormRef = ref<InstanceType<typeof ElForm>>();

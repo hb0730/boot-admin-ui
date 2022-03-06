@@ -5,12 +5,12 @@ export default {
 </script>
 <script setup lang="ts">
 import { toRef, PropType, reactive, ref, watch } from "vue";
-import { MenuPermissionTree } from "/@/api/model/menu_model";
+import { MenuPermissionTree } from "/@/api/model/system/menu_model";
 import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
 import { ElTree } from "element-plus";
-import { Role } from "/@/api/model/role_model";
+import { Role } from "/@/api/model/system/role_model";
 import { successMessage, warnMessage } from "/@/utils/message";
-import { roleApi } from "/@/api/role";
+import { roleApi } from "/@/api/system/role";
 const permissionTreeRef = ref<InstanceType<typeof ElTree>>();
 const emit = defineEmits<{
   (e: "refresh"): void;

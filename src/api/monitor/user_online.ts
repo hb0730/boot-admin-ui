@@ -1,8 +1,11 @@
-import BaseRequest from "./base";
-import { Page } from "./model/domain";
-import { UserOnlineModel, UserOnlineQuery } from "./model/user_online_model";
+import BaseRequest from "../base";
+import { Page } from "../model/domain";
+import {
+  UserOnlineModel,
+  UserOnlineQuery
+} from "../model/monitor/user_online_model";
 enum API {
-  BASE_URL = "/api/v3/monitor/online/user",
+  BASE_URL = "/monitor/online/user",
   page = "/list/page",
   logout = "/logout/:token",
   logoutBatch = "/logout"

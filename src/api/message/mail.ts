@@ -1,7 +1,7 @@
-import BaseRequest from "./base";
-import { MailModel, mailTestInfo } from "./model/mail_model";
+import BaseRequest from "../base";
+import { MailModel, mailTestInfo } from "../model/message/mail_model";
 enum API {
-  BASE_URL = "/api/v3/message/mail",
+  BASE_URL = "/message/mail",
   info = "/",
   save = "/save",
   test = "/test"

@@ -1,8 +1,8 @@
-import BaseRequest from "./base";
-import { Page } from "./model/domain";
-import { JobLog, JobLogQuery } from "./model/job_log_model";
+import BaseRequest from "../base";
+import { Page } from "../model/domain";
+import { JobLog, JobLogQuery } from "../model/monitor/job_log_model";
 enum API {
-  BASE_URL = "/api/v3/system/job/log",
+  BASE_URL = "/system/job/log",
   page = "/list/page"
 }
 class JobLogAPI extends BaseRequest {

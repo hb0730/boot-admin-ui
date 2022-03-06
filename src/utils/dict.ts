@@ -1,4 +1,4 @@
-import { DictEntryCache } from "../api/model/dict_model";
+import { DictEntryCache } from "/@/api/model/system/dict_model";
 
 export function getDictEntryInfo(
   entry: DictEntryCache[],

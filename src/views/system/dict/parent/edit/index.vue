@@ -3,10 +3,10 @@ export default { name: "DictParentEdit" };
 </script>
 <script setup lang="ts">
 import { toRef, PropType, reactive, ref } from "vue";
-import { Dict } from "/@/api/model/dict_model";
+import { Dict } from "/@/api/model/system/dict_model";
 import { ElForm } from "element-plus";
 import { successMessage, warnMessage } from "/@/utils/message";
-import { dictApi } from "/@/api/dict";
+import { dictApi } from "/@/api/system/dict";
 const emit = defineEmits<{
   (e: "refresh"): void;
 }>();

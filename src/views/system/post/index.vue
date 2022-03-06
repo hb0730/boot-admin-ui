@@ -2,8 +2,8 @@
 import { onMounted, reactive } from "vue";
 import PostList from "./list/index.vue";
 import { Page } from "/@/api/model/domain";
-import { Post, PostQuery } from "/@/api/model/post_model";
-import { postApi } from "/@/api/post";
+import { Post, PostQuery } from "/@/api/model/system/post_model";
+import { postApi } from "/@/api/system/post";
 import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
 const isEnabledOptions = reactive([
   { value: 1, label: "启用" },

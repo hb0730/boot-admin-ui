@@ -1,10 +1,10 @@
-import BaseRequest from "./base";
+import BaseRequest from "../base";
 import {
   Menu,
   MenuPermissionTree,
   MenuTree,
   RouterModel
-} from "./model/menu_model";
+} from "../model/system/menu_model";
 
 enum API {
   currentRouter = "/get/current/router",
@@ -17,7 +17,7 @@ enum API {
   update_current_cache = "/update/current"
 }
 class MenuAPI extends BaseRequest {
-  private static BASE_API = "/api/v3/system/menu";
+  private static BASE_API = "/system/menu";
   getBaseUrl(): String {
     return MenuAPI.BASE_API;
   }

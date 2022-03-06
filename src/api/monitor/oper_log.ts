@@ -1,9 +1,9 @@
-import BaseRequest from "./base";
-import { Page } from "./model/domain";
-import { OperLogModel, OperLogQuery } from "./model/oper_log_model";
+import BaseRequest from "../base";
+import { Page } from "../model/domain";
+import { OperLogModel, OperLogQuery } from "../model/monitor/oper_log_model";
 
 enum API {
-  BASE_URL = "/api/v3/monitor/operation/log",
+  BASE_URL = "/monitor/operation/log",
   clean = "/clean",
   page = "/list/page",
   delete = "/delete/:id",

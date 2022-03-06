@@ -5,16 +5,16 @@ export default {
 </script>
 <script setup lang="ts">
 import { toRef, PropType, Ref, onMounted, reactive } from "vue";
-import { Role, RoleQuery } from "/@/api/model/role_model";
+import { Role, RoleQuery } from "/@/api/model/system/role_model";
 import PermissionTree from "../permission/index.vue";
 import RoleEdit from "../edit/index.vue";
 import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
-import { deptApi } from "/@/api/dept";
-import { DeptTree } from "/@/api/model/dept_model";
-import { menuApi } from "/@/api/menu";
-import { MenuPermissionTree } from "/@/api/model/menu_model";
+import { deptApi } from "/@/api/system/dept";
+import { DeptTree } from "/@/api/model/system/dept_model";
+import { menuApi } from "/@/api/system/menu";
+import { MenuPermissionTree } from "/@/api/model/system/menu_model";
 import { successMessage, warnMessage } from "/@/utils/message";
-import { roleApi } from "/@/api/role";
+import { roleApi } from "/@/api/system/role";
 import { confirm } from "/@/utils/message/box";
 const pageData = reactive<{
   selection: any;

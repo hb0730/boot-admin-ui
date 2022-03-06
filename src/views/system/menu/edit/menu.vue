@@ -6,8 +6,8 @@ export default {
 <script setup lang="ts">
 import { ElForm } from "element-plus";
 import { reactive, PropType, toRef, watch, ref, toRaw } from "vue";
-import { menuApi } from "/@/api/menu";
-import { Menu, MenuTree } from "/@/api/model/menu_model";
+import { menuApi } from "/@/api/system/menu";
+import { Menu, MenuTree } from "/@/api/model/system/menu_model";
 import VueSelectTree from "/@/components/tree-select/index.vue";
 import { warnMessage } from "/@/utils/message";
 

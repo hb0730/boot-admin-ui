@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { onMounted, reactive, ref } from "vue";
-import { menuApi } from "/@/api/menu";
+import { menuApi } from "/@/api/system/menu";
 import { Page } from "/@/api/model/domain";
-import { Menu, MenuTree } from "/@/api/model/menu_model";
-import { Permission, Query } from "/@/api/model/permission_model";
+import { Menu, MenuTree } from "/@/api/model/system/menu_model";
+import { Permission, Query } from "/@/api/model/system/permission_model";
 import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
 import { warnMessage } from "/@/utils/message";
 import { confirm } from "/@/utils/message/box";
@@ -11,7 +11,7 @@ import type { ElTree } from "element-plus";
 
 import PermissionList from "./list/permission.vue";
 import MenuEdit from "./edit/menu.vue";
-import { permissionApi } from "/@/api/permission";
+import { permissionApi } from "/@/api/system/permission";
 
 const treeRef = ref<InstanceType<typeof ElTree>>();
 const checkedId = ref("");

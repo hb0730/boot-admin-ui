@@ -1,4 +1,4 @@
-import { BaseQuery } from "./domain";
+import { BaseQuery } from "../domain";
 export interface Permission {
   id: string;
   name: string;

@@ -3,10 +3,10 @@ export default { name: "PostEdit" };
 </script>
 <script setup lang="ts">
 import { toRef, PropType, reactive, ref } from "vue";
-import { Post } from "/@/api/model/post_model";
+import { Post } from "/@/api/model/system/post_model";
 import { ElForm } from "element-plus";
 import { successMessage, warnMessage } from "/@/utils/message";
-import { postApi } from "/@/api/post";
+import { postApi } from "/@/api/system/post";
 const postForm = ref<InstanceType<typeof ElForm>>();
 const emit = defineEmits<{
   (e: "refresh"): void;

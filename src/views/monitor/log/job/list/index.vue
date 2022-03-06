@@ -6,8 +6,8 @@ export default {
 <script setup lang="ts">
 import { ElMessageBox } from "element-plus";
 import { toRef, PropType, Ref } from "vue";
-import { DictEntryCache } from "/@/api/model/dict_model";
-import { JobLog, JobLogQuery } from "/@/api/model/job_log_model";
+import { DictEntryCache } from "/@/api/model/system/dict_model";
+import { JobLog, JobLogQuery } from "/@/api/model/monitor/job_log_model";
 import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
 import { getDictEntryInfo } from "/@/utils/dict";
 const props = defineProps({

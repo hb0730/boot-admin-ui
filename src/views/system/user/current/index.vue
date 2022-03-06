@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ElForm } from "element-plus";
 import { onMounted, reactive, ref } from "vue";
-import { userApi } from "/@/api/user";
+import { userApi } from "/@/api/system/user";
 import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
 import { dictStoreHook } from "/@/store/modules/dict";
 import { successMessage, warnMessage } from "/@/utils/message";

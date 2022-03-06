@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { onMounted, reactive } from "vue";
-import { loginLogApi } from "/@/api/login_log";
+import { loginLogApi } from "/@/api/monitor/login_log";
 import { Page } from "/@/api/model/domain";
-import { LoginLogModel } from "/@/api/model/login_log_model";
+import { LoginLogModel } from "/@/api/model/monitor/login_log_model";
 import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
 import { successMessage, warnMessage } from "/@/utils/message";
 import { confirm } from "/@/utils/message/box";

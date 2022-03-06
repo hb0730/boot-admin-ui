@@ -2,7 +2,7 @@
 import { reactive } from "vue";
 import DictParent from "./parent/list/index.vue";
 import DictEntryList from "./entry/list/index.vue";
-import { Dict } from "/@/api/model/dict_model";
+import { Dict } from "/@/api/model/system/dict_model";
 const pageData = reactive({
   parentId: null,
   data: null

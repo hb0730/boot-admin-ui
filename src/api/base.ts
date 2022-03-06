@@ -1,7 +1,7 @@
 import { ElLoading } from "element-plus";
-import { downloadFileBlob } from "../utils/file";
-import { http } from "../utils/http";
-import { PureHttpResoponse, RequestMethods } from "../utils/http/types";
+import { downloadFileBlob } from "/@/utils/file";
+import { http } from "/@/utils/http";
+import { PureHttpResponse, RequestMethods } from "/@/utils/http/types";
 
 export default class BaseRequest {
   getBaseUrl(): String {
@@ -83,11 +83,11 @@ export default class BaseRequest {
     url: string,
     params?: R
   ): Promise<void> {
-    let response: PureHttpResoponse = null;
+    let response: PureHttpResponse = null;
     return http
       .request<void>(method, this.getBaseUrl().trim() + url, params, {
         responseType: "blob",
-        beforeResponseCallback: function (res: PureHttpResoponse) {
+        beforeResponseCallback: function (res: PureHttpResponse) {
           response = res;
         }
       })

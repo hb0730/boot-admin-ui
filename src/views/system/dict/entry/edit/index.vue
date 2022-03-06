@@ -3,10 +3,10 @@ export default { name: "DictEntryEdit" };
 </script>
 <script setup lang="ts">
 import { toRef, PropType, reactive, ref } from "vue";
-import { Dict, DictEntry } from "/@/api/model/dict_model";
+import { Dict, DictEntry } from "/@/api/model/system/dict_model";
 import { ElForm } from "element-plus";
 import { successMessage, warnMessage } from "/@/utils/message";
-import { dictEntryApi } from "/@/api/dist_entry";
+import { dictEntryApi } from "/@/api/system/dist_entry";
 const dictEntryFormRef = ref<InstanceType<typeof ElForm>>();
 const emit = defineEmits<{
   (e: "refresh"): void;

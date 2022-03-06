@@ -1,8 +1,8 @@
-import BaseRequest from "./base";
-import { Page } from "./model/domain";
-import { Role, RoleQuery } from "./model/role_model";
+import BaseRequest from "../base";
+import { Page } from "../model/domain";
+import { Role, RoleQuery } from "../model/system/role_model";
 enum API {
-  BASE_URL = "/api/v3/system/role",
+  BASE_URL = "/system/role",
   list = "/list",
   page = "/list/page",
   save = "/save",

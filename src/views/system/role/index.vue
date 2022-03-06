@@ -2,9 +2,9 @@
 import { onMounted, reactive } from "vue";
 import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
 import RoleList from "./list/index.vue";
-import { Role, RoleQuery } from "/@/api/model/role_model";
+import { Role, RoleQuery } from "/@/api/model/system/role_model";
 import { Page } from "/@/api/model/domain";
-import { roleApi } from "/@/api/role";
+import { roleApi } from "/@/api/system/role";
 const isEnabledOptions = reactive([
   { label: "启用", value: 1 },
   { label: "禁用", value: 0 }

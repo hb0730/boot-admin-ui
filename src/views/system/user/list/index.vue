@@ -1,8 +1,13 @@
+<script lang="ts">
+export default {
+  name: "UserList"
+};
+</script>
 <script setup lang="ts">
 import { ElTable } from "element-plus";
 import { PropType, reactive, ref, Ref, toRef } from "vue";
-import { User, UserQuery } from "/@/api/model/user_model";
-import { userApi } from "/@/api/user";
+import { User, UserQuery } from "/@/api/model/system/user_model";
+import { userApi } from "/@/api/system/user";
 import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
 import { successMessage, warnMessage } from "/@/utils/message";
 import { confirm } from "/@/utils/message/box";

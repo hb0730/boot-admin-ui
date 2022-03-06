@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import { onMounted, reactive } from "vue";
-import { deptApi } from "/@/api/dept";
-import { DeptTree } from "/@/api/model/dept_model";
+import { deptApi } from "/@/api/system/dept";
+import { DeptTree } from "/@/api/model/system/dept_model";
 import { Page } from "/@/api/model/domain";
-import { User, UserQuery } from "/@/api/model/user_model";
-import { userApi } from "/@/api/user";
-import { postApi } from "/@/api/post";
+import { User, UserQuery } from "/@/api/model/system/user_model";
+import { userApi } from "/@/api/system/user";
+import { postApi } from "/@/api/system/post";
 import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
 import UserList from "./list/index.vue";
 import UserEdit from "./edit/index.vue";
-import { Post, PostQuery } from "/@/api/model/post_model";
-import { Role, RoleQuery } from "/@/api/model/role_model";
-import { roleApi } from "/@/api/role";
+import { Post, PostQuery } from "/@/api/model/system/post_model";
+import { Role, RoleQuery } from "/@/api/model/system/role_model";
+import { roleApi } from "/@/api/system/role";
 const pageData = reactive<{
   isUpdate: boolean;
   dialogVisible: boolean;

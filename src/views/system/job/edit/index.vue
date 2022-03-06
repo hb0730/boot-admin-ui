@@ -6,9 +6,9 @@ export default {
 <script setup lang="ts">
 import { ElForm } from "element-plus";
 import { toRef, PropType, reactive, Ref, ref } from "vue";
-import { jobApi } from "/@/api/job";
-import { DictEntryCache } from "/@/api/model/dict_model";
-import { Job } from "/@/api/model/job_model";
+import { jobApi } from "/@/api/system/job";
+import { DictEntryCache } from "/@/api/model/system/dict_model";
+import { Job } from "/@/api/model/monitor/job_model";
 import { successMessage, warnMessage } from "/@/utils/message";
 const jobRef = ref<InstanceType<typeof ElForm>>();
 const emit = defineEmits<{

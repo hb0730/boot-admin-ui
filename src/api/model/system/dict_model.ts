@@ -1,4 +1,4 @@
-import { BaseClass, BaseQuery } from "./domain";
+import { BaseClass, BaseQuery } from "../domain";
 
 export interface DictQuery extends BaseQuery {
   name?: string;

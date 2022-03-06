@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { store } from "..";
-import { DictCache, DictEntryCache } from "/@/api/model/dict_model";
+import { DictCache, DictEntryCache } from "/@/api/model/system/dict_model";
 import { db } from "/@/utils/storage/db";
 export const dictStore = defineStore({
   id: "dict-store",

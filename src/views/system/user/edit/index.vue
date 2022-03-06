@@ -1,11 +1,16 @@
+<script lang="ts">
+export default {
+  name: "UserEdit"
+};
+</script>
 <script setup lang="ts">
 import { ElForm } from "element-plus";
 import { reactive, toRef, PropType, ref, watch, toRaw } from "vue";
-import { DeptTree } from "/@/api/model/dept_model";
-import { Post } from "/@/api/model/post_model";
-import { Role } from "/@/api/model/role_model";
-import { User } from "/@/api/model/user_model";
-import { userApi } from "/@/api/user";
+import { DeptTree } from "/@/api/model/system/dept_model";
+import { Post } from "/@/api/model/system/post_model";
+import { Role } from "/@/api/model/system/role_model";
+import { User } from "/@/api/model/system/user_model";
+import { userApi } from "/@/api/system/user";
 import VueSelectTree from "/@/components/tree-select/index.vue";
 import { successMessage, warnMessage } from "/@/utils/message";
 const treeProps = reactive({

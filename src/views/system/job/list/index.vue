@@ -6,13 +6,13 @@ export default {
 <script setup lang="ts">
 import { toRef, PropType, Ref, reactive } from "vue";
 import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
-import { Job, JobQuery } from "/@/api/model/job_model";
+import { Job, JobQuery } from "/@/api/model/monitor/job_model";
 import { getDictEntryInfo } from "/@/utils/dict";
-import { DictEntryCache } from "/@/api/model/dict_model";
+import { DictEntryCache } from "/@/api/model/system/dict_model";
 import JobEdit from "../edit/index.vue";
 import { successMessage, warnMessage } from "/@/utils/message";
 import { confirm } from "/@/utils/message/box";
-import { jobApi } from "/@/api/job";
+import { jobApi } from "/@/api/system/job";
 import router from "/@/router";
 const emit = defineEmits<{
   (e: "refresh", pageSize: number, pageNum: number): void;

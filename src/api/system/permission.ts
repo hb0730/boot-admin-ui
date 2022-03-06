@@ -1,8 +1,8 @@
-import BaseRequest from "./base";
-import { Page } from "./model/domain";
-import { Query, Permission } from "./model/permission_model";
+import BaseRequest from "../base";
+import { Page } from "../model/domain";
+import { Query, Permission } from "../model/system/permission_model";
 enum API {
-  BASE_URL = "/api/v3/system/permission",
+  BASE_URL = "/system/permission",
   menu_permission = "/menu/page/:menuId",
   save = "/save",
   update_id = "/update/:id",

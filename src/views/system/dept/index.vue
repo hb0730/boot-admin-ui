@@ -2,8 +2,8 @@
 import { onMounted, reactive, ref } from "vue";
 import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
 import DeptEdit from "./edit/index.vue";
-import { Dept, DeptTree } from "/@/api/model/dept_model";
-import { deptApi } from "/@/api/dept";
+import { Dept, DeptTree } from "/@/api/model/system/dept_model";
+import { deptApi } from "/@/api/system/dept";
 import { warnMessage } from "/@/utils/message";
 import { ElTree } from "element-plus";
 import { confirm } from "/@/utils/message/box";

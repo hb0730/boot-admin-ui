@@ -3,13 +3,13 @@ export default { name: "PostList" };
 </script>
 <script setup lang="ts">
 import { toRef, PropType, reactive, Ref, ref } from "vue";
-import { Post, PostQuery } from "/@/api/model/post_model";
+import { Post, PostQuery } from "/@/api/model/system/post_model";
 import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
 import PostEdit from "../edit/index.vue";
 import { ElTable, ElUpload } from "element-plus";
 import { successMessage, warnMessage } from "/@/utils/message";
 import { confirm } from "/@/utils/message/box";
-import { postApi } from "/@/api/post";
+import { postApi } from "/@/api/system/post";
 const postListRef = ref<InstanceType<typeof ElTable>>();
 const uploadRef = ref<InstanceType<typeof ElUpload>>();
 const emit = defineEmits<{

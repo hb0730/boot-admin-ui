@@ -3,8 +3,12 @@ export default { name: "DictEntryList" };
 </script>
 <script setup lang="ts">
 import { toRef, reactive, watch, PropType } from "vue";
-import { dictEntryApi } from "/@/api/dist_entry";
-import { Dict, DictEntry, DictEntryQuery } from "/@/api/model/dict_model";
+import { dictEntryApi } from "/@/api/system/dist_entry";
+import {
+  Dict,
+  DictEntry,
+  DictEntryQuery
+} from "/@/api/model/system/dict_model";
 import { Page } from "/@/api/model/domain";
 import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
 import DictEntryEdit from "../edit/index.vue";

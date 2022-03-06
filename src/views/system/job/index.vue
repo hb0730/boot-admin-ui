@@ -3,9 +3,9 @@ import { onMounted, reactive } from "vue";
 import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
 import { dictStoreHook } from "/@/store/modules/dict";
 import JobList from "./list/index.vue";
-import { jobApi } from "/@/api/job";
-import { Job, JobQuery } from "/@/api/model/job_model";
-import { DictEntryCache } from "/@/api/model/dict_model";
+import { jobApi } from "/@/api/system/job";
+import { Job, JobQuery } from "/@/api/model/monitor/job_model";
+import { DictEntryCache } from "/@/api/model/system/dict_model";
 import { Page } from "/@/api/model/domain";
 const pageData = reactive<{
   position: string;

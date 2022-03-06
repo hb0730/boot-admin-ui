@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { store } from "/@/store";
 import { userType } from "./types";
 import { useRouter } from "vue-router";
-import { getLogin, refreshToken } from "/@/api/user";
+import { getLogin, refreshToken } from "/@/api/system/user";
 import { storageLocal, storageSession } from "/@/utils/storage";
 import { getToken, setToken, removeToken } from "/@/utils/auth";
 import { useMultiTagsStoreHook } from "/@/store/modules/multiTags";

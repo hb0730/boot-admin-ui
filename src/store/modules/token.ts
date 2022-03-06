@@ -1,14 +1,14 @@
 import { defineStore } from "pinia";
 import { store } from "/@/store";
 import { db } from "/@/utils/storage/db";
-import { authAPi } from "/@/api/auth";
-import { LoginUser } from "/@/api/model/auth_model";
+import { authAPi } from "/@/api/system/auth";
+import { LoginUser } from "/@/api/model/system/auth_model";
 import { cookies } from "/@/utils/storage/cookie";
 import dayjs from "dayjs";
 import router from "/@/router";
 import { handleAliveRoute, initRouter } from "/@/router/utils";
 import { dictStoreHook } from "./dict";
-import { getCache, updateCache } from "/@/api/dict_cache";
+import { getCache, updateCache } from "/@/api/system/dict_cache";
 import { menuStoreHook } from "./menu";
 
 export const tokenStore = defineStore({

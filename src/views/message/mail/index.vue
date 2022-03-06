@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ElForm } from "element-plus";
-import { mailApi } from "/@/api/mail";
+import { mailApi } from "/@/api/message/mail";
 import { onMounted, reactive, ref } from "vue";
 import { successMessage, warnMessage } from "/@/utils/message";
 const mailRef = ref<InstanceType<typeof ElForm>>();

@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { store } from "..";
 import { db } from "/@/utils/storage/db";
-import { menuApi } from "/@/api/menu";
+import { menuApi } from "../../api/system/menu";
 
 export const menuStore = defineStore({
   id: "menu-store",

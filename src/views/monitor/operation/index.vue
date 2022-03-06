@@ -2,10 +2,10 @@
 import { onMounted, reactive } from "vue";
 import { dictStoreHook } from "/@/store/modules/dict";
 import { getDictEntryInfo } from "/@/utils/dict";
-import { operLogApi } from "/@/api/oper_log";
+import { operLogApi } from "/@/api/monitor/oper_log";
 import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
 import { Page } from "/@/api/model/domain";
-import { OperLogModel } from "/@/api/model/oper_log_model";
+import { OperLogModel } from "/@/api/model/monitor/oper_log_model";
 import { successMessage, warnMessage } from "/@/utils/message";
 import { confirm } from "/@/utils/message/box";
 const pageData = reactive({

@@ -1,8 +1,8 @@
-import BaseRequest from "./base";
-import { Page } from "./model/domain";
-import { Job, JobQuery } from "./model/job_model";
+import BaseRequest from "../base";
+import { Page } from "../model/domain";
+import { Job, JobQuery } from "../model/monitor/job_model";
 enum API {
-  BASE_URL = "/api/v3/system/job",
+  BASE_URL = "/system/job",
   list = "/list",
   page = "/list/page",
   save = "/save",

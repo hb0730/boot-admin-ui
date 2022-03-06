@@ -3,12 +3,12 @@ export default { name: "RoleEdit" };
 </script>
 <script setup lang="ts">
 import { Ref, toRef, PropType, reactive, ref } from "vue";
-import { DeptTree } from "/@/api/model/dept_model";
-import { Role } from "/@/api/model/role_model";
+import { DeptTree } from "/@/api/model/system/dept_model";
+import { Role } from "/@/api/model/system/role_model";
 import TreeSelectV2 from "/@/components/tree-select2/index.vue";
 import { ElForm } from "element-plus";
 import { successMessage, warnMessage } from "/@/utils/message";
-import { roleApi } from "/@/api/role";
+import { roleApi } from "/@/api/system/role";
 const roleFormRef = ref<InstanceType<typeof ElForm>>();
 const treeProps = reactive({
   id: "id",

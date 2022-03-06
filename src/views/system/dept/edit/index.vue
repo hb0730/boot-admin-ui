@@ -3,11 +3,11 @@ export default { name: "DeptEdit" };
 </script>
 <script setup lang="ts">
 import { PropType, reactive, ref, toRef, watch } from "vue";
-import { Dept, DeptTree } from "/@/api/model/dept_model";
+import { Dept, DeptTree } from "/@/api/model/system/dept_model";
 import VueSelectTree from "/@/components/tree-select/index.vue";
 import { ElForm } from "element-plus";
 import { warnMessage } from "/@/utils/message";
-import { deptApi } from "/@/api/dept";
+import { deptApi } from "/@/api/system/dept";
 const formRef = ref<InstanceType<typeof ElForm>>();
 const treeProps = reactive({
   id: "id",

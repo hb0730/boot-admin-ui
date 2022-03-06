@@ -1,7 +1,7 @@
-import BaseRequest from "./base";
-import { Dept, DeptTree } from "./model/dept_model";
+import BaseRequest from "../base";
+import { Dept, DeptTree } from "../model/system/dept_model";
 enum API {
-  BASE_URL = "/api/v3/system/dept",
+  BASE_URL = "/system/dept",
   tree_dept = "/tree/all",
   save = "/save",
   update_id = "/update/:id",

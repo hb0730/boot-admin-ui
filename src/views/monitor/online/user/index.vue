@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { onMounted, reactive } from "vue";
 import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
-import { userOnlineApi } from "/@/api/user_online";
+import { userOnlineApi } from "/@/api/monitor/user_online";
 import { Page } from "/@/api/model/domain";
-import { UserOnlineModel } from "/@/api/model/user_online_model";
+import { UserOnlineModel } from "/@/api/model/monitor/user_online_model";
 import { warnMessage } from "/@/utils/message";
 import { confirm } from "/@/utils/message/box";
 const pageData = reactive({

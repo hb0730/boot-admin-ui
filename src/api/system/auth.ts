@@ -1,5 +1,5 @@
-import { http } from "../utils/http";
-import { Login, LoginUser } from "./model/auth_model";
+import { http } from "../../utils/http";
+import { Login, LoginUser } from "../model/system/auth_model";
 
 enum API {
   login = "/auth/login",

@@ -1,8 +1,8 @@
-import BaseRequest from "./base";
-import { Page } from "./model/domain";
-import { LoginLogModel, LoginLogQuery } from "./model/login_log_model";
+import BaseRequest from "../base";
+import { Page } from "../model/domain";
+import { LoginLogModel, LoginLogQuery } from "../model/monitor/login_log_model";
 enum API {
-  BASE_URL = "/api/v3/monitor/log/login",
+  BASE_URL = "/monitor/log/login",
   page = "/list/page",
   list = "/list",
   delete = "/delete/:id",
