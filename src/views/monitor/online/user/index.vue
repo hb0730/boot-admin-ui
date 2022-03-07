@@ -3,7 +3,10 @@ import { onMounted, reactive } from "vue";
 import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
 import { userOnlineApi } from "/@/api/monitor/user_online";
 import { Page } from "/@/api/model/domain";
-import { UserOnlineModel } from "/@/api/model/monitor/user_online_model";
+import {
+  UserOnlineModel,
+  UserOnlineQuery
+} from "/@/api/model/monitor/user_online_model";
 import { warnMessage } from "/@/utils/message";
 import { confirm } from "/@/utils/message/box";
 const pageData = reactive({
@@ -22,9 +25,10 @@ const pageData = reactive({
   selection: []
 });
 const getPage = async () => {
-  const result: Page<UserOnlineModel[]> = await userOnlineApi.page(
-    pageData.searchInfo
-  );
+  const result: Page<UserOnlineModel[]> = await userOnlineApi.page<
+    Page<UserOnlineModel[]>,
+    UserOnlineQuery
+  >(pageData.searchInfo);
   pageData.userOnlineList = result.records;
   pageData.pages.total = Number(result.total);
 };

@@ -112,17 +112,17 @@ const getTreeDept = async () => {
   pageData.deptTreeData = await deptApi.getTreDept();
 };
 const getPage = async () => {
-  const result: Page<User[]> = await userApi.getUserPage(pageData.searchInfo);
+  const result: Page<User[]> = await userApi.page(pageData.searchInfo);
   pageData.userList = result.records;
   pageData.searchInfo.total = Number(result.total);
 };
 const getPost = async () => {
   const query: PostQuery = { isEnabled: 1 };
-  pageData.postDataList = await postApi.getList(query);
+  pageData.postDataList = await postApi.list(query);
 };
 const getRoleList = async () => {
   const query: RoleQuery = { isEnabled: 1 };
-  pageData.roleDataList = await roleApi.getList(query);
+  pageData.roleDataList = await roleApi.list(query);
 };
 const handlerAddNew = () => {
   initUserInfo(null);

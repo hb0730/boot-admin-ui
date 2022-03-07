@@ -38,7 +38,7 @@ const pageData = reactive<{
   roleList: []
 });
 const getPage = async () => {
-  const result: Page<Role[]> = await roleApi.getPage(pageData.searchInfo);
+  const result: Page<Role[]> = await roleApi.page(pageData.searchInfo);
   pageData.roleList = result.records;
   pageData.searchInfo.total = Number(result.total);
 };

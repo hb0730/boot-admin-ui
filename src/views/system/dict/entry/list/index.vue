@@ -54,7 +54,7 @@ const parent = toRef(props, "parent");
 const sizeChange = (pageSize: number) => {};
 const currentChange = (pageNum: number) => {};
 const getPage = async () => {
-  const result: Page<DictEntry[]> = await dictEntryApi.getPage(
+  const result: Page<DictEntry[]> = await dictEntryApi.page(
     pageData.searchEntryInfo
   );
   pageData.entryDataList = result.records;

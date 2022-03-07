@@ -1,4 +1,6 @@
-export interface MailModel {
+import { BaseClass } from "../domain";
+
+export interface MailModel extends BaseClass {
   /**
    * 发送主机
    */

@@ -1,15 +1,12 @@
 import BaseRequest from "../base";
-import { Dept, DeptTree } from "../model/system/dept_model";
+import { DeptTree } from "../model/system/dept_model";
 enum API {
   BASE_URL = "/system/dept",
-  tree_dept = "/tree/all",
-  save = "/save",
-  update_id = "/update/:id",
-  delete_id = "/delete/:id"
+  tree_dept = "/tree/all"
 }
 
 class DeptAPI extends BaseRequest {
-  getBaseUrl(): String {
+  getBaseUrl(): string {
     return API.BASE_URL;
   }
   /**
@@ -18,15 +15,6 @@ class DeptAPI extends BaseRequest {
    */
   getTreDept(): Promise<DeptTree[]> {
     return this.get<DeptTree[]>(API.tree_dept);
-  }
-  save(vo: Dept): Promise<string> {
-    return this.post<string>(API.save, vo);
-  }
-  updateById(id: string, vo: Dept): Promise<string> {
-    return this.put<string>(API.update_id.replace(":id", id), vo);
-  }
-  deleteById(id: string): Promise<string> {
-    return this.delete<string>(API.delete_id.replace(":id", id));
   }
 }
 export const deptApi = new DeptAPI();

@@ -72,7 +72,7 @@ const handlerSave = () => {
   });
 };
 const update = async () => {
-  await roleApi.update(roleInfo.value.id, roleInfo.value);
+  await roleApi.updateById(roleInfo.value.id, roleInfo.value);
   handleDialogClose();
 };
 const save = async () => {

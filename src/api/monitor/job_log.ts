@@ -6,7 +6,7 @@ enum API {
   page = "/list/page"
 }
 class JobLogAPI extends BaseRequest {
-  getBaseUrl(): String {
+  getBaseUrl(): string {
     return API.BASE_URL;
   }
   getPage(query?: JobLogQuery): Promise<Page<JobLog[]>> {

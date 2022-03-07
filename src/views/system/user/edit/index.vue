@@ -5,7 +5,7 @@ export default {
 </script>
 <script setup lang="ts">
 import { ElForm } from "element-plus";
-import { reactive, toRef, PropType, ref, watch, toRaw } from "vue";
+import { reactive, toRef, PropType, ref, watch } from "vue";
 import { DeptTree } from "/@/api/model/system/dept_model";
 import { Post } from "/@/api/model/system/post_model";
 import { Role } from "/@/api/model/system/role_model";
@@ -100,12 +100,12 @@ const handlerSave = () => {
   });
 };
 const saveUser = async () => {
-  await userApi.saveUser(toRaw(userInfo.value));
+  await userApi.save(userInfo.value);
   successMessage("成功");
   emit("closeDialog");
 };
 const updateUser = async () => {
-  await userApi.updateUserById(userInfo.value.id, toRaw(userInfo.value));
+  await userApi.updateById(userInfo.value.id, userInfo.value);
   successMessage("成功");
   emit("closeDialog");
 };

@@ -29,7 +29,7 @@ const pageData = reactive<{
   }
 });
 const getPage = async () => {
-  const result: Page<Post[]> = await postApi.getPage(pageData.searchInfo);
+  const result: Page<Post[]> = await postApi.page(pageData.searchInfo);
   pageData.postList = result.records;
   pageData.searchInfo.total = Number(result.total);
 };

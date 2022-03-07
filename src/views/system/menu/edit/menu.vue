@@ -52,7 +52,7 @@ const handlerAddNew = () => {
 };
 const addNew = async () => {
   const value = toRaw(menuInfo.value);
-  await menuApi.newSave(value);
+  await menuApi.save(value);
   menuFormRef.value!.resetFields();
   emit("newSaveSuccess");
 };

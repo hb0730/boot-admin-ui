@@ -3,6 +3,7 @@ import { ElForm } from "element-plus";
 import { mailApi } from "/@/api/message/mail";
 import { onMounted, reactive, ref } from "vue";
 import { successMessage, warnMessage } from "/@/utils/message";
+import { MailModel } from "/@/api/model/message/mail_model";
 const mailRef = ref<InstanceType<typeof ElForm>>();
 const testRef = ref<InstanceType<typeof ElForm>>();
 const pageData = reactive({
@@ -50,7 +51,7 @@ const getInfo = async () => {
 const handlerSave = () => {
   mailRef.value!.validate(async isValid => {
     if (isValid) {
-      await mailApi.save(pageData.info);
+      await mailApi.save<MailModel>(pageData.info);
       successMessage("保存成功");
       getInfo();
     } else {

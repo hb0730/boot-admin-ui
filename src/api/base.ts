@@ -1,11 +1,77 @@
 import { ElLoading } from "element-plus";
+import { BaseClass, BaseQuery } from "./model/domain";
 import { downloadFileBlob } from "/@/utils/file";
 import { http } from "/@/utils/http";
 import { PureHttpResponse, RequestMethods } from "/@/utils/http/types";
 
-export default class BaseRequest {
-  getBaseUrl(): String {
-    return "";
+export default abstract class BaseRequest {
+  private pageUrl: string;
+  private listUrl: string;
+  private saveUrl: string;
+  private updateUrl: string;
+  private deleteUrl: string;
+  constructor() {
+    this.pageUrl = "/list/page";
+    this.listUrl = "/list";
+    this.saveUrl = "/save";
+    this.updateUrl = "/update/:id";
+    this.deleteUrl = "/delete";
+  }
+  abstract getBaseUrl(): string;
+  /**
+   * 分页查询
+   *
+   * @param params 请求参数
+   * @return 分页列表
+   */
+  page<T, Q extends BaseQuery>(query: Q): Promise<T> {
+    return this.post<T>(this.pageUrl, query);
+  }
+  /**
+   * 列表查询
+   *
+   * @param params 请求参数
+   * @return 列表
+   */
+  list<T, Q extends BaseQuery>(query: Q): Promise<T> {
+    return this.post<T>(this.listUrl, query);
+  }
+  /**
+   * 保存
+   *
+   * @param dto 参数
+   * @return 是否成功
+   */
+  save<dto extends BaseClass>(data: dto): Promise<string> {
+    return this.post<string>(this.saveUrl, data);
+  }
+  /**
+   * 根据id修改
+   *
+   * @param id  id
+   * @param dto 修改参数
+   * @return 是否成功
+   */
+  updateById<dto extends BaseClass>(id: string, data: dto): Promise<string> {
+    return this.put<string>(this.updateUrl.replace(":id", id), data);
+  }
+  /**
+   * 删除
+   *
+   * @param id id
+   * @return 是否成功
+   */
+  deleteById(id: string): Promise<string> {
+    return this.delete(this.deleteUrl + "/" + id, null);
+  }
+  /**
+   * 根据id批量删除
+   *
+   * @param ids id
+   * @return 是否成功
+   */
+  deleteBatch(ids: string[]): Promise<string> {
+    return this.post(this.deleteUrl, ids);
   }
   /**
    * get request

@@ -55,7 +55,7 @@ const handlerSearch = () => {
   getPage();
 };
 const getPage = async () => {
-  const result: Page<Dict[]> = await dictApi.getPage(pageData.searchInfo);
+  const result: Page<Dict[]> = await dictApi.page(pageData.searchInfo);
   pageData.dictDataList = result.records;
   pageData.searchInfo.total = Number(result.total);
 };

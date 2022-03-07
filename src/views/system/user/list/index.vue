@@ -62,7 +62,7 @@ const handlerDelete = () => {
 };
 const deleteByIds = async (ids: string[]) => {
   if (ids.length > 0) {
-    await userApi.deleteBatchById(ids);
+    await userApi.deleteBatch(ids);
     emit(
       "handlerRefresh",
       searchModel.value.pageSize,
