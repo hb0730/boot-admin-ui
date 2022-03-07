@@ -2,20 +2,20 @@
 import { onMounted, reactive } from "vue";
 import PostList from "./list/index.vue";
 import { Page } from "/@/api/model/domain";
+import { DictEntryCache } from "/@/api/model/system/dict_model";
 import { Post, PostQuery } from "/@/api/model/system/post_model";
 import { postApi } from "/@/api/system/post";
 import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
-const isEnabledOptions = reactive([
-  { value: 1, label: "启用" },
-  { value: 0, label: "禁用" }
-]);
+import { dictStoreHook } from "/@/store/modules/dict";
 
 const pageData = reactive<{
   position: string;
+  isEnabledOptions: DictEntryCache[];
   postList: Post[];
   searchInfo: PostQuery;
 }>({
   position: "left",
+  isEnabledOptions: [],
   postList: [],
   searchInfo: {
     sortColumn: [],
@@ -39,8 +39,12 @@ const handlerRefresh = () => {
 const handlerSearch = () => {
   getPage();
 };
+const getDict = () => {
+  pageData.isEnabledOptions = dictStoreHook().getEntry("sys_common_status");
+};
 onMounted(() => {
   getPage();
+  getDict();
 });
 </script>
 
@@ -74,7 +78,7 @@ onMounted(() => {
           clearable
         >
           <el-option
-            v-for="item in isEnabledOptions"
+            v-for="item in pageData.isEnabledOptions"
             :key="Number(item.value)"
             :label="item.label"
             :value="Number(item.value)"
@@ -94,6 +98,7 @@ onMounted(() => {
     <post-list
       :post-list="pageData.postList"
       :search-model="pageData.searchInfo"
+      :is-enabled-options="pageData.isEnabledOptions"
       @handler-refresh="handlerRefresh"
     ></post-list>
   </div>

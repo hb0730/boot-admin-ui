@@ -9,6 +9,7 @@ import TreeSelectV2 from "/@/components/tree-select2/index.vue";
 import { ElForm } from "element-plus";
 import { successMessage, warnMessage } from "/@/utils/message";
 import { roleApi } from "/@/api/system/role";
+import { DictEntryCache } from "/@/api/model/system/dict_model";
 const roleFormRef = ref<InstanceType<typeof ElForm>>();
 const treeProps = reactive({
   id: "id",
@@ -22,10 +23,6 @@ const roleRules = reactive({
   name: [{ required: true, message: "请输入名称", trigger: "blur" }],
   code: [{ required: true, message: "请输入标识符", trigger: "blur" }]
 });
-const isEnabledOptions = reactive([
-  { value: 1, label: "启用" },
-  { value: 0, label: "禁用" }
-]);
 const emit = defineEmits<{
   (e: "refresh"): void;
 }>();
@@ -46,14 +43,18 @@ const props = defineProps({
     default: "right"
   },
   roleInfo: Object as PropType<Role>,
-  deptTreeData: Array as PropType<DeptTree[]>
+  deptTreeData: Array as PropType<DeptTree[]>,
+  isEnabledOptions: Object as PropType<DictEntryCache[]>
 });
 const dialogVisible = toRef(props, "dialogVisible");
 const roleInfo: Ref<Role> = toRef(props, "roleInfo");
 const isUpdate = toRef(props, "isUpdate");
 const position = toRef(props, "position");
 const deptTreeData = toRef(props, "deptTreeData");
-
+const isEnabledOptions: Ref<DictEntryCache[]> = toRef(
+  props,
+  "isEnabledOptions"
+);
 const handleDialogClose = () => {
   roleFormRef.value!.clearValidate();
   emit("refresh");

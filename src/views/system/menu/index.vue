@@ -12,6 +12,8 @@ import type { ElTree } from "element-plus";
 import PermissionList from "./list/permission.vue";
 import MenuEdit from "./edit/menu.vue";
 import { permissionApi } from "/@/api/system/permission";
+import { DictEntryCache } from "/@/api/model/system/dict_model";
+import { dictStoreHook } from "/@/store/modules/dict";
 
 const treeRef = ref<InstanceType<typeof ElTree>>();
 const checkedId = ref("");
@@ -21,6 +23,7 @@ const treeProps = {
 };
 const pageData: {
   isUpdate: boolean;
+  isEnabledOptions: DictEntryCache[];
   treeData: MenuTree[];
   menuInfo: Menu;
   position: string;
@@ -28,6 +31,7 @@ const pageData: {
   permissionList: Permission[];
 } = reactive({
   isUpdate: false,
+  isEnabledOptions: [],
   treeData: [],
   menuInfo: {
     id: "",
@@ -173,8 +177,12 @@ const handlerPermissionSearch = () => {
     getMenuPermission(ids[0].toString());
   }
 };
+const getDict = () => {
+  pageData.isEnabledOptions = dictStoreHook().getEntry("sys_common_status");
+};
 onMounted(() => {
   getMenuTree();
+  getDict();
 });
 </script>
 
@@ -229,6 +237,7 @@ onMounted(() => {
             :is-update="pageData.isUpdate"
             :menu-info="pageData.menuInfo"
             :position="pageData.position"
+            :is-enabled-options="pageData.isEnabledOptions"
             @new-save-success="handlerNewSaveSuccess"
           ></menuEdit>
         </el-card>
@@ -274,6 +283,7 @@ onMounted(() => {
             :table-data="pageData.permissionList"
             :search-model="pageData.searchPermissionInfo"
             :tree-menu-data="pageData.treeData"
+            :is-enabled-options="pageData.isEnabledOptions"
             @current-change="currentChange"
             @size-change="sizeChange"
             @refresh="refreshTable"

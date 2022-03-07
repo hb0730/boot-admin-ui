@@ -10,6 +10,7 @@ import { ElTable, ElUpload } from "element-plus";
 import { successMessage, warnMessage } from "/@/utils/message";
 import { confirm } from "/@/utils/message/box";
 import { postApi } from "/@/api/system/post";
+import { DictEntryCache } from "/@/api/model/system/dict_model";
 const postListRef = ref<InstanceType<typeof ElTable>>();
 const uploadRef = ref<InstanceType<typeof ElUpload>>();
 const emit = defineEmits<{
@@ -35,11 +36,15 @@ const pageData = reactive<{
 });
 const props = defineProps({
   postList: Array as PropType<Post[]>,
-  searchModel: Object as PropType<PostQuery>
+  searchModel: Object as PropType<PostQuery>,
+  isEnabledOptions: Object as PropType<DictEntryCache[]>
 });
 const postList = toRef(props, "postList");
 const searchModel: Ref<PostQuery> = toRef(props, "searchModel");
-
+const isEnabledOptions: Ref<DictEntryCache[]> = toRef(
+  props,
+  "isEnabledOptions"
+);
 const sizeChange = (pageSize: number) => {};
 const currentChange = (pageNum: number) => {};
 const handleSelectionChange = val => {
@@ -297,6 +302,7 @@ const handlerUpload = async val => {
       :post-info="pageData.postInfo"
       :dialog-visible="pageData.dialogTableVisible"
       :is-update="pageData.isUpdate"
+      :is-enabled-options="isEnabledOptions"
       @refresh="handlerRefresh"
     ></post-edit>
   </div>

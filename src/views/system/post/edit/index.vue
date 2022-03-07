@@ -2,19 +2,16 @@
 export default { name: "PostEdit" };
 </script>
 <script setup lang="ts">
-import { toRef, PropType, reactive, ref } from "vue";
+import { toRef, PropType, reactive, ref, Ref } from "vue";
 import { Post } from "/@/api/model/system/post_model";
 import { ElForm } from "element-plus";
 import { successMessage, warnMessage } from "/@/utils/message";
 import { postApi } from "/@/api/system/post";
+import { DictEntryCache } from "/@/api/model/system/dict_model";
 const postForm = ref<InstanceType<typeof ElForm>>();
 const emit = defineEmits<{
   (e: "refresh"): void;
 }>();
-const isEnabledOptions = reactive([
-  { value: 1, label: "启用" },
-  { value: 0, label: "禁用" }
-]);
 const postRules = reactive({
   name: [{ required: true, message: "请输入岗位名称", trigger: "blur" }],
   number: [{ required: true, message: "请输入岗位编码", trigger: "blur" }]
@@ -35,12 +32,17 @@ const props = defineProps({
     require: true,
     default: false,
     type: Boolean
-  }
+  },
+  isEnabledOptions: Object as PropType<DictEntryCache[]>
 });
 const position = toRef(props, "position");
 const dialogVisible = toRef(props, "dialogVisible");
 const postInfo = toRef(props, "postInfo");
 const isUpdate = toRef(props, "isUpdate");
+const isEnabledOptions: Ref<DictEntryCache[]> = toRef(
+  props,
+  "isEnabledOptions"
+);
 const handleDialogClose = () => {
   postForm.value!.clearValidate();
   emit("refresh");

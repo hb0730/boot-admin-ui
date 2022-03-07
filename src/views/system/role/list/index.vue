@@ -16,6 +16,7 @@ import { MenuPermissionTree } from "/@/api/model/system/menu_model";
 import { successMessage, warnMessage } from "/@/utils/message";
 import { roleApi } from "/@/api/system/role";
 import { confirm } from "/@/utils/message/box";
+import { DictEntryCache } from "/@/api/model/system/dict_model";
 const pageData = reactive<{
   selection: any;
   deptTreeData: DeptTree[];
@@ -57,8 +58,13 @@ const emit = defineEmits<{
 }>();
 const props = defineProps({
   roleList: Array as PropType<Role[]>,
-  searchInfo: Object as PropType<RoleQuery>
+  searchInfo: Object as PropType<RoleQuery>,
+  isEnabledOptions: Object as PropType<DictEntryCache[]>
 });
+const isEnabledOptions: Ref<DictEntryCache[]> = toRef(
+  props,
+  "isEnabledOptions"
+);
 const roleList = toRef(props, "roleList");
 const searchModel: Ref<RoleQuery> = toRef(props, "searchInfo");
 const sizeChange = (pageSize: number) => {};
@@ -307,6 +313,7 @@ onMounted(() => {
     :dialog-visible="pageData.dialogVisible"
     :is-update="pageData.isUpdate"
     :role-info="pageData.roleInfo"
+    :is-enabled-options="isEnabledOptions"
     @refresh="handlerEditRefresh"
   ></role-edit>
 </template>

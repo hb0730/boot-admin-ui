@@ -12,6 +12,8 @@ import UserEdit from "./edit/index.vue";
 import { Post, PostQuery } from "/@/api/model/system/post_model";
 import { Role, RoleQuery } from "/@/api/model/system/role_model";
 import { roleApi } from "/@/api/system/role";
+import { DictEntryCache } from "/@/api/model/system/dict_model";
+import { dictStoreHook } from "/@/store/modules/dict";
 const pageData = reactive<{
   isUpdate: boolean;
   dialogVisible: boolean;
@@ -24,6 +26,7 @@ const pageData = reactive<{
   userInfo: User;
   postDataList: Post[];
   roleDataList: Role[];
+  isEnabledOptions: DictEntryCache[];
 }>({
   isUpdate: false,
   dialogVisible: false,
@@ -69,12 +72,9 @@ const pageData = reactive<{
    */
   postDataList: [],
   //角色列表
-  roleDataList: []
+  roleDataList: [],
+  isEnabledOptions: []
 });
-const isEnabledOptions = reactive([
-  { value: 1, label: "启用" },
-  { value: 0, label: "禁用" }
-]);
 const treeFilterNode = (value, data) => {
   if (!value) return true;
   return data.name.indexOf(value) !== -1;
@@ -157,11 +157,15 @@ const handlerSearch = () => {
   pageData.searchInfo.pageNum = 1;
   getPage();
 };
+const getDict = () => {
+  pageData.isEnabledOptions = dictStoreHook().getEntry("sys_common_status");
+};
 onMounted(() => {
   getPost();
   getRoleList();
   getTreeDept();
   getPage();
+  getDict();
 });
 </script>
 
@@ -221,7 +225,7 @@ onMounted(() => {
                   clearable
                 >
                   <el-option
-                    v-for="item in isEnabledOptions"
+                    v-for="item in pageData.isEnabledOptions"
                     :key="Number(item.value)"
                     :label="item.label"
                     :value="Number(item.value)"
@@ -256,6 +260,7 @@ onMounted(() => {
       :dept-tree-data="pageData.deptTreeData"
       :post-data-list="pageData.postDataList"
       :role-data-list="pageData.roleDataList"
+      :is-enabled-options="pageData.isEnabledOptions"
       @close-dialog="closeDialog"
     ></UserEdit>
   </div>

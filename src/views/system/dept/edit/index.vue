@@ -2,12 +2,13 @@
 export default { name: "DeptEdit" };
 </script>
 <script setup lang="ts">
-import { PropType, reactive, ref, toRef, watch } from "vue";
+import { PropType, reactive, ref, toRef, watch, onMounted } from "vue";
 import { Dept, DeptTree } from "/@/api/model/system/dept_model";
 import VueSelectTree from "/@/components/tree-select/index.vue";
 import { ElForm } from "element-plus";
 import { warnMessage } from "/@/utils/message";
 import { deptApi } from "/@/api/system/dept";
+import { dictStoreHook } from "/@/store/modules/dict";
 const formRef = ref<InstanceType<typeof ElForm>>();
 const treeProps = reactive({
   id: "id",
@@ -17,10 +18,9 @@ const treeProps = reactive({
   disabled: "disabled",
   isLeaf: "isLeaf"
 });
-const isEnabledOptions = reactive([
-  { value: 1, label: "启用" },
-  { value: 0, label: "禁用" }
-]);
+const pageData = reactive({
+  isEnabledOptions: []
+});
 const rules = reactive({
   name: [{ required: true, message: "请输入部门名称", trigger: "blur" }],
   leader: [{ required: true, message: "请输入部门负责人", trigger: "blur" }]
@@ -84,6 +84,12 @@ watch(
     }, 0);
   }
 );
+const getDict = () => {
+  pageData.isEnabledOptions = dictStoreHook().getEntry("sys_common_status");
+};
+onMounted(() => {
+  getDict();
+});
 </script>
 
 <template>
@@ -144,7 +150,7 @@ watch(
             <el-form-item label="是否启用: " prop="isEnabled">
               <el-radio-group v-model="deptInfo.isEnabled">
                 <el-radio
-                  v-for="item in isEnabledOptions"
+                  v-for="item in pageData.isEnabledOptions"
                   :key="Number(item.value)"
                   :label="Number(item.value)"
                   >{{ item.label }}</el-radio

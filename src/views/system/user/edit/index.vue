@@ -5,8 +5,9 @@ export default {
 </script>
 <script setup lang="ts">
 import { ElForm } from "element-plus";
-import { reactive, toRef, PropType, ref, watch } from "vue";
+import { reactive, toRef, PropType, ref, watch, Ref } from "vue";
 import { DeptTree } from "/@/api/model/system/dept_model";
+import { DictEntryCache } from "/@/api/model/system/dict_model";
 import { Post } from "/@/api/model/system/post_model";
 import { Role } from "/@/api/model/system/role_model";
 import { User } from "/@/api/model/system/user_model";
@@ -21,10 +22,6 @@ const treeProps = reactive({
   disabled: "disabled",
   isLeaf: "isLeaf"
 });
-const isEnabledOptions = reactive([
-  { value: 1, label: "启用" },
-  { value: 0, label: "禁用" }
-]);
 const sexOptions = reactive([
   { label: "男", value: 1 },
   { label: "女", value: 2 },
@@ -53,7 +50,8 @@ const props = defineProps({
     require: true,
     default: false,
     type: Boolean
-  }
+  },
+  isEnabledOptions: Object as PropType<DictEntryCache[]>
 });
 const emit = defineEmits<{
   (e: "closeDialog"): void;
@@ -64,6 +62,10 @@ const deptTreeData = toRef(props, "deptTreeData");
 const postDataList = toRef(props, "postDataList");
 const roleDataList = toRef(props, "roleDataList");
 const isUpdate = toRef(props, "isUpdate");
+const isEnabledOptions: Ref<DictEntryCache[]> = toRef(
+  props,
+  "isEnabledOptions"
+);
 const handleDialogClose = () => {
   emit("closeDialog");
 };

@@ -5,15 +5,15 @@ import RoleList from "./list/index.vue";
 import { Role, RoleQuery } from "/@/api/model/system/role_model";
 import { Page } from "/@/api/model/domain";
 import { roleApi } from "/@/api/system/role";
-const isEnabledOptions = reactive([
-  { label: "启用", value: 1 },
-  { label: "禁用", value: 0 }
-]);
+import { DictEntryCache } from "/@/api/model/system/dict_model";
+import { dictStoreHook } from "/@/store/modules/dict";
 const pageData = reactive<{
+  isEnabledOptions: DictEntryCache[];
   searchInfo: RoleQuery;
   roleInfo: Role;
   roleList: Role[];
 }>({
+  isEnabledOptions: [],
   searchInfo: {
     sortColumn: [],
     groupColumn: [],
@@ -51,8 +51,12 @@ const handlerSearch = () => {
   pageData.searchInfo.pageNum = 1;
   getPage();
 };
+const getDict = () => {
+  pageData.isEnabledOptions = dictStoreHook().getEntry("sys_common_status");
+};
 onMounted(() => {
   getPage();
+  getDict();
 });
 </script>
 
@@ -86,7 +90,7 @@ onMounted(() => {
           clearable
         >
           <el-option
-            v-for="item in isEnabledOptions"
+            v-for="item in pageData.isEnabledOptions"
             :key="item.value"
             :label="item.label"
             :value="item.value"
@@ -105,6 +109,7 @@ onMounted(() => {
     <role-list
       :role-list="pageData.roleList"
       :search-info="pageData.searchInfo"
+      :is-enabled-options="pageData.isEnabledOptions"
       @refresh="handlerRefresh"
     ></role-list>
   </div>

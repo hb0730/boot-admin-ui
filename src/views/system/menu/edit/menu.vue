@@ -5,17 +5,14 @@ export default {
 </script>
 <script setup lang="ts">
 import { ElForm } from "element-plus";
-import { reactive, PropType, toRef, watch, ref, toRaw } from "vue";
+import { reactive, PropType, toRef, watch, ref, toRaw, Ref } from "vue";
 import { menuApi } from "/@/api/system/menu";
 import { Menu, MenuTree } from "/@/api/model/system/menu_model";
 import VueSelectTree from "/@/components/tree-select/index.vue";
 import { warnMessage } from "/@/utils/message";
+import { DictEntryCache } from "/@/api/model/system/dict_model";
 
 const menuFormRef = ref<InstanceType<typeof ElForm>>();
-const isEnabledOptions = reactive([
-  { value: 1, label: "启用" },
-  { value: 0, label: "禁用" }
-]);
 
 const menuRules = reactive({
   title: [{ required: true, message: "请输入菜单名称", trigger: "blur" }],
@@ -34,13 +31,18 @@ const props = defineProps({
     default: false,
     type: Boolean
   },
-  menuInfo: Object as PropType<Menu>
+  menuInfo: Object as PropType<Menu>,
+  isEnabledOptions: Object as PropType<DictEntryCache[]>
 });
 const emit = defineEmits<{ (e: "newSaveSuccess"): void }>();
 const menuInfo = toRef(props, "menuInfo");
 const isUpdate = toRef(props, "isUpdate");
 const position = toRef(props, "position");
 const treeMenu = toRef(props, "treeMenu");
+const isEnabledOptions: Ref<DictEntryCache[]> = toRef(
+  props,
+  "isEnabledOptions"
+);
 const handlerAddNew = () => {
   menuFormRef.value!.validate(isValidate => {
     if (isValidate) {

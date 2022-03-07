@@ -11,13 +11,10 @@ import { MenuTree } from "/@/api/model/system/menu_model";
 import type { ElForm, ElTable } from "element-plus";
 import { permissionApi } from "/@/api/system/permission";
 import { confirm } from "/@/utils/message/box";
+import { DictEntryCache } from "/@/api/model/system/dict_model";
 
 const permissionFormRef = ref<InstanceType<typeof ElForm>>();
 const permissionTableRef = ref<InstanceType<typeof ElTable>>();
-const isEnabledOptions = reactive([
-  { value: 1, label: "启用" },
-  { value: 0, label: "禁用" }
-]);
 const pageData = reactive<{
   position: string;
   dialogVisible: boolean;
@@ -53,7 +50,8 @@ const pageData = reactive<{
 const props = defineProps({
   treeMenuData: Object as PropType<MenuTree[]>,
   tableData: Object as PropType<Permission[]>,
-  searchModel: Object as PropType<Query>
+  searchModel: Object as PropType<Query>,
+  isEnabledOptions: Object as PropType<DictEntryCache[]>
 });
 const emit = defineEmits<{
   (e: "sizeChange", v: number): void;
@@ -63,6 +61,10 @@ const emit = defineEmits<{
 const treeMenuData = toRef(props, "treeMenuData");
 const tableData = toRef(props, "tableData");
 const searchModel: Ref<Query> = toRef(props, "searchModel");
+const isEnabledOptions: Ref<DictEntryCache[]> = toRef(
+  props,
+  "isEnabledOptions"
+);
 const sizeChange = (pageSize: number) => {
   emit("sizeChange", pageSize);
 };

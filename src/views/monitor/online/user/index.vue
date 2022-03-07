@@ -50,7 +50,7 @@ const handleSelectionChange = selection => {
 const handleLogout = data => {
   confirm("是否注销当前用户")
     .then(() => {
-      let ids: string[] = [data.id];
+      let ids: string[] = [data.tokenId];
       logout(ids);
     })
     .catch(() => {});
