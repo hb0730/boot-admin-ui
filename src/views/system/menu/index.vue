@@ -119,24 +119,13 @@ const handleNodeChangeCheckEvent = (data, checked: boolean) => {
     treeRef.value!.setCheckedKeys([data.id], false);
     getMenuPermission(data.id);
     setData(data, true);
+    pageData.searchPermissionInfo.menuId = data.id;
   } else {
     if (checkedId.value == data.id) {
       treeRef.value!.setCheckedKeys([data.id], false);
     }
     pageData.searchPermissionInfo.menuId = undefined;
   }
-  // if (checked) {
-  //   checkedId.value = data.id;
-  //   setData(data, true);
-  //   // getMenuPermission(data.id);
-  //   pageData.searchPermissionInfo.menuId = data.id;
-  //   treeRef.value!.setCheckedKeys([data.id], false);
-  // } else {
-  //   if (checkedId.value == data.id) {
-  //     treeRef.value!.setCheckedKeys([data.id], false);
-  //   }
-  //   pageData.searchPermissionInfo.menuId = undefined;
-  // }
 };
 const addNew = () => {
   setData(null, false);

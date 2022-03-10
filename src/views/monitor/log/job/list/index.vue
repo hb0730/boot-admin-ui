@@ -5,11 +5,14 @@ export default {
 </script>
 <script setup lang="ts">
 import { ElMessageBox } from "element-plus";
-import { toRef, PropType, Ref } from "vue";
+import { toRef, PropType, Ref, reactive } from "vue";
 import { DictEntryCache } from "/@/api/model/system/dict_model";
 import { JobLog, JobLogQuery } from "/@/api/model/monitor/job_log_model";
 import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
 import { getDictEntryInfo } from "/@/utils/dict";
+const permission = reactive({
+  delete: ["job:log:delete"]
+});
 const props = defineProps({
   dataList: Array as PropType<JobLog[]>,
   searchInfo: Object as PropType<JobLogQuery>,
@@ -42,6 +45,7 @@ const handleViewError = (data: JobLog) => {
         size="default"
         :icon="useRenderIcon('fa fa-remove')"
         @click="handlerDelete"
+        v-auth="permission.delete"
         >删除</el-button
       >
       <el-button
