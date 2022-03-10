@@ -8,6 +8,10 @@ import { Page } from "/@/api/model/domain";
 import { OperLogModel } from "/@/api/model/monitor/oper_log_model";
 import { successMessage, warnMessage } from "/@/utils/message";
 import { confirm } from "/@/utils/message/box";
+const permission = reactive({
+  delete: ["oper:log:delete"],
+  clear: ["oper:log:clean"]
+});
 const pageData = reactive({
   position: "left",
   searchInfo: {
@@ -176,6 +180,7 @@ onMounted(() => {
             size="default"
             :icon="useRenderIcon('iconify-fa-trash')"
             @click="handleRemove"
+            v-auth="permission.delete"
             >删除</el-button
           >
           <el-button
@@ -183,6 +188,7 @@ onMounted(() => {
             size="default"
             @click="handleClean"
             :icon="useRenderIcon('iconify-fa-trash')"
+            v-auth="permission.clear"
             >清除</el-button
           >
           <el-button

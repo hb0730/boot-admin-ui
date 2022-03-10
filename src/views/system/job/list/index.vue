@@ -14,6 +14,12 @@ import { successMessage, warnMessage } from "/@/utils/message";
 import { confirm } from "/@/utils/message/box";
 import { jobApi } from "/@/api/system/job";
 import router from "/@/router";
+const permission = reactive({
+  add: ["job:save"],
+  edit: ["job:update"],
+  delete: ["job:remove"],
+  exec: ["job:exec"]
+});
 const emit = defineEmits<{
   (e: "refresh", pageSize: number, pageNum: number): void;
 }>();
@@ -151,6 +157,7 @@ const handlerOpenLog = () => {
         size="default"
         :icon="useRenderIcon('iconify-plus')"
         @click="handlerAddNew"
+        v-auth="permission.add"
         >新增</el-button
       >
       <el-button
@@ -158,6 +165,7 @@ const handlerOpenLog = () => {
         size="default"
         :icon="useRenderIcon('iconify-edit')"
         @click="handlerUpdate"
+        v-auth="permission.edit"
         >修改</el-button
       >
       <el-button
@@ -165,6 +173,7 @@ const handlerOpenLog = () => {
         size="default"
         :icon="useRenderIcon('iconify-fa-trash')"
         @click="handlerDeleteBatch"
+        v-auth="permission.delete"
         >删除</el-button
       >
       <button class="el-button el-button--default" style="padding: 0 0 0 0px">
@@ -310,6 +319,7 @@ const handlerOpenLog = () => {
             type="text"
             :icon="useRenderIcon('iconify-fa-edit')"
             @click="handlerEdit(scope.row)"
+            v-auth="permission.edit"
             size="small"
           ></el-button>
           <el-button
@@ -317,6 +327,7 @@ const handlerOpenLog = () => {
             type="text"
             :icon="useRenderIcon('fa fa-play-circle')"
             @click="handlerExec(scope.row)"
+            v-auth="permission.exec"
             size="small"
           ></el-button>
           <el-button
@@ -324,6 +335,7 @@ const handlerOpenLog = () => {
             type="text"
             :icon="useRenderIcon('iconify-fa-trash')"
             @click="handlerDelete(scope.row)"
+            v-auth="permission.delete"
             size="small"
           ></el-button>
         </template>

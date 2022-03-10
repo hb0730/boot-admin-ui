@@ -17,6 +17,12 @@ import { successMessage, warnMessage } from "/@/utils/message";
 import { roleApi } from "/@/api/system/role";
 import { confirm } from "/@/utils/message/box";
 import { DictEntryCache } from "/@/api/model/system/dict_model";
+const permission = reactive({
+  add: ["role:save"],
+  edit: ["role:update"],
+  delete: ["role:delete"],
+  putAuth: ["role:permission:save"]
+});
 const pageData = reactive<{
   selection: any;
   deptTreeData: DeptTree[];
@@ -169,6 +175,7 @@ onMounted(() => {
           size="small"
           :icon="useRenderIcon('iconify-plus')"
           @click="handlerAddNew"
+          v-auth="permission.add"
           >新增</el-button
         >
         <el-button
@@ -176,6 +183,7 @@ onMounted(() => {
           size="small"
           :icon="useRenderIcon('iconify-edit')"
           @click="handlerUpdate"
+          v-auth="permission.edit"
           >修改</el-button
         >
         <el-button
@@ -183,6 +191,7 @@ onMounted(() => {
           size="small"
           :icon="useRenderIcon('iconify-fa-trash')"
           @click="handlerDeleteBatch"
+          v-auth="permission.delete"
           >删除</el-button
         >
         <el-button
@@ -274,6 +283,7 @@ onMounted(() => {
                   type="primary"
                   :icon="useRenderIcon('iconify-fa-edit')"
                   @click="handlerEdit(scope.row)"
+                  v-auth="permission.edit"
                   size="small"
                 ></el-button>
                 <el-button
@@ -281,6 +291,7 @@ onMounted(() => {
                   type="danger"
                   :icon="useRenderIcon('iconify-fa-trash')"
                   @click="handleDelete(scope.row)"
+                  v-auth="permission.delete"
                   size="small"
                 ></el-button>
               </template>

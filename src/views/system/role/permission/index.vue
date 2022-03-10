@@ -12,6 +12,12 @@ import { Role } from "/@/api/model/system/role_model";
 import { successMessage, warnMessage } from "/@/utils/message";
 import { roleApi } from "/@/api/system/role";
 const permissionTreeRef = ref<InstanceType<typeof ElTree>>();
+const permission = reactive({
+  add: ["role:save"],
+  edit: ["role:update"],
+  delete: ["role:delete"],
+  putAuth: ["role:permission:save"]
+});
 const emit = defineEmits<{
   (e: "refresh"): void;
 }>();
@@ -86,6 +92,7 @@ const updatePermission = async permission => {
             style="float: right; padding: 6px 9px"
             :icon="useRenderIcon('iconify-fa-check')"
             @click="handlerSave"
+            v-auth="permission.putAuth"
             >保存</el-button
           >
         </div>

@@ -6,6 +6,10 @@ import { LoginLogModel } from "/@/api/model/monitor/login_log_model";
 import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
 import { successMessage, warnMessage } from "/@/utils/message";
 import { confirm } from "/@/utils/message/box";
+const permission = reactive({
+  delete: ["login:log:delete"],
+  clear: ["login:log:clean"]
+});
 const pageData = reactive({
   position: "left",
   searchInfo: {
@@ -154,6 +158,7 @@ onMounted(() => {
             size="default"
             :icon="useRenderIcon('iconify-fa-trash')"
             @click="handleRemove"
+            v-auth="permission.delete"
             >删除</el-button
           >
           <el-button
@@ -161,6 +166,7 @@ onMounted(() => {
             size="default"
             @click="handleClean"
             :icon="useRenderIcon('iconify-fa-trash')"
+            v-auth="permission.clear"
             >清除</el-button
           >
           <el-button

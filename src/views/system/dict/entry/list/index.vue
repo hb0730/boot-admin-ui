@@ -14,6 +14,11 @@ import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
 import DictEntryEdit from "../edit/index.vue";
 import { successMessage } from "/@/utils/message";
 import { confirm } from "/@/utils/message/box";
+const permission = reactive({
+  add: ["dict:entry:save"],
+  edit: ["dict:entry:update"],
+  delete: ["dict:entry:update"]
+});
 const pageData = reactive<{
   entryDataList: DictEntry[];
   isUpdate: boolean;
@@ -138,6 +143,7 @@ watch(
               ifAddEntry == null || ifAddEntry == undefined || ifAddEntry == ''
             "
             @click="handlerAddNew"
+            v-auth="permission.add"
             >新增</el-button
           >
         </div>
@@ -196,6 +202,7 @@ watch(
               type="primary"
               :icon="useRenderIcon('iconify-fa-edit')"
               @click="handlerEdit(scope.row)"
+              v-auth="permission.edit"
               size="small"
             ></el-button>
             <el-button
@@ -203,6 +210,7 @@ watch(
               type="danger"
               :icon="useRenderIcon('iconify-fa-trash')"
               @click="handlerDelete(scope.row)"
+              v-auth="permission.delete"
               size="small"
             ></el-button>
           </template>

@@ -12,7 +12,11 @@ import type { ElForm, ElTable } from "element-plus";
 import { permissionApi } from "/@/api/system/permission";
 import { confirm } from "/@/utils/message/box";
 import { DictEntryCache } from "/@/api/model/system/dict_model";
-
+const permission = reactive({
+  add: ["permission:save"],
+  edit: ["permission:update"],
+  delete: ["permission:update"]
+});
 const permissionFormRef = ref<InstanceType<typeof ElForm>>();
 const permissionTableRef = ref<InstanceType<typeof ElTable>>();
 const pageData = reactive<{
@@ -187,6 +191,7 @@ const permissionDelete = async (ids: string[]) => {
             size="small"
             @click="handlerAddNew"
             :icon="useRenderIcon('iconify-plus')"
+            v-auth="permission.add"
             >新增</el-button
           >
           <el-button
@@ -194,6 +199,7 @@ const permissionDelete = async (ids: string[]) => {
             size="small"
             @click="handlerEdit"
             :icon="useRenderIcon('iconify-edit')"
+            v-auth="permission.edit"
             >修改</el-button
           >
           <el-button
@@ -201,6 +207,7 @@ const permissionDelete = async (ids: string[]) => {
             size="small"
             @click="handlerDelete"
             :icon="useRenderIcon('iconify-fa-trash')"
+            v-auth="permission.delete"
             >删除</el-button
           >
         </div>

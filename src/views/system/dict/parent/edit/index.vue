@@ -7,6 +7,9 @@ import { Dict } from "/@/api/model/system/dict_model";
 import { ElForm } from "element-plus";
 import { successMessage, warnMessage } from "/@/utils/message";
 import { dictApi } from "/@/api/system/dict";
+const permission = reactive({
+  update: ["dict:save", "dict:update"]
+});
 const emit = defineEmits<{
   (e: "refresh"): void;
 }>();
@@ -101,7 +104,11 @@ const update = async () => {
     </el-form>
     <template #footer>
       <div class="dialog-footer">
-        <el-button type="primary" size="default" @click="handlerSave"
+        <el-button
+          type="primary"
+          size="default"
+          v-auth="permission.update"
+          @click="handlerSave"
           >保存</el-button
         >
         <el-button size="default" @click="handleDialogClose">取 消</el-button>

@@ -6,6 +6,9 @@ import { successMessage, warnMessage } from "/@/utils/message";
 import { MailModel } from "/@/api/model/message/mail_model";
 const mailRef = ref<InstanceType<typeof ElForm>>();
 const testRef = ref<InstanceType<typeof ElForm>>();
+const permission = reactive({
+  save: ["mail:save"]
+});
 const pageData = reactive({
   activeName: "smtp",
   position: "left",
@@ -123,7 +126,12 @@ onMounted(() => {
                 ></el-switch>
               </el-form-item>
               <el-form-item>
-                <el-button @click="handlerSave" type="primary">保存</el-button>
+                <el-button
+                  @click="handlerSave"
+                  v-auth="permission.save"
+                  type="primary"
+                  >保存</el-button
+                >
               </el-form-item>
             </el-form>
           </el-col>

@@ -25,6 +25,11 @@ const rules = reactive({
   name: [{ required: true, message: "请输入部门名称", trigger: "blur" }],
   leader: [{ required: true, message: "请输入部门负责人", trigger: "blur" }]
 });
+const permission = reactive({
+  add: ["dept:save"],
+  edit: ["dept:update"],
+  delete: ["dept:delete"]
+});
 const props = defineProps({
   deptInfo: Object as PropType<Dept>,
   treeData: Array as PropType<DeptTree[]>,
@@ -160,13 +165,27 @@ onMounted(() => {
           </el-form>
           <div class="form-button">
             <el-button
+              v-show="isUpdate"
+              v-auth="permission.edit"
               type="primary"
               size="large"
               plain
               class="button"
               @click="handlerSave"
-              >{{ isUpdate ? "修改" : "新增" }}</el-button
             >
+              修改
+            </el-button>
+            <el-button
+              v-show="!isUpdate"
+              v-auth="permission.add"
+              type="primary"
+              size="large"
+              plain
+              class="button"
+              @click="handlerSave"
+            >
+              新增
+            </el-button>
           </div>
         </el-col>
       </el-row>

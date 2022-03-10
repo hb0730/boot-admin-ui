@@ -14,7 +14,11 @@ import MenuEdit from "./edit/menu.vue";
 import { permissionApi } from "/@/api/system/permission";
 import { DictEntryCache } from "/@/api/model/system/dict_model";
 import { dictStoreHook } from "/@/store/modules/dict";
-
+const permission = reactive({
+  add: ["menu:save"],
+  edit: ["menu:update"],
+  delete: ["menu:delete"]
+});
 const treeRef = ref<InstanceType<typeof ElTree>>();
 const checkedId = ref("");
 const treeProps = {
@@ -112,16 +116,27 @@ const getMenuPermission = async (id: string) => {
 const handleNodeChangeCheckEvent = (data, checked: boolean) => {
   if (checked) {
     checkedId.value = data.id;
-    setData(data, true);
-    getMenuPermission(data.id);
-    pageData.searchPermissionInfo.menuId = data.id;
     treeRef.value!.setCheckedKeys([data.id], false);
+    getMenuPermission(data.id);
+    setData(data, true);
   } else {
     if (checkedId.value == data.id) {
       treeRef.value!.setCheckedKeys([data.id], false);
     }
     pageData.searchPermissionInfo.menuId = undefined;
   }
+  // if (checked) {
+  //   checkedId.value = data.id;
+  //   setData(data, true);
+  //   // getMenuPermission(data.id);
+  //   pageData.searchPermissionInfo.menuId = data.id;
+  //   treeRef.value!.setCheckedKeys([data.id], false);
+  // } else {
+  //   if (checkedId.value == data.id) {
+  //     treeRef.value!.setCheckedKeys([data.id], false);
+  //   }
+  //   pageData.searchPermissionInfo.menuId = undefined;
+  // }
 };
 const addNew = () => {
   setData(null, false);
@@ -199,6 +214,7 @@ onMounted(() => {
                 :icon="useRenderIcon('iconify-plus')"
                 @click="addNew"
                 plain
+                v-auth="permission.add"
                 >新增</el-button
               >
               <el-button
@@ -207,6 +223,7 @@ onMounted(() => {
                 :icon="useRenderIcon('iconify-delete')"
                 @click="handlerDelete"
                 plain
+                v-auth="permission.delete"
                 >删除</el-button
               >
             </el-col>

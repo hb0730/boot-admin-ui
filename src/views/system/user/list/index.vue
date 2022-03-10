@@ -12,6 +12,12 @@ import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
 import { successMessage, warnMessage } from "/@/utils/message";
 import { confirm } from "/@/utils/message/box";
 const userListRef = ref<InstanceType<typeof ElTable>>();
+const permission = reactive({
+  add: ["user:save"],
+  edit: ["user:update"],
+  delete: ["user:delete"],
+  reset: ["user:rest:password"]
+});
 const pageData = reactive({
   selection: []
 });
@@ -96,6 +102,7 @@ const handlerRestPassword = data => {
             size="default"
             @click="addNew"
             :icon="useRenderIcon('iconify-plus')"
+            v-auth="permission.add"
             >新增</el-button
           >
           <el-button
@@ -103,6 +110,7 @@ const handlerRestPassword = data => {
             size="default"
             @click="update"
             :icon="useRenderIcon('iconify-edit')"
+            v-auth="permission.edit"
             >修改</el-button
           >
           <el-button
@@ -110,6 +118,7 @@ const handlerRestPassword = data => {
             size="default"
             :icon="useRenderIcon('iconify-fa-trash')"
             @click="handlerDelete"
+            v-auth="permission.delete"
             >删除</el-button
           >
           <button
@@ -228,6 +237,7 @@ const handlerRestPassword = data => {
                 @click="handlerRestPassword(scope.row)"
                 type="warning"
                 :icon="useRenderIcon('iconify-fa-key')"
+                v-auth="permission.reset"
                 size="small"
               ></el-button>
             </template>

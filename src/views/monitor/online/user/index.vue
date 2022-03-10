@@ -9,6 +9,9 @@ import {
 } from "/@/api/model/monitor/user_online_model";
 import { warnMessage } from "/@/utils/message";
 import { confirm } from "/@/utils/message/box";
+const permission = reactive({
+  delete: ["online:user:logout"]
+});
 const pageData = reactive({
   position: "left",
   searchInfo: {
@@ -121,6 +124,7 @@ onMounted(() => {
             type="danger"
             @click="handlerLogoutBatch"
             :icon="useRenderIcon('fa fa-sign-out')"
+            v-auth="permission.delete"
             >强退</el-button
           >
         </div>
@@ -211,6 +215,7 @@ onMounted(() => {
                 type="danger"
                 plain
                 :icon="useRenderIcon('fa fa-sign-out')"
+                v-auth="permission.delete"
                 >强退</el-button
               >
             </template>

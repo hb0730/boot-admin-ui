@@ -10,6 +10,11 @@ import { Dict, DictQuery } from "/@/api/model/system/dict_model";
 import { Page } from "/@/api/model/domain";
 import { successMessage, warnMessage } from "/@/utils/message";
 import { confirm } from "/@/utils/message/box";
+const permission = reactive({
+  add: ["dict:save"],
+  edit: ["dict:update"],
+  delete: ["dict:update"]
+});
 const emit = defineEmits<{ (e: "rowClick", v: string, data: Dict) }>();
 const pageData = reactive<{
   selection: any[];
@@ -182,6 +187,7 @@ onMounted(() => {
               type="success"
               size="default"
               :icon="useRenderIcon('iconify-plus')"
+              v-auth="permission.add"
               @click="handlerAddNew"
               >新增</el-button
             >
@@ -189,6 +195,7 @@ onMounted(() => {
               type="primary"
               size="default"
               :icon="useRenderIcon('iconify-edit')"
+              v-auth="permission.edit"
               @click="handlerUpdate"
               >修改</el-button
             >
@@ -196,6 +203,7 @@ onMounted(() => {
               type="danger"
               size="default"
               :icon="useRenderIcon('iconify-fa-trash')"
+              v-auth="permission.delete"
               @click="handlerBatchDelete"
               >删除</el-button
             >
@@ -293,6 +301,7 @@ onMounted(() => {
                   title="修改"
                   type="primary"
                   :icon="useRenderIcon('iconify-fa-edit')"
+                  v-auth="permission.edit"
                   @click="handlerEdit(scope.row)"
                   size="small"
                 ></el-button>
@@ -300,6 +309,7 @@ onMounted(() => {
                   title="删除"
                   type="danger"
                   :icon="useRenderIcon('iconify-fa-trash')"
+                  v-auth="permission.delete"
                   @click="handlerDelete(scope.row)"
                   size="small"
                 ></el-button>

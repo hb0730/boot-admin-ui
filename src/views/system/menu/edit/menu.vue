@@ -11,7 +11,10 @@ import { Menu, MenuTree } from "/@/api/model/system/menu_model";
 import VueSelectTree from "/@/components/tree-select/index.vue";
 import { warnMessage } from "/@/utils/message";
 import { DictEntryCache } from "/@/api/model/system/dict_model";
-
+const permission = reactive({
+  add: ["menu:save"],
+  edit: ["menu:update"]
+});
 const menuFormRef = ref<InstanceType<typeof ElForm>>();
 
 const menuRules = reactive({
@@ -210,8 +213,9 @@ watch(
           size="default"
           plain
           class="footer-button"
-          v-if="!isUpdate"
+          v-show="!isUpdate"
           @click="handlerAddNew"
+          v-auth="permission.add"
           >新增</el-button
         >
         <el-button
@@ -219,8 +223,9 @@ watch(
           size="default"
           plain
           class="footer-button"
+          v-show="isUpdate"
           @click="handlerUpdate"
-          v-if="isUpdate"
+          v-auth="permission.edit"
           >修改</el-button
         >
       </div>

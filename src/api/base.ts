@@ -1,4 +1,4 @@
-import { ElLoading } from "element-plus";
+import { hideLoading, showLoading } from "../utils/loading";
 import { BaseClass, BaseQuery } from "./model/domain";
 import { downloadFileBlob } from "/@/utils/file";
 import { http } from "/@/utils/http";
@@ -121,20 +121,11 @@ export default abstract class BaseRequest {
     url: string,
     params?: P
   ): Promise<T> {
-    const instance = ElLoading.service({
-      lock: true,
-      text: "Loading",
-      background: "rgba(0, 0, 0, 0.7)"
-    });
+    showLoading();
     return http
       .request<T>(method, this.getBaseUrl().trim() + url, params)
-      .then(value => {
-        instance.close();
-        return value;
-      })
-      .catch(error => {
-        instance.close();
-        return error;
+      .finally(() => {
+        hideLoading();
       });
   }
   /**

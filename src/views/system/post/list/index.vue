@@ -13,6 +13,11 @@ import { postApi } from "/@/api/system/post";
 import { DictEntryCache } from "/@/api/model/system/dict_model";
 const postListRef = ref<InstanceType<typeof ElTable>>();
 const uploadRef = ref<InstanceType<typeof ElUpload>>();
+const permission = reactive({
+  add: ["post:save"],
+  edit: ["post:update"],
+  delete: ["post:delete"]
+});
 const emit = defineEmits<{
   (e: "handlerRefresh"): void;
 }>();
@@ -142,6 +147,7 @@ const handlerUpload = async val => {
             size="default"
             :icon="useRenderIcon('iconify-plus')"
             @click="handlerAddNew"
+            v-auth="permission.add"
             >新增</el-button
           >
           <el-button
@@ -149,6 +155,7 @@ const handlerUpload = async val => {
             size="default"
             :icon="useRenderIcon('iconify-edit')"
             @click="handlerUpdate"
+            v-auth="permission.edit"
             >修改</el-button
           >
           <el-button
@@ -156,6 +163,7 @@ const handlerUpload = async val => {
             size="default"
             :icon="useRenderIcon('iconify-fa-trash')"
             @click="handlerDeleteBatch"
+            v-auth="permission.delete"
             >删除</el-button
           >
           <button
@@ -275,6 +283,7 @@ const handlerUpload = async val => {
               type="primary"
               :icon="useRenderIcon('iconify-fa-edit')"
               @click="handlerEdit(scope.row)"
+              v-auth="permission.edit"
               size="small"
             ></el-button>
             <el-button
@@ -282,6 +291,7 @@ const handlerUpload = async val => {
               type="danger"
               :icon="useRenderIcon('iconify-fa-trash')"
               @click="handlerDelete(scope.row)"
+              v-auth="permission.delete"
               size="small"
             ></el-button>
           </template>
