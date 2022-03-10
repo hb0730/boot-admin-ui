@@ -24,6 +24,7 @@ export interface Menu {
   cache: number;
   hidden: number;
   i18n: number;
+  showParent: number;
   parentId: string;
   path: string;
   component: string;

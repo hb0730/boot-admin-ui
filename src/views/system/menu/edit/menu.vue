@@ -144,12 +144,24 @@ watch(
             </el-form-item>
           </el-col>
         </el-row>
-        <el-form-item label="菜单国际化: " prop="i18n">
-          <el-radio-group v-model="menuInfo.i18n">
-            <el-radio-button label="1">是</el-radio-button>
-            <el-radio-button label="0">否</el-radio-button>
-          </el-radio-group>
-        </el-form-item>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="菜单国际化: " prop="i18n">
+              <el-radio-group v-model="menuInfo.i18n">
+                <el-radio-button label="1">是</el-radio-button>
+                <el-radio-button label="0">否</el-radio-button>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="显示父菜单: " prop="showParent">
+              <el-radio-group v-model="menuInfo.showParent">
+                <el-radio-button label="1">是</el-radio-button>
+                <el-radio-button label="0">否</el-radio-button>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-form-item label="上级菜单: ">
           <VueSelectTree
             v-model="menuInfo.parentId"
