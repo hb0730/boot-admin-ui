@@ -4,19 +4,17 @@ export default { name: "DeptEdit" };
 <script setup lang="ts">
 import { PropType, reactive, ref, toRef, watch, onMounted } from "vue";
 import { Dept, DeptTree } from "/@/api/model/system/dept_model";
-import VueSelectTree from "/@/components/tree-select/index.vue";
+import { TreeSelect } from "@pureadmin/components";
 import { ElForm } from "element-plus";
 import { warnMessage } from "/@/utils/message";
 import { deptApi } from "/@/api/system/dept";
 import { dictStoreHook } from "/@/store/modules/dict";
 const formRef = ref<InstanceType<typeof ElForm>>();
 const treeProps = reactive({
-  id: "id",
+  key: "id",
   value: "id",
   children: "children",
-  label: "name",
-  disabled: "disabled",
-  isLeaf: "isLeaf"
+  label: "name"
 });
 const pageData = reactive({
   isEnabledOptions: []
@@ -51,13 +49,6 @@ const deptInfo = toRef(props, "deptInfo");
 const position = toRef(props, "position");
 const treeData = toRef(props, "treeData");
 const isUpdate = toRef(props, "isUpdate");
-const nodeClick = node => {
-  if (node) {
-    deptInfo.value.parentId = node.id;
-  } else {
-    deptInfo.value.parentId = null;
-  }
-};
 const handlerSave = () => {
   formRef.value!.validate(isValid => {
     if (isValid) {
@@ -113,15 +104,17 @@ onMounted(() => {
             required-asterisk
           >
             <el-form-item label="上级组织: " prop="parentName">
-              <VueSelectTree
-                v-model="deptInfo.parentId"
-                placeholder="顶级节点"
-                :options="treeData"
-                :data-props="treeProps"
-                @nodeClick="nodeClick"
+              <TreeSelect
+                v-model:value="deptInfo.parentId"
+                show-search
                 style="width: 100%"
-              >
-              </VueSelectTree>
+                placeholder="请选择"
+                allow-clear
+                tree-default-expand-all
+                :tree-data="treeData"
+                :field-names="treeProps"
+                :getPopupContainer="triggerNode => triggerNode.parentNode"
+              ></TreeSelect>
             </el-form-item>
             <el-form-item required label="组织名称: " prop="name">
               <el-input v-model="deptInfo.name" clearable></el-input>

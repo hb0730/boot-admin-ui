@@ -8,9 +8,15 @@ import { ElForm } from "element-plus";
 import { reactive, PropType, toRef, watch, ref, toRaw, Ref } from "vue";
 import { menuApi } from "/@/api/system/menu";
 import { Menu, MenuTree } from "/@/api/model/system/menu_model";
-import VueSelectTree from "/@/components/tree-select/index.vue";
+import { TreeSelect } from "@pureadmin/components";
 import { warnMessage } from "/@/utils/message";
 import { DictEntryCache } from "/@/api/model/system/dict_model";
+const treeProps = reactive({
+  key: "id",
+  value: "id",
+  children: "children",
+  label: "title"
+});
 const permission = reactive({
   add: ["menu:save"],
   edit: ["menu:update"]
@@ -75,13 +81,6 @@ const update = async () => {
   await menuApi.updateById(value.id, value);
   menuFormRef.value!.resetFields();
   emit("newSaveSuccess");
-};
-const nodeClick = node => {
-  if (node) {
-    menuInfo.value.parentId = node.id;
-  } else {
-    menuInfo.value.parentId = null;
-  }
 };
 watch(
   () => {
@@ -163,14 +162,17 @@ watch(
           </el-col>
         </el-row>
         <el-form-item label="上级菜单: ">
-          <VueSelectTree
-            v-model="menuInfo.parentId"
-            placeholder="顶级节点"
-            :options="treeMenu"
-            @nodeClick="nodeClick"
+          <TreeSelect
+            v-model:value="menuInfo.parentId"
+            show-search
             style="width: 100%"
-          >
-          </VueSelectTree>
+            placeholder="请选择"
+            allow-clear
+            tree-default-expand-all
+            :tree-data="treeMenu"
+            :field-names="treeProps"
+            :getPopupContainer="triggerNode => triggerNode.parentNode"
+          ></TreeSelect>
         </el-form-item>
         <el-form-item required label="菜单名称: " prop="title">
           <el-input v-model="menuInfo.title" clearable></el-input>

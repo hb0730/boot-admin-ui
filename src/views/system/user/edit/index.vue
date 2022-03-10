@@ -12,15 +12,13 @@ import { Post } from "/@/api/model/system/post_model";
 import { Role } from "/@/api/model/system/role_model";
 import { User } from "/@/api/model/system/user_model";
 import { userApi } from "/@/api/system/user";
-import VueSelectTree from "/@/components/tree-select/index.vue";
+import { TreeSelect } from "@pureadmin/components";
 import { successMessage, warnMessage } from "/@/utils/message";
 const treeProps = reactive({
-  id: "id",
+  key: "id",
   value: "id",
   children: "children",
-  label: "name",
-  disabled: "disabled",
-  isLeaf: "isLeaf"
+  label: "name"
 });
 const sexOptions = reactive([
   { label: "男", value: 1 },
@@ -81,13 +79,6 @@ watch(
     }
   }
 );
-const nodeClick = node => {
-  if (node) {
-    userInfo.value.deptId = node.id;
-  } else {
-    userInfo.value.deptId = null;
-  }
-};
 const handlerSave = () => {
   userFormRef.value!.validate(isValid => {
     if (isValid) {
@@ -159,15 +150,17 @@ const updateUser = async () => {
         <el-row>
           <el-col :span="12">
             <el-form-item required label="所属部门: " prop="deptId">
-              <VueSelectTree
-                v-model="userInfo.deptId"
-                placeholder="顶级节点"
-                :options="deptTreeData"
-                :data-props="treeProps"
-                @nodeClick="nodeClick"
+              <TreeSelect
+                v-model:value="userInfo.deptId"
+                show-search
                 style="width: 100%"
-              >
-              </VueSelectTree>
+                placeholder="请选择"
+                allow-clear
+                tree-default-expand-all
+                :tree-data="deptTreeData"
+                :field-names="treeProps"
+                :getPopupContainer="triggerNode => triggerNode.parentNode"
+              ></TreeSelect>
             </el-form-item>
           </el-col>
           <el-col :span="12">

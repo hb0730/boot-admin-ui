@@ -5,19 +5,18 @@ export default { name: "RoleEdit" };
 import { Ref, toRef, PropType, reactive, ref } from "vue";
 import { DeptTree } from "/@/api/model/system/dept_model";
 import { Role } from "/@/api/model/system/role_model";
-import TreeSelectV2 from "/@/components/tree-select2/index.vue";
+// import TreeSelectV2 from "/@/components/tree-select2/index.vue";
+import { TreeSelect } from "@pureadmin/components";
 import { ElForm } from "element-plus";
 import { successMessage, warnMessage } from "/@/utils/message";
 import { roleApi } from "/@/api/system/role";
 import { DictEntryCache } from "/@/api/model/system/dict_model";
 const roleFormRef = ref<InstanceType<typeof ElForm>>();
 const treeProps = reactive({
-  id: "id",
+  key: "id",
   value: "id",
   children: "children",
-  label: "name",
-  disabled: "disabled",
-  isLeaf: "isLeaf"
+  label: "name"
 });
 const roleRules = reactive({
   name: [{ required: true, message: "请输入名称", trigger: "blur" }],
@@ -106,14 +105,27 @@ const save = async () => {
           <el-input v-model="roleInfo.code" clearable></el-input>
         </el-form-item>
         <el-form-item label="数据范围:">
-          <tree-select-v2
+          <!-- <tree-select-v2
             :multiple="true"
             placeholder="请选择"
             style="width: 100%"
             :default-props="treeProps"
             v-model="roleInfo.deptIds"
             :options="deptTreeData"
-          ></tree-select-v2>
+          ></tree-select-v2> -->
+          <TreeSelect
+            v-model:value="roleInfo.deptIds"
+            show-search
+            style="width: 100%"
+            placeholder="请选择"
+            allow-clear
+            tree-default-expand-all
+            tree-checkable
+            treeCheckStrictly
+            :tree-data="deptTreeData"
+            :field-names="treeProps"
+            :getPopupContainer="triggerNode => triggerNode.parentNode"
+          ></TreeSelect>
         </el-form-item>
         <el-form-item label="排序: " prop="sort">
           <el-input-number

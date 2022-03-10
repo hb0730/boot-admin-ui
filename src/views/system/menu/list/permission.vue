@@ -6,7 +6,7 @@ import { reactive, PropType, toRef, ref, Ref } from "vue";
 import { Permission, Query } from "/@/api/model/system/permission_model";
 import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
 import { successMessage, warnMessage } from "/@/utils/message";
-import VueSelectTree from "/@/components/tree-select/index.vue";
+import { TreeSelect } from "@pureadmin/components";
 import { MenuTree } from "/@/api/model/system/menu_model";
 import type { ElForm, ElTable } from "element-plus";
 import { permissionApi } from "/@/api/system/permission";
@@ -16,6 +16,12 @@ const permission = reactive({
   add: ["permission:save"],
   edit: ["permission:update"],
   delete: ["permission:update"]
+});
+const treeProps = reactive({
+  key: "id",
+  value: "id",
+  children: "children",
+  label: "title"
 });
 const permissionFormRef = ref<InstanceType<typeof ElForm>>();
 const permissionTableRef = ref<InstanceType<typeof ElTable>>();
@@ -121,13 +127,6 @@ const handlerEdit = () => {
     initPermissionInfo(pageData.selection[0]);
     pageData.isUpdate = true;
     pageData.dialogVisible = true;
-  }
-};
-const nodeClick = node => {
-  if (node) {
-    pageData.permissionInfo.menuId = node.id;
-  } else {
-    pageData.permissionInfo.menuId = undefined;
   }
 };
 const handlerSave = () => {
@@ -319,14 +318,17 @@ const permissionDelete = async (ids: string[]) => {
           ></el-input>
         </el-form-item>
         <el-form-item required label="所属菜单: " prop="menuId">
-          <VueSelectTree
-            v-model="pageData.permissionInfo.menuId"
-            placeholder="顶级节点"
-            :options="treeMenuData"
-            @nodeClick="nodeClick"
+          <TreeSelect
+            v-model:value="pageData.permissionInfo.menuId"
+            show-search
             style="width: 100%"
-          >
-          </VueSelectTree>
+            placeholder="请选择"
+            allow-clear
+            tree-default-expand-all
+            :tree-data="treeMenuData"
+            :field-names="treeProps"
+            :getPopupContainer="triggerNode => triggerNode.parentNode"
+          ></TreeSelect>
         </el-form-item>
         <el-form-item label="排序: " prop="sort">
           <el-input-number

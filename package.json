@@ -27,6 +27,7 @@
   ],
   "dependencies": {
     "@ctrl/tinycolor": "^3.4.0",
+    "@pureadmin/components": "^1.0.0",
     "@vueuse/core": "^7.6.2",
     "@vueuse/motion": "^2.0.0-beta.9",
     "@vueuse/shared": "^7.6.2",
@@ -58,6 +59,7 @@
     "vue-types": "^4.1.1"
   },
   "devDependencies": {
+    "@babel/runtime": "7.17.2",
     "@commitlint/cli": "13.1.0",
     "@commitlint/config-conventional": "13.1.0",
     "@iconify-icons/akar-icons": "^1.2.1",

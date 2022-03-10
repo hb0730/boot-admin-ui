@@ -15,7 +15,8 @@ import "./style/index.scss";
 // 导入字体图标
 import "./assets/iconfont/iconfont.js";
 import "./assets/iconfont/iconfont.css";
-
+import "@pureadmin/components/dist/index.min.css";
+// import "@pureadmin/components/dist/theme.min.css";
 const app = createApp(App);
 
 // 自定义指令
