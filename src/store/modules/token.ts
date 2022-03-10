@@ -24,6 +24,10 @@ export const tokenStore = defineStore({
     setUserId(userId: string) {
       cookies.set("uuid", userId);
     },
+    isCurrentUserAdmin(): boolean {
+      const user: LoginUser = this.getCurrentUserInfo();
+      return user.isAdmin === 1;
+    },
     getCurrentUserInfo(): LoginUser {
       return JSON.parse(
         db.dbGet({ dbName: "sys", path: "userInfo", user: true })

@@ -8,6 +8,11 @@ import { warnMessage } from "/@/utils/message";
 import { ElTree } from "element-plus";
 import { confirm } from "/@/utils/message/box";
 const treeRef = ref<InstanceType<typeof ElTree>>();
+const permission = reactive({
+  add: ["dept:save"],
+  edit: ["dept:update"],
+  delete: ["dept:delete"]
+});
 const pageData = reactive<{
   i: number;
   isUpdate: boolean;
@@ -125,6 +130,7 @@ onMounted(() => {
                 size="large"
                 :icon="useRenderIcon('iconify-fa-check')"
                 @click="handlerSave"
+                v-auth="permission.add"
                 plain
                 >添加</el-button
               >
@@ -133,6 +139,7 @@ onMounted(() => {
                 size="large"
                 :icon="useRenderIcon('iconify-fa-trash')"
                 @click="handlerDelete"
+                v-auth="permission.delete"
                 plain
                 >删除</el-button
               >

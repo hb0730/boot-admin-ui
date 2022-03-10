@@ -9,6 +9,7 @@ export interface LoginUser {
   gender: number;
   nickName: string;
   username: string;
+  isAdmin: number;
   expireTime: Date;
   loginTime: Date;
 }
