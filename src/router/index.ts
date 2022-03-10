@@ -73,6 +73,8 @@ router.beforeEach((to: toRouteType, _from, next) => {
       } else {
         next();
       }
+    } else if (to.path === "/login") {
+      next({ path: "/" });
     } else {
       // 刷新
       if (usePermissionStoreHook().wholeMenus.length === 0)

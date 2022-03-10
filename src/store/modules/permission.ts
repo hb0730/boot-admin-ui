@@ -64,6 +64,10 @@ export const usePermissionStore = defineStore({
     // 清空缓存页面
     clearAllCachePage() {
       this.cachePageList = [];
+    },
+    //清理缓存录入
+    clearAllWholeMenus() {
+      this.wholeMenus = [];
     }
   }
 });

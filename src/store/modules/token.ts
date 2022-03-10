@@ -6,10 +6,11 @@ import { LoginUser } from "/@/api/model/system/auth_model";
 import { cookies } from "/@/utils/storage/cookie";
 import dayjs from "dayjs";
 import router from "/@/router";
-import { handleAliveRoute, initRouter } from "/@/router/utils";
+import { initRouter } from "/@/router/utils";
 import { dictStoreHook } from "./dict";
 import { getCache, updateCache } from "/@/api/system/dict_cache";
 import { menuStoreHook } from "./menu";
+import { usePermissionStoreHook } from "./permission";
 
 export const tokenStore = defineStore({
   id: "token-store",
@@ -104,15 +105,18 @@ export const tokenStore = defineStore({
         value: JSON.stringify(loginUser),
         user: true
       });
-      this.updateCache();
-      initRouter(loginUser.username).then(() => {});
-      router.push("/");
+      this.updateCache().then(async () => {
+        usePermissionStoreHook().clearAllWholeMenus();
+        initRouter(loginUser.username);
+        router.push("/");
+      });
     },
     async updateCache(): Promise<void> {
       await menuStoreHook()
         .updateCurrentMenu()
-        .then(result => {
-          handleAliveRoute(result);
+        .then(_ => {
+          usePermissionStoreHook().clearAllWholeMenus();
+          initRouter("");
         });
       await updateCache().then(() => {
         getCache().then(result => {
