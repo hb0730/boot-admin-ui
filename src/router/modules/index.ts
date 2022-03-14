@@ -1,7 +1,5 @@
 // 静态路由
 import homeRouter from "./home";
-// import errorRouter from "./error";
-// import externalLink from "./externalLink";
 import remainingRouter from "./remaining";
 import { RouteRecordRaw, RouteComponent } from "vue-router";
 

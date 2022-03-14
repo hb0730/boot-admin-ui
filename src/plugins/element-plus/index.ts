@@ -88,7 +88,6 @@ const components = [
   ElCollapse,
   ElCollapseItem,
   ElCheckbox,
-  ElCard,
   ElTree,
   ElForm,
   ElFormItem,
@@ -101,9 +100,10 @@ const components = [
   ElSelect,
   ElOption,
   ElPagination,
-  ElDialog,
   ElUpload,
-  ElDatePicker
+  ElDatePicker,
+  ElDialog,
+  ElCard
 ];
 
 export function useElementPlus(app: App) {

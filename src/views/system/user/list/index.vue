@@ -127,7 +127,7 @@ const handlerRestPassword = data => {
           >
             <el-upload
               ref="upload"
-              class="upload-demo"
+              class="upload-null-list"
               :limit="1"
               action=""
               :auto-upload="false"

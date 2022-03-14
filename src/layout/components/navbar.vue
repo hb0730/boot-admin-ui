@@ -2,6 +2,7 @@
 import { useI18n } from "vue-i18n";
 import { useNav } from "../hooks/nav";
 import { useRoute } from "vue-router";
+import Search from "./search/index.vue";
 import Notice from "./notice/index.vue";
 import mixNav from "./sidebar/mixNav.vue";
 import avatars from "/@/assets/avatars.jpg";
@@ -16,7 +17,7 @@ import { tokenStoreHook } from "/@/store/modules/token";
 import { successMessage } from "/@/utils/message";
 import router from "/@/router";
 const route = useRoute();
-const { locale } = useI18n();
+const { locale, t } = useI18n();
 const instance =
   getCurrentInstance().appContext.config.globalProperties.$storage;
 const {
@@ -71,6 +72,8 @@ const updateCache = async () => {
     <mixNav v-if="pureApp.layout === 'mix'" />
 
     <div v-if="pureApp.layout === 'vertical'" class="vertical-header-right">
+      <!-- 菜单搜索 -->
+      <Search />
       <!-- 通知 -->
       <Notice id="header-notice" />
       <!-- 全屏 -->
@@ -123,14 +126,14 @@ const updateCache = async () => {
               <IconifyIconOffline
                 icon="logout-circle-r-line"
                 style="margin: 5px"
-              />{{ $t("buttons.hsLoginOut") }}</el-dropdown-item
+              />{{ t("buttons.hsLoginOut") }}</el-dropdown-item
             >
           </el-dropdown-menu>
         </template>
       </el-dropdown>
       <el-icon
         class="el-icon-setting"
-        :title="$t('buttons.hssystemSet')"
+        :title="t('buttons.hssystemSet')"
         @click="onPanel"
       >
         <IconifyIconOffline icon="setting" />

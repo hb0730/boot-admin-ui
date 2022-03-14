@@ -61,3 +61,14 @@
 .form-button {
   float: right;
 }
+.upload-null-list {
+  ul {
+    margin: 0;
+  }
+}
+
+.ui-fas {
+  .el-input-group__prepend {
+    border: 0px solid #dcdfe6;
+  }
+}
