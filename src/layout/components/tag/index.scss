@@ -75,6 +75,9 @@
         background: #b4bccc;
         font-size: 13px;
       }
+      &:before {
+        content: "";
+      }
     }
 
     &.is-closable:not(:first-child) {

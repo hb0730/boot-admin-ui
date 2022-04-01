@@ -95,10 +95,11 @@ const updateCache = async () => {
             <el-dropdown-item
               :style="getDropdownItemStyle(locale, 'en')"
               @click="translationEn"
-              ><el-icon class="check-en" v-show="locale === 'en'"
-                ><IconifyIconOffline icon="check" /></el-icon
-              >English</el-dropdown-item
             >
+              <span class="check-en" v-show="locale === 'en'">
+                <IconifyIconOffline icon="check" /> </span
+              >English
+            </el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -112,13 +113,13 @@ const updateCache = async () => {
           <el-dropdown-menu class="logout">
             <el-dropdown-item @click="currentSetting">
               <el-icon style="margin: 5px">
-                <component :is="useRenderIcon('el-icon-setting')"></component>
+                <component :is="useRenderIcon('el-icon-setting')" />
               </el-icon>
               用户设置
             </el-dropdown-item>
             <el-dropdown-item @click="updateCache">
               <el-icon style="margin: 5px">
-                <component :is="useRenderIcon('fa fa-trash')"></component>
+                <component :is="useRenderIcon('fa fa-trash')" />
               </el-icon>
               清理缓存
             </el-dropdown-item>
@@ -131,13 +132,13 @@ const updateCache = async () => {
           </el-dropdown-menu>
         </template>
       </el-dropdown>
-      <el-icon
+      <span
         class="el-icon-setting"
         :title="t('buttons.hssystemSet')"
         @click="onPanel"
       >
         <IconifyIconOffline icon="setting" />
-      </el-icon>
+      </span>
     </div>
   </div>
 </template>
