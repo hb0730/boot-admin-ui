@@ -33,7 +33,8 @@ const {
   changeTitle,
   handleResize,
   menuSelect,
-  usename,
+  username,
+  avatarsStyle,
   getDropdownItemStyle
 } = useNav();
 
@@ -135,8 +136,8 @@ const updateCache = async () => {
       <!-- 退出登陆 -->
       <el-dropdown trigger="click">
         <span class="el-dropdown-link">
-          <img :src="avatars" />
-          <p>{{ usename }}</p>
+          <img v-if="avatars" :src="avatars" :style="avatarsStyle" />
+          <p v-if="username">{{ username }}</p>
         </span>
         <template #dropdown>
           <el-dropdown-menu class="logout">
