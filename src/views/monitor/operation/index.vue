@@ -118,7 +118,7 @@ onMounted(() => {
             :key="item.value"
             :label="item.label"
             :value="item.value"
-          ></el-option>
+          />
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -126,14 +126,14 @@ onMounted(() => {
           v-model="pageData.searchInfo.username"
           placeholder="操作用户"
           clearable
-        ></el-input>
+        />
       </el-form-item>
       <el-form-item>
         <el-input
           v-model="pageData.searchInfo.description"
           placeholder="描述"
           clearable
-        ></el-input>
+        />
       </el-form-item>
       <el-form-item>
         <el-select
@@ -146,7 +146,7 @@ onMounted(() => {
             :key="item.value"
             :label="item.label"
             :value="item.value"
-          ></el-option>
+          />
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -159,7 +159,7 @@ onMounted(() => {
             end-placeholder="结束日期"
             format="YYYY 年 MM 月 DD 日"
             value-format="YYYY-MM-DD"
-          ></el-date-picker>
+          />
         </el-form-item>
       </el-form-item>
       <el-form-item>
@@ -167,7 +167,7 @@ onMounted(() => {
           plain
           size="default"
           @click="handleCurrentChange(1)"
-          :icon="useRenderIcon('fa fa-search')"
+          :icon="useRenderIcon('iconify-fa-search')"
           >查询</el-button
         >
       </el-form-item>
@@ -205,7 +205,7 @@ onMounted(() => {
             circle
             @click="getPage"
             :icon="useRenderIcon('iconify-fa-refresh')"
-          ></el-button>
+          />
         </div>
       </div>
       <el-col :xs="10">
@@ -249,7 +249,7 @@ onMounted(() => {
             :show-overflow-tooltip="true"
             align="center"
             type="selection"
-          ></el-table-column>
+          />
           <el-table-column
             prop="username"
             label="操作人员"
@@ -257,7 +257,7 @@ onMounted(() => {
             resizable
             :show-overflow-tooltip="true"
             align="center"
-          ></el-table-column>
+          />
           <el-table-column
             prop="operIp"
             label="操作ip"
@@ -265,7 +265,7 @@ onMounted(() => {
             resizable
             :show-overflow-tooltip="true"
             align="center"
-          ></el-table-column>
+          />
           <el-table-column
             prop="businessType"
             label="操作类型"
@@ -285,7 +285,7 @@ onMounted(() => {
             resizable
             :show-overflow-tooltip="true"
             align="center"
-          ></el-table-column>
+          />
           <el-table-column
             prop="status"
             label="操作状态"
@@ -309,7 +309,7 @@ onMounted(() => {
             resizable
             :show-overflow-tooltip="true"
             align="center"
-          ></el-table-column>
+          />
         </el-table>
         <el-pagination
           align="left"
@@ -320,7 +320,7 @@ onMounted(() => {
           :page-size="pageData.searchInfo.pageSize"
           layout="total, sizes, prev, pager, next, jumper"
           :total="pageData.searchInfo.total"
-        ></el-pagination>
+        />
       </el-col>
     </el-row>
   </div>

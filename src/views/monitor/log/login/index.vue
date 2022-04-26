@@ -104,14 +104,14 @@ onMounted(() => {
           v-model="pageData.searchInfo.username"
           placeholder="登录账号"
           clearable
-        ></el-input>
+        />
       </el-form-item>
       <el-form-item>
         <el-input
           v-model="pageData.searchInfo.loginIp"
           placeholder="登录ip"
           clearable
-        ></el-input>
+        />
       </el-form-item>
       <el-form-item>
         <el-select
@@ -124,7 +124,7 @@ onMounted(() => {
             :key="item.value"
             :label="item.label"
             :value="item.value"
-          ></el-option>
+          />
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -137,7 +137,7 @@ onMounted(() => {
             end-placeholder="结束日期"
             format="YYYY 年 MM 月 DD 日"
             value-format="YYYY-MM-DD"
-          ></el-date-picker>
+          />
         </el-form-item>
       </el-form-item>
       <el-form-item>
@@ -145,7 +145,7 @@ onMounted(() => {
           plain
           @click="handleCurrentChange(1)"
           size="default"
-          :icon="useRenderIcon('fa fa-search')"
+          :icon="useRenderIcon('iconify-fa-search')"
           >查询</el-button
         >
       </el-form-item>
@@ -183,7 +183,7 @@ onMounted(() => {
             circle
             :icon="useRenderIcon('iconify-fa-refresh')"
             @click="getPage"
-          ></el-button>
+          />
         </div>
       </div>
       <el-col :xs="10">
@@ -203,7 +203,7 @@ onMounted(() => {
             :show-overflow-tooltip="true"
             align="center"
             type="selection"
-          ></el-table-column>
+          />
           <el-table-column
             prop="username"
             label="登录账号"
@@ -211,7 +211,7 @@ onMounted(() => {
             resizable
             :show-overflow-tooltip="true"
             align="center"
-          ></el-table-column>
+          />
           <el-table-column
             prop="loginIp"
             label="登录ip"
@@ -219,7 +219,7 @@ onMounted(() => {
             resizable
             :show-overflow-tooltip="true"
             align="center"
-          ></el-table-column>
+          />
           <el-table-column
             prop="browser"
             label="浏览器"
@@ -227,7 +227,7 @@ onMounted(() => {
             resizable
             :show-overflow-tooltip="true"
             align="center"
-          ></el-table-column>
+          />
           <el-table-column
             prop="os"
             label="操作系统"
@@ -235,7 +235,7 @@ onMounted(() => {
             resizable
             :show-overflow-tooltip="true"
             align="center"
-          ></el-table-column>
+          />
           <el-table-column
             prop="status"
             label="登录状态"
@@ -259,7 +259,7 @@ onMounted(() => {
             resizable
             :show-overflow-tooltip="true"
             align="center"
-          ></el-table-column>
+          />
           <el-table-column
             prop="createTime"
             label="登录时间"
@@ -267,7 +267,7 @@ onMounted(() => {
             resizable
             :show-overflow-tooltip="true"
             align="center"
-          ></el-table-column>
+          />
         </el-table>
         <el-pagination
           align="left"
@@ -278,7 +278,7 @@ onMounted(() => {
           :page-size="pageData.searchInfo.pageSize"
           layout="total, sizes, prev, pager, next, jumper"
           :total="pageData.searchInfo.total"
-        ></el-pagination>
+        />
       </el-col>
     </el-row>
   </div>

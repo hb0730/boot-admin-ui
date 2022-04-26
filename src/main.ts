@@ -7,7 +7,6 @@ import { useI18n } from "../src/plugins/i18n";
 import { MotionPlugin } from "@vueuse/motion";
 import { useElementPlus } from "../src/plugins/element-plus";
 import { injectResponsiveStorage } from "/@/utils/storage/responsive";
-import { useIconPicker } from "./plugins/icon-picker";
 import "animate.css";
 import "virtual:windi.css";
 // 导入公共样式
@@ -41,6 +40,6 @@ getServerConfig(app).then(async config => {
   await router.isReady();
   injectResponsiveStorage(app, config);
   setupStore(app);
-  app.use(MotionPlugin).use(useI18n).use(useElementPlus).use(useIconPicker);
+  app.use(MotionPlugin).use(useI18n).use(useElementPlus);
   app.mount("#app");
 });

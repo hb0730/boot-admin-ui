@@ -72,7 +72,7 @@ onMounted(() => {
           v-model="pageData.searchInfo.jobName"
           placeholder="任务名称"
           clearable
-        ></el-input>
+        />
       </el-form-item>
       <el-form-item>
         <el-select
@@ -85,7 +85,7 @@ onMounted(() => {
             :key="item.value"
             :label="item.label"
             :value="item.value"
-          ></el-option>
+          />
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -99,7 +99,7 @@ onMounted(() => {
             :key="Number(item.value)"
             :label="item.label"
             :value="Number(item.value)"
-          ></el-option>
+          />
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -111,7 +111,7 @@ onMounted(() => {
           end-placeholder="结束日期"
           format="YYYY 年 MM 月 DD 日"
           value-format="YYYY-MM-DD"
-        ></el-date-picker>
+        />
       </el-form-item>
       <el-form-item>
         <el-button
@@ -128,7 +128,7 @@ onMounted(() => {
         :search-info="pageData.searchInfo"
         :data-list="pageData.dataList"
         :group-options="pageData.groupOptions"
-      ></job-log-list>
+      />
     </el-row>
   </div>
 </template>

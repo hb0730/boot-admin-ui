@@ -41,6 +41,7 @@
     "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
     "lodash-unified": "^1.0.2",
+    "lowdb": "^3.0.0",
     "mitt": "^3.0.0",
     "mockjs": "^1.1.0",
     "nprogress": "^0.2.0",
@@ -53,10 +54,7 @@
     "vue": "^3.2.33",
     "vue-i18n": "^9.2.0-beta.35",
     "vue-router": "^4.0.14",
-    "vue-types": "^4.1.1",
-    "font-awesome": "^4.7.0",
-    "e-icon-picker": "^2.0.9",
-    "lowdb": "^3.0.0"
+    "vue-types": "^4.1.1"
   },
   "devDependencies": {
     "@commitlint/cli": "13.1.0",

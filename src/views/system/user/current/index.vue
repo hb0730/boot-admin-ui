@@ -139,22 +139,13 @@ onMounted(() => {
               center
             >
               <el-form-item prop="nickName" required label="昵称">
-                <el-input
-                  v-model="pageData.userInfo.nickName"
-                  clearable
-                ></el-input>
+                <el-input v-model="pageData.userInfo.nickName" clearable />
               </el-form-item>
               <el-form-item label="电话号码" prop="phoneNumber">
-                <el-input
-                  v-model="pageData.userInfo.phoneNumber"
-                  clearable
-                ></el-input>
+                <el-input v-model="pageData.userInfo.phoneNumber" clearable />
               </el-form-item>
               <el-form-item label="邮箱" prop="email">
-                <el-input
-                  v-model="pageData.userInfo.email"
-                  clearable
-                ></el-input>
+                <el-input v-model="pageData.userInfo.email" clearable />
               </el-form-item>
               <el-form-item label="性別" prop="gender">
                 <el-radio-group v-model="pageData.userInfo.gender">
@@ -170,13 +161,13 @@ onMounted(() => {
                 <el-button
                   type="primary"
                   @click="updateInfo"
-                  :icon="useRenderIcon('fa fa-check')"
+                  :icon="useRenderIcon('iconify-fa-check')"
                   >更新</el-button
                 >
                 <el-button
                   type="info"
                   @click="resetForm('info')"
-                  :icon="useRenderIcon('fa fa-reply-all')"
+                  :icon="useRenderIcon('fa:reply-all')"
                 >
                   重置
                 </el-button>
@@ -202,33 +193,33 @@ onMounted(() => {
                 <el-input
                   v-model="pageData.userPasswordInfo.oldPassword"
                   clearable
-                ></el-input>
+                />
               </el-form-item>
               <el-form-item required prop="newPassword" label="新密码">
                 <el-input
                   type="password"
                   v-model="pageData.userPasswordInfo.newPassword"
                   clearable
-                ></el-input>
+                />
               </el-form-item>
               <el-form-item required prop="newPassword2" label="确认密码">
                 <el-input
                   type="password"
                   v-model="pageData.userPasswordInfo.newPassword2"
                   clearable
-                ></el-input>
+                />
               </el-form-item>
               <el-form-item>
                 <el-button
                   type="primary"
                   @click="settingPassword"
-                  :icon="useRenderIcon('fa fa-check')"
+                  :icon="useRenderIcon('iconify-fa-check')"
                 >
                   提交
                 </el-button>
                 <el-button
                   @click="resetForm('passwordForm')"
-                  :icon="useRenderIcon('fa fa-reply-all')"
+                  :icon="useRenderIcon('fa:reply-all')"
                   type="info"
                 >
                   重置

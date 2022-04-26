@@ -114,13 +114,13 @@ const updateCache = async () => {
           <el-dropdown-menu class="logout">
             <el-dropdown-item @click="currentSetting">
               <el-icon style="margin: 5px">
-                <component :is="useRenderIcon('el-icon-setting')" />
+                <component :is="useRenderIcon('ep:setting')" />
               </el-icon>
               用户设置
             </el-dropdown-item>
             <el-dropdown-item @click="updateCache">
               <el-icon style="margin: 5px">
-                <component :is="useRenderIcon('fa fa-trash')" />
+                <component :is="useRenderIcon('iconify-fa-trash')" />
               </el-icon>
               清理缓存
             </el-dropdown-item>

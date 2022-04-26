@@ -11,6 +11,7 @@ import { Menu, MenuTree } from "/@/api/model/system/menu_model";
 import { TreeSelect } from "@pureadmin/components";
 import { warnMessage } from "/@/utils/message";
 import { DictEntryCache } from "/@/api/model/system/dict_model";
+import { IconSelect } from "/@/components/ReIcon";
 const treeProps = reactive({
   key: "id",
   value: "id",
@@ -172,26 +173,27 @@ watch(
             :tree-data="treeMenu"
             :field-names="treeProps"
             :getPopupContainer="triggerNode => triggerNode.parentNode"
-          ></TreeSelect>
+          />
         </el-form-item>
         <el-form-item required label="菜单名称: " prop="title">
-          <el-input v-model="menuInfo.title" clearable></el-input>
+          <el-input v-model="menuInfo.title" clearable />
         </el-form-item>
         <el-form-item required label="路由地址: " prop="path">
-          <el-input v-model="menuInfo.path" clearable></el-input>
+          <el-input v-model="menuInfo.path" clearable />
         </el-form-item>
         <el-form-item required label="组件名称: " prop="enname">
-          <el-input v-model="menuInfo.enname" clearable></el-input>
+          <el-input v-model="menuInfo.enname" clearable />
         </el-form-item>
         <el-form-item label="组件路径: " prop="component">
-          <el-input v-model="menuInfo.component" clearable></el-input>
+          <el-input v-model="menuInfo.component" clearable />
         </el-form-item>
         <el-form-item label="图标: " prop="icon">
-          <e-icon-picker
+          <!-- <e-icon-picker
             style="width: 100%"
             v-model="menuInfo.icon"
             clearable
-          />
+          /> -->
+          <icon-select v-model="menuInfo.icon" />
         </el-form-item>
         <el-form-item label="排序: " prop="sort">
           <el-input-number
@@ -200,7 +202,7 @@ watch(
             v-model="menuInfo.sort"
             placeholder="排序"
             clearable
-          ></el-input-number>
+          />
         </el-form-item>
         <el-form-item label="备注: " prop="description">
           <el-input
@@ -208,7 +210,7 @@ watch(
             v-model="menuInfo.description"
             placeholder="备注"
             clearable
-          ></el-input>
+          />
         </el-form-item>
         <el-form-item label="是否启用: " prop="isEnabled">
           <el-radio-group v-model="menuInfo.isEnabled">

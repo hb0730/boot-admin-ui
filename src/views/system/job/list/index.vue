@@ -203,7 +203,7 @@ const handlerOpenLog = () => {
       <el-button
         size="default"
         type="info"
-        :icon="useRenderIcon('el-icon-tickets')"
+        :icon="useRenderIcon('el:tickets')"
         @click="handlerOpenLog"
         >日志</el-button
       >
@@ -215,7 +215,7 @@ const handlerOpenLog = () => {
         circle
         :icon="useRenderIcon('iconify-fa-refresh')"
         @click="handlerRefresh"
-      ></el-button>
+      />
     </div>
   </div>
   <el-col :xs="10">
@@ -235,7 +235,7 @@ const handlerOpenLog = () => {
         :show-overflow-tooltip="true"
         align="center"
         type="selection"
-      ></el-table-column>
+      />
       <el-table-column
         prop="id"
         label="任务编号"
@@ -243,7 +243,7 @@ const handlerOpenLog = () => {
         resizable
         :show-overflow-tooltip="true"
         align="center"
-      ></el-table-column>
+      />
       <el-table-column
         prop="name"
         label="任务名称"
@@ -251,7 +251,7 @@ const handlerOpenLog = () => {
         resizable
         :show-overflow-tooltip="true"
         align="center"
-      ></el-table-column>
+      />
       <el-table-column
         prop="group"
         label="任务分组"
@@ -271,7 +271,7 @@ const handlerOpenLog = () => {
         resizable
         :show-overflow-tooltip="true"
         align="center"
-      ></el-table-column>
+      />
       <el-table-column
         prop="cron"
         label="执行表达式"
@@ -279,7 +279,7 @@ const handlerOpenLog = () => {
         resizable
         :show-overflow-tooltip="true"
         align="center"
-      ></el-table-column>
+      />
       <el-table-column
         prop="isEnabled"
         label="状态"
@@ -305,7 +305,7 @@ const handlerOpenLog = () => {
         resizable
         :show-overflow-tooltip="true"
         align="center"
-      ></el-table-column>
+      />
       <el-table-column
         label="操作"
         sortable
@@ -321,7 +321,7 @@ const handlerOpenLog = () => {
             @click="handlerEdit(scope.row)"
             v-auth="permission.edit"
             size="small"
-          ></el-button>
+          />
           <el-button
             title="立即执行"
             type="text"
@@ -329,7 +329,7 @@ const handlerOpenLog = () => {
             @click="handlerExec(scope.row)"
             v-auth="permission.exec"
             size="small"
-          ></el-button>
+          />
           <el-button
             title="删除"
             type="text"
@@ -337,7 +337,7 @@ const handlerOpenLog = () => {
             @click="handlerDelete(scope.row)"
             v-auth="permission.delete"
             size="small"
-          ></el-button>
+          />
         </template>
       </el-table-column>
     </el-table>
@@ -349,7 +349,7 @@ const handlerOpenLog = () => {
       :total="searchInfo.total"
       @size-change="sizeChange"
       @current-change="currentChange"
-    ></el-pagination>
+    />
   </el-col>
   <job-edit
     :dialog-visible="pageData.dialogVisible"
@@ -358,7 +358,7 @@ const handlerOpenLog = () => {
     :job-info="pageData.jobInfo"
     :is-update="pageData.isUpdate"
     @refresh="handlerRefresh"
-  ></job-edit>
+  />
 </template>
 
 <style scoped></style>

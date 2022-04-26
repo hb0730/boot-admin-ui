@@ -98,21 +98,21 @@ onMounted(() => {
           v-model="pageData.searchInfo.username"
           placeholder="登录账号"
           clearable
-        ></el-input>
+        />
       </el-form-item>
       <el-form-item>
         <el-input
           v-model="pageData.searchInfo.ipaddr"
           placeholder="登录ip"
           clearable
-        ></el-input>
+        />
       </el-form-item>
       <el-form-item>
         <el-button
           plain
           size="default"
           @click="handlerSearch"
-          :icon="useRenderIcon('fa fa-search')"
+          :icon="useRenderIcon('iconify-fa-search')"
           >查询</el-button
         >
       </el-form-item>
@@ -123,12 +123,12 @@ onMounted(() => {
           <el-button
             type="danger"
             @click="handlerLogoutBatch"
-            :icon="useRenderIcon('fa fa-sign-out')"
+            :icon="useRenderIcon('iconify-fa-sign-out')"
             v-auth="permission.delete"
             >强退</el-button
           >
         </div>
-        <div class="avue-crud__right"></div>
+        <div class="avue-crud__right" />
       </div>
       <el-col :xs="10">
         <el-table
@@ -152,7 +152,7 @@ onMounted(() => {
             :show-overflow-tooltip="true"
             align="center"
             type="selection"
-          ></el-table-column>
+          />
           <el-table-column
             prop="tokenId"
             label="会话id"
@@ -160,7 +160,7 @@ onMounted(() => {
             resizable
             :show-overflow-tooltip="true"
             align="center"
-          ></el-table-column>
+          />
           <el-table-column
             prop="username"
             label="登录账号"
@@ -168,7 +168,7 @@ onMounted(() => {
             resizable
             :show-overflow-tooltip="true"
             align="center"
-          ></el-table-column>
+          />
           <el-table-column
             prop="ipaddr"
             label="登录ip"
@@ -176,7 +176,7 @@ onMounted(() => {
             resizable
             :show-overflow-tooltip="true"
             align="center"
-          ></el-table-column>
+          />
           <el-table-column
             prop="browser"
             label="浏览器"
@@ -184,7 +184,7 @@ onMounted(() => {
             resizable
             :show-overflow-tooltip="true"
             align="center"
-          ></el-table-column>
+          />
           <el-table-column
             prop="os"
             label="操作系统"
@@ -192,7 +192,7 @@ onMounted(() => {
             resizable
             :show-overflow-tooltip="true"
             align="center"
-          ></el-table-column>
+          />
           <el-table-column
             prop="loginTime"
             label="登录时间"
@@ -200,7 +200,7 @@ onMounted(() => {
             resizable
             :show-overflow-tooltip="true"
             align="center"
-          ></el-table-column>
+          />
           <el-table-column
             label="操作"
             sortable
@@ -214,7 +214,7 @@ onMounted(() => {
                 @click="handleLogout(scope.row)"
                 type="danger"
                 plain
-                :icon="useRenderIcon('fa fa-sign-out')"
+                :icon="useRenderIcon('iconify-fa-sign-out')"
                 v-auth="permission.delete"
                 >强退</el-button
               >
@@ -230,7 +230,7 @@ onMounted(() => {
           :page-size="pageData.pages.pageSize"
           layout="total, sizes, prev, pager, next, jumper"
           :total="pageData.pages.total"
-        ></el-pagination>
+        />
       </el-col>
     </el-row>
   </div>

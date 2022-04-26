@@ -43,7 +43,7 @@ const handleViewError = (data: JobLog) => {
       <el-button
         type="danger"
         size="default"
-        :icon="useRenderIcon('fa fa-remove')"
+        :icon="useRenderIcon('iconify-fa-remove')"
         @click="handlerDelete"
         v-auth="permission.delete"
         >删除</el-button
@@ -69,7 +69,7 @@ const handleViewError = (data: JobLog) => {
         circle
         :icon="useRenderIcon('iconify-fa-refresh')"
         @click="handlerRefresh"
-      ></el-button>
+      />
     </div>
   </div>
   <el-col :xs="10">
@@ -88,7 +88,7 @@ const handleViewError = (data: JobLog) => {
         resizable
         :show-overflow-tooltip="true"
         align="center"
-      ></el-table-column>
+      />
       <el-table-column
         prop="jobName"
         label="任务名称"
@@ -96,7 +96,7 @@ const handleViewError = (data: JobLog) => {
         resizable
         :show-overflow-tooltip="true"
         align="center"
-      ></el-table-column>
+      />
       <el-table-column
         prop="jobGroup"
         label="任务分组"
@@ -116,7 +116,7 @@ const handleViewError = (data: JobLog) => {
         resizable
         :show-overflow-tooltip="true"
         align="center"
-      ></el-table-column>
+      />
       <el-table-column
         prop="jobMessage"
         label="日志信息"
@@ -124,7 +124,7 @@ const handleViewError = (data: JobLog) => {
         resizable
         :show-overflow-tooltip="true"
         align="center"
-      ></el-table-column>
+      />
       <el-table-column
         prop="createTime"
         label="开始时间"
@@ -132,7 +132,7 @@ const handleViewError = (data: JobLog) => {
         resizable
         :show-overflow-tooltip="true"
         align="center"
-      ></el-table-column>
+      />
       <el-table-column
         prop="status"
         label="任务状态"
@@ -175,7 +175,7 @@ const handleViewError = (data: JobLog) => {
       :total="searchInfo.total"
       @size-change="sizeChange"
       @current-change="currentChange"
-    ></el-pagination>
+    />
   </el-col>
 </template>
 
