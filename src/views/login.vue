@@ -88,7 +88,7 @@ onMounted(() => {
           }"
         >
           <div class="icon">
-            <IconifyIconOffline icon="fa-user" width="14" height="14" />
+            <IconifyIconOffline icon="user" width="14" height="14" />
           </div>
           <div>
             <h5>用户名</h5>
@@ -117,7 +117,7 @@ onMounted(() => {
           }"
         >
           <div class="icon">
-            <IconifyIconOffline icon="fa-lock" width="14" height="14" />
+            <IconifyIconOffline icon="lock" width="14" height="14" />
           </div>
           <div>
             <h5>密码</h5>
@@ -131,7 +131,7 @@ onMounted(() => {
           </div>
         </div>
         <div>
-          <el-checkbox v-model="remember" label="记住我"></el-checkbox>
+          <el-checkbox v-model="remember" label="记住我" />
         </div>
         <button
           class="btn"

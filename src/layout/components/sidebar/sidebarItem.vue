@@ -232,6 +232,7 @@ function resolvePath(routePath) {
   >
     <template #title>
       <el-icon v-show="props.item.meta.icon">
+        <!-- <div v-show="props.item.meta.icon" class="sub-menu-icon"> -->
         <component
           :is="useRenderIcon(props.item.meta && props.item.meta.icon)"
         />
