@@ -2,6 +2,7 @@
 import { cloneDeep } from "lodash-unified";
 import { ref, computed, CSSProperties, toRef, watch } from "vue";
 import { IconJson } from "/@/components/ReIcon/data";
+type ParameterCSSProperties = (item?: string) => CSSProperties | undefined;
 const props = defineProps({
   modelValue: {
     require: false,
@@ -9,12 +10,10 @@ const props = defineProps({
   }
 });
 const emit = defineEmits<{ (e: "update:modelValue", v: string) }>();
-type ParameterCSSProperties = (item?: string) => CSSProperties | undefined;
-// let inputValue = ref("ep:add-location");
+let visible = ref(false);
 let inputValue = toRef(props, "modelValue");
 let iconList = ref(IconJson);
 let icon = ref("add-location");
-let visible = ref(false);
 let currentActiveType = ref("ep:");
 // 深拷贝图标数据，前端做搜索
 let copyIconList = cloneDeep(iconList.value);
@@ -39,15 +38,15 @@ let tabsList = [
 let pageList = computed(() => {
   if (currentPage.value === 1) {
     return copyIconList[currentActiveType.value]
-      .slice(currentPage.value - 1, pageSize.value)
-      .filter(v => v.includes(filterValue.value));
+      .filter(v => v.includes(filterValue.value))
+      .slice(currentPage.value - 1, pageSize.value);
   } else {
     return copyIconList[currentActiveType.value]
+      .filter(v => v.includes(filterValue.value))
       .slice(
         pageSize.value * (currentPage.value - 1),
         pageSize.value * (currentPage.value - 1) + pageSize.value
-      )
-      .filter(v => v.includes(filterValue.value));
+      );
   }
 });
 const iconItemStyle = computed((): ParameterCSSProperties => {
@@ -62,15 +61,15 @@ const iconItemStyle = computed((): ParameterCSSProperties => {
 function handleClick({ props }) {
   currentPage.value = 1;
   currentActiveType.value = props.name;
-  inputValue.value =
-    currentActiveType.value + iconList.value[currentActiveType.value][0];
+  emit(
+    "update:modelValue",
+    currentActiveType.value + iconList.value[currentActiveType.value][0]
+  );
   icon.value = iconList.value[currentActiveType.value][0];
 }
 function onChangeIcon(item) {
-  // inputValue = ref(currentActiveType.value + item);
-  // inputValue.value = currentActiveType.value + item;
   icon.value = item;
-  emit("update:modelValue", inputValue.value);
+  emit("update:modelValue", currentActiveType.value + item);
   visible.value = false;
 }
 function onCurrentChange(page) {
@@ -92,6 +91,14 @@ watch(
     }
   }
 );
+watch(
+  () => {
+    return filterValue.value;
+  },
+  () => {
+    currentPage.value = 1;
+  }
+);
 </script>
 
 <template>
@@ -99,14 +106,12 @@ watch(
     <el-input v-model="inputValue" disabled>
       <template #append>
         <el-popover
-          ref="elPopover"
           :width="350"
           trigger="click"
+          popper-class="pure-popper"
           :popper-options="{
             placement: 'auto'
           }"
-          :popper-append-to-body="false"
-          popper-class="pure-popper"
           :visible="visible"
         >
           <template #reference>
@@ -197,7 +202,6 @@ watch(
 
 :deep(.el-input-group__append) {
   padding: 0;
-  border: 0;
 }
 
 :deep(.el-tabs__item) {
