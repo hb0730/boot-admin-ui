@@ -9,6 +9,25 @@ import {
 } from "/@/api/model/monitor/user_online_model";
 import { warnMessage } from "/@/utils/message";
 import { confirm } from "/@/utils/message/box";
+import { SearchView, TableOpera } from "/@/components/searchTable";
+const searchParams = reactive({
+  form: [
+    {
+      name: "登录账号",
+      key: "username",
+      use: true,
+      type: "input",
+      tips: "精确查询"
+    },
+    {
+      name: "登录ip",
+      key: "ipaddr",
+      use: true,
+      type: "input",
+      tips: "精确查询"
+    }
+  ]
+});
 const permission = reactive({
   delete: ["online:user:logout"]
 });
@@ -34,6 +53,9 @@ const getPage = async () => {
   >(pageData.searchInfo);
   pageData.userOnlineList = result.records;
   pageData.pages.total = Number(result.total);
+};
+const getSearchForm = data => {
+  pageData.searchInfo = data;
 };
 const handlerSearch = () => {
   pageData.pages.page = 1;
@@ -87,49 +109,24 @@ onMounted(() => {
 
 <template>
   <div>
-    <el-form
-      ref="searchForm"
-      :model="pageData.searchInfo"
-      :inline="true"
-      :label-position="pageData.position"
-    >
-      <el-form-item>
-        <el-input
-          v-model="pageData.searchInfo.username"
-          placeholder="登录账号"
-          clearable
-        />
-      </el-form-item>
-      <el-form-item>
-        <el-input
-          v-model="pageData.searchInfo.ipaddr"
-          placeholder="登录ip"
-          clearable
-        />
-      </el-form-item>
-      <el-form-item>
+    <search-view
+      :search-form-config="searchParams.form"
+      :is-search-auth="true"
+      @searchRun="handlerSearch"
+      @getSearchForm="getSearchForm"
+    />
+    <table-opera>
+      <template v-slot:opera-left>
         <el-button
-          plain
-          size="default"
-          @click="handlerSearch"
-          :icon="useRenderIcon('iconify-fa-search')"
-          >查询</el-button
+          type="danger"
+          @click="handlerLogoutBatch"
+          :icon="useRenderIcon('iconify-fa-sign-out')"
+          v-auth="permission.delete"
+          >强退</el-button
         >
-      </el-form-item>
-    </el-form>
+      </template>
+    </table-opera>
     <el-row :gutter="2">
-      <div class="avue-crud__menu">
-        <div class="avue-crud__left">
-          <el-button
-            type="danger"
-            @click="handlerLogoutBatch"
-            :icon="useRenderIcon('iconify-fa-sign-out')"
-            v-auth="permission.delete"
-            >强退</el-button
-          >
-        </div>
-        <div class="avue-crud__right" />
-      </div>
       <el-col :xs="10">
         <el-table
           :data="
