@@ -9,7 +9,7 @@ import {
 } from "/@/api/model/monitor/user_online_model";
 import { warnMessage } from "/@/utils/message";
 import { confirm } from "/@/utils/message/box";
-import { SearchView, TableOpera } from "/@/components/searchTable";
+import { SearchView, TableOpera, TableView } from "/@/components/searchTable";
 const searchParams = reactive({
   form: [
     {
@@ -44,7 +44,15 @@ const pageData = reactive({
     total: 0
   },
   userOnlineList: [],
-  selection: []
+  selection: [],
+  columns: [
+    { prop: "tokenId", label: "会话id" },
+    { prop: "username", label: "登录账号" },
+    { prop: "ipaddr", label: "登录ip" },
+    { prop: "browser", label: "浏览器" },
+    { prop: "os", label: "操作系统" },
+    { prop: "loginTime", label: "登录时间" }
+  ]
 });
 const getPage = async () => {
   const result: Page<UserOnlineModel[]> = await userOnlineApi.page<
@@ -126,110 +134,59 @@ onMounted(() => {
         >
       </template>
     </table-opera>
-    <el-row :gutter="2">
-      <el-col :xs="10">
-        <el-table
-          :data="
-            pageData.userOnlineList.slice(
-              (pageData.pages.page - 1) * pageData.pages.pageSize,
-              pageData.pages.page * pageData.pages.pageSize
-            )
-          "
-          style="width: 100%"
-          ref="userOnlineRef"
-          size="large"
-          border
-          :fit="true"
-          :header-cell-style="{ 'text-align': 'center' }"
-          @selection-change="handleSelectionChange"
-        >
-          <el-table-column
-            sortable
-            resizable
-            :show-overflow-tooltip="true"
-            align="center"
-            type="selection"
-          />
-          <el-table-column
-            prop="tokenId"
-            label="会话id"
-            sortable
-            resizable
-            :show-overflow-tooltip="true"
-            align="center"
-          />
-          <el-table-column
-            prop="username"
-            label="登录账号"
-            sortable
-            resizable
-            :show-overflow-tooltip="true"
-            align="center"
-          />
-          <el-table-column
-            prop="ipaddr"
-            label="登录ip"
-            sortable
-            resizable
-            :show-overflow-tooltip="true"
-            align="center"
-          />
-          <el-table-column
-            prop="browser"
-            label="浏览器"
-            sortable
-            resizable
-            :show-overflow-tooltip="true"
-            align="center"
-          />
-          <el-table-column
-            prop="os"
-            label="操作系统"
-            sortable
-            resizable
-            :show-overflow-tooltip="true"
-            align="center"
-          />
-          <el-table-column
-            prop="loginTime"
-            label="登录时间"
-            sortable
-            resizable
-            :show-overflow-tooltip="true"
-            align="center"
-          />
-          <el-table-column
-            label="操作"
-            sortable
-            resizable
-            :show-overflow-tooltip="true"
-            align="center"
-          >
-            <template #default="scope">
-              <el-button
-                size="small"
-                @click="handleLogout(scope.row)"
-                type="danger"
-                plain
-                :icon="useRenderIcon('iconify-fa-sign-out')"
-                v-auth="permission.delete"
-                >强退</el-button
-              >
-            </template>
-          </el-table-column>
-        </el-table>
-        <el-pagination
-          align="left"
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="pageData.pages.page"
-          :page-sizes="[10, 20, 50, 100]"
-          :page-size="pageData.pages.pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="pageData.pages.total"
+    <table-view
+      :list="
+        pageData.userOnlineList.slice(
+          (pageData.pages.page - 1) * pageData.pages.pageSize,
+          pageData.pages.page * pageData.pages.pageSize
+        )
+      "
+      :current-page="pageData.pages.page"
+      :page-size="pageData.pages.pageSize"
+      :page-total="pageData.pages.total"
+      @selection-change="handleSelectionChange"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    >
+      <template v-slot:tableColumn>
+        <el-table-column
+          sortable
+          resizable
+          :show-overflow-tooltip="true"
+          align="center"
+          type="selection"
         />
-      </el-col>
-    </el-row>
+        <template v-for="item in pageData.columns" :key="item">
+          <el-table-column
+            :prop="item.prop"
+            :label="item.label"
+            sortable
+            resizable
+            :show-overflow-tooltip="true"
+            align="center"
+          />
+        </template>
+        <el-table-column
+          label="操作"
+          sortable
+          resizable
+          :show-overflow-tooltip="true"
+          align="center"
+        >
+          <template #default="scope">
+            <el-button
+              size="small"
+              @click="handleLogout(scope.row)"
+              type="danger"
+              plain
+              :icon="useRenderIcon('iconify-fa-sign-out')"
+              v-auth="permission.delete"
+              >强退</el-button
+            >
+          </template>
+        </el-table-column>
+      </template>
+    </table-view>
   </div>
 </template>
 
