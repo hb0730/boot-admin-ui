@@ -159,8 +159,7 @@ function onReset() {
       parentPath: "/",
       meta: {
         title: "menus.hshome",
-        icon: "home-filled",
-        i18n: true
+        icon: "home-filled"
       }
     }
   ]);

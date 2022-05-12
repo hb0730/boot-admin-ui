@@ -139,7 +139,7 @@ const updateCache = async () => {
           <el-icon v-show="route.meta.icon">
             <component :is="useRenderIcon(route.meta && route.meta.icon)" />
           </el-icon>
-          <span>{{ transformI18n(route.meta.title, route.meta.i18n) }}</span>
+          <span>{{ transformI18n(route.meta.title) }}</span>
           <FontIcon
             v-if="route.meta.extraIcon"
             width="30px"
