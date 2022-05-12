@@ -7,7 +7,7 @@ specifiers:
   "@iconify-icons/ep": ^1.2.4
   "@iconify-icons/fa": ^1.2.2
   "@iconify-icons/ri": ^1.2.1
-  "@iconify/vue": ^3.2.1
+  "@iconify/vue": ^3.2.0
   "@intlify/vite-plugin-vue-i18n": ^3.4.0
   "@pureadmin/components": ^1.0.6
   "@pureadmin/theme": ^1.1.0
