@@ -36,12 +36,12 @@ export function useRenderIcon(icon: string, attrs?: iconType): Component {
     // svg
     return icon;
   } else if (iconOnline.test(icon)) {
-    const type = icon.substring(0, icon.indexOf(":") + 1);
-    const i = icon.substring(icon.indexOf(":") + 1);
+    // const type = icon.substring(0, icon.indexOf(":") + 1);
+    // const i = icon.substring(icon.indexOf(":") + 1);
     return defineComponent({
       name: "Icon",
       render() {
-        return h(IconifyIconOnline, { icon: i, type: type, ...attrs });
+        return h(IconifyIconOnline, { icon: icon, ...attrs });
       }
     });
   } else if (iconifyReg.test(icon)) {

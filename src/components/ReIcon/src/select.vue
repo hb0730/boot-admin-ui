@@ -53,7 +53,8 @@ const iconItemStyle = computed((): ParameterCSSProperties => {
   return item => {
     if (inputValue.value === currentActiveType.value + item) {
       return {
-        borderColor: "var(--el-color-primary)"
+        borderColor: "var(--el-color-primary)",
+        color: "var(--el-color-primary)"
       };
     }
   };
@@ -119,7 +120,7 @@ watch(
               class="w-40px h-32px cursor-pointer flex justify-center items-center"
               @click="visible = !visible"
             >
-              <IconifyIconOnline :icon="icon" :type="currentActiveType" />
+              <IconifyIconOnline :icon="currentActiveType + icon" />
             </div>
           </template>
 
@@ -149,7 +150,7 @@ watch(
                     :style="iconItemStyle(item)"
                     @click="onChangeIcon(item)"
                   >
-                    <IconifyIconOnline :icon="item" :type="currentActiveType" />
+                    <IconifyIconOnline :icon="currentActiveType + item" />
                   </li>
                 </ul>
               </el-scrollbar>
@@ -185,6 +186,9 @@ watch(
 .icon-item {
   &:hover {
     border-color: var(--el-color-primary);
+    color: var(--el-color-primary);
+    transition: all 0.4s;
+    transform: scaleX(1.05);
   }
 }
 
