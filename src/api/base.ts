@@ -129,6 +129,17 @@ export default abstract class BaseRequest {
       });
   }
   /**
+   * http request 无遮挡
+   * @returns
+   */
+  public requestNonLoading<T, P>(
+    method: RequestMethods,
+    url: string,
+    params?: P
+  ): Promise<T> {
+    return http.request<T>(method, this.getBaseUrl().trim() + url, params);
+  }
+  /**
    * file download
    * @param method method
    * @param url url

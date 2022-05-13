@@ -7,6 +7,6 @@ export const TableOpera = opera;
 export const TableView = tableView;
 export default {
   SearchView,
-  opera,
+  TableOpera,
   TableView
 };

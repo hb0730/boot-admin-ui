@@ -1,179 +1,264 @@
 <script setup lang="ts">
 import { onMounted, reactive, ref } from "vue";
 import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
-import DeptEdit from "./edit/index.vue";
-import { Dept, DeptTree } from "/@/api/model/system/dept_model";
+import { dictStoreHook } from "/@/store/modules/dict";
+import { SearchView, TableOpera } from "/@/components/searchTable";
+import { filterDict } from "/@/utils/utils";
+import Edit from "./modules/edit.vue";
 import { deptApi } from "/@/api/system/dept";
 import { warnMessage } from "/@/utils/message";
-import { ElTree } from "element-plus";
 import { confirm } from "/@/utils/message/box";
-const treeRef = ref<InstanceType<typeof ElTree>>();
-const permission = reactive({
-  add: ["dept:save"],
-  edit: ["dept:update"],
-  delete: ["dept:delete"]
-});
-const pageData = reactive<{
-  i: number;
-  isUpdate: boolean;
-  checkedId: string;
-  treeData: DeptTree[];
-  treeProps: any;
-  deptInfo: Dept;
-}>({
-  i: 0,
-  isUpdate: false,
-  checkedId: "",
-  treeData: [],
-  treeProps: {
-    children: "children",
-    label: "name"
-  },
-  deptInfo: {
-    id: "",
-    name: "",
-    leader: "",
-    phone: "",
-    email: "",
-    parentId: "-1",
-    sort: 999,
-    ancestors: "",
-    description: "",
-    isEnabled: 0
+const editRef = ref<InstanceType<typeof Edit>>();
+const pageData = reactive({
+  permission: {
+    add: ["dept:save"],
+    update: ["dept:save"],
+    delete: ["dept:delete"]
   }
 });
-const getTree = async () => {
-  pageData.treeData = await deptApi.getTreDept();
+const searchParams = reactive({
+  formInfo: {},
+  form: [
+    {
+      name: "部门名称",
+      key: "name",
+      use: true,
+      type: "input",
+      tips: "部门名称查询"
+    },
+    {
+      name: "状态",
+      key: "isEnabled",
+      use: true,
+      type: "select",
+      tips: "部门名称查询",
+      dataList: "enabledOptions"
+    }
+  ],
+  dataSource: {
+    enabledOptions: [],
+    deptTree: []
+  }
+});
+const tableParam = reactive({
+  tableData: [],
+  selectionData: [],
+  //遮挡
+  loading: false
+});
+const loadData = async () => {
+  tableParam.loading = true;
+  const result = await deptApi.getTreeDept(searchParams.formInfo);
+  tableParam.loading = false;
+  tableParam.tableData = result;
 };
-const initDeptInfo = (data: Dept) => {
+const handlerSearchForm = data => {
+  searchParams.formInfo = data;
+};
+const handlerSearch = () => {
+  loadData();
+};
+const handlerReset = data => {
+  searchParams.formInfo = data;
+  loadData();
+};
+const handlerSelectionChange = selection => {
+  tableParam.selectionData = selection;
+};
+/**
+ * cell 修改
+ */
+const handlerEdit = (data?: any) => {
   if (data) {
-    pageData.deptInfo = data;
+    editRef.value.open("edit", data, searchParams.dataSource);
   } else {
-    pageData.deptInfo = {
-      id: "",
-      name: "",
-      leader: "",
-      phone: "",
-      email: "",
-      parentId: "-1",
-      sort: 999,
-      ancestors: "",
-      description: "",
-      isEnabled: 0
-    };
-  }
-};
-const handleNodeChangeCheckEvent = (data, checked: boolean) => {
-  pageData.i++;
-  if (pageData.i % 2 === 0) {
-    if (checked) {
-      pageData.checkedId = data.id;
-      treeRef.value!.setCheckedNodes([]);
-      treeRef.value!.setCheckedNodes([data]);
+    if (tableParam.selectionData && tableParam.selectionData.length == 1) {
+      editRef.value.open(
+        "edit",
+        tableParam.selectionData[0],
+        searchParams.dataSource
+      );
     } else {
-      treeRef.value!.setCheckedNodes([]);
+      warnMessage("请正确选择");
     }
   }
 };
-const handleNodeCheckClickEvent = (data, _) => {
-  pageData.deptInfo = data;
-  initDeptInfo(data);
-  pageData.isUpdate = true;
-};
-const handlerSave = () => {
-  const nodes = treeRef.value!.getCheckedNodes();
-  let parentId = "";
-  if (nodes.length > 0) {
-    parentId = nodes[0].id;
+const handlerAdd = (data?: any) => {
+  if (data) {
+    editRef.value.open("add", data, searchParams.dataSource);
   } else {
-    parentId = "-1";
+    if (tableParam.selectionData && tableParam.selectionData.length == 1) {
+      editRef.value.open(
+        "add",
+        tableParam.selectionData[0],
+        searchParams.dataSource
+      );
+    } else if (
+      (tableParam.selectionData && tableParam.selectionData.length === 0) ||
+      !tableParam.selectionData
+    ) {
+      editRef.value.open("add", { id: -1 }, searchParams.dataSource);
+    } else {
+      warnMessage("请正确选择");
+    }
   }
-  initDeptInfo(null);
-  pageData.deptInfo.parentId = parentId;
-  pageData.isUpdate = false;
 };
-const handlerRefreshDept = () => {
-  getTree();
-  initDeptInfo(null);
-  pageData.isUpdate = false;
+const handlerDelete = (data?: any) => {
+  if (data && data.length > 0) {
+    handlerRemove([data.id]);
+  } else {
+    handlerRemove(tableParam.selectionData.map(v => v.id));
+  }
 };
-const handlerDelete = () => {
-  const ids = treeRef.value!.getCheckedKeys();
-  if (ids.length < 0) {
+const handlerRemove = (ids: string[]) => {
+  if (ids && ids.length > 0) {
+    confirm("是否删除及其下级部门")
+      .then(() => {
+        deptApi.deleteBatch(ids).then(res => {
+          if (res !== "fail") {
+            loadData();
+          }
+        });
+      })
+      .catch(() => {});
+  } else {
     warnMessage("请选择");
-    return;
   }
-  confirm("是否要删除已选择数据")
-    .then(() => {
-      deptDelete(ids[0].toString());
-    })
-    .catch(() => {});
 };
-const deptDelete = async (id: string) => {
-  await deptApi.deleteById(id);
-  handlerRefreshDept();
+/**
+ * 字典的启用状态
+ */
+const getEnableOptions = () => {
+  const result = dictStoreHook().getEntry("sys_common_status");
+  searchParams.dataSource.enabledOptions = result || [];
+};
+/**
+ * 全部的部门树
+ */
+const getDeptTree = async () => {
+  searchParams.dataSource.deptTree = await deptApi.getTreDeptAll();
 };
 onMounted(() => {
-  getTree();
+  loadData();
+  getDeptTree();
+  getEnableOptions();
 });
 </script>
 
 <template>
-  <div>
-    <el-row>
-      <el-col :span="14">
-        <el-card shadow="never">
-          <el-row>
-            <el-col :span="24">
-              <el-button
-                type="primary"
-                size="large"
-                :icon="useRenderIcon('iconify-fa-check')"
-                @click="handlerSave"
-                v-auth="permission.add"
-                plain
-                >添加</el-button
-              >
-              <el-button
-                type="danger"
-                size="large"
-                :icon="useRenderIcon('iconify-fa-trash')"
-                @click="handlerDelete"
-                v-auth="permission.delete"
-                plain
-                >删除</el-button
-              >
-            </el-col>
-          </el-row>
-          <el-row style="padding-top: 10%">
-            <el-col>
-              <el-tree
-                :data="pageData.treeData"
-                show-checkbox
-                ref="treeRef"
-                node-key="id"
-                :props="pageData.treeProps"
-                check-strictly
-                :highlight-current="true"
-                :expand-on-click-node="true"
-                default-expand-all
-                @check-change="handleNodeChangeCheckEvent"
-                @check="handleNodeCheckClickEvent"
-              ></el-tree>
-            </el-col>
-          </el-row>
-        </el-card>
-      </el-col>
-      <el-col :span="10">
-        <DeptEdit
-          :dept-info="pageData.deptInfo"
-          :is-update="pageData.isUpdate"
-          :tree-data="pageData.treeData"
-          @refresh-dept="handlerRefreshDept"
-        ></DeptEdit>
-      </el-col>
-    </el-row>
-  </div>
+  <el-card shadow="never" :span="18">
+    <!-- 查询区域 -->
+    <search-view
+      :search-form-config="searchParams.form"
+      :data-source="searchParams.dataSource"
+      @get-search-form="handlerSearchForm"
+      @search-run="handlerSearch"
+      @search-reset="handlerReset"
+    />
+    <!--opera-->
+    <table-opera>
+      <template v-slot:opera-left>
+        <!---->
+        <el-button
+          type="primary"
+          :icon="useRenderIcon('plus')"
+          v-auth="pageData.permission.add"
+          @click="handlerAdd()"
+          >新增</el-button
+        >
+        <el-button
+          type="success"
+          :icon="useRenderIcon('edit')"
+          v-auth="pageData.permission.update"
+          @click="handlerEdit()"
+          >修改</el-button
+        >
+        <el-button
+          type="danger"
+          :icon="useRenderIcon('delete')"
+          v-auth="pageData.permission.delete"
+          @click="handlerDelete()"
+          >删除</el-button
+        >
+        <el-button type="warning" :icon="useRenderIcon('download')"
+          >导出</el-button
+        >
+      </template>
+      <template v-slot:opera-right>
+        <!---->
+        <el-button
+          size="default"
+          title="刷新"
+          circle
+          :icon="useRenderIcon('refresh-right')"
+          @click="loadData"
+        />
+      </template>
+    </table-opera>
+    <!-- table区域 -->
+    <div>
+      <el-table
+        v-loading="tableParam.loading"
+        :data="tableParam.tableData"
+        row-key="id"
+        style="width: 100%"
+        @selection-change="handlerSelectionChange"
+      >
+        <!----->
+        <el-table-column type="selection" />
+        <el-table-column prop="name" label="部门名称" />
+        <el-table-column prop="sort" label="排序" />
+        <el-table-column prop="isEnabled" label="状态">
+          <template #default="scope">
+            <el-tag
+              :type="scope.row.isEnabled === 1 ? 'success' : 'danger'"
+              disable-transitions
+              >{{
+                filterDict(
+                  searchParams.dataSource.enabledOptions,
+                  scope.row.isEnabled.toString()
+                )?.label
+              }}</el-tag
+            >
+          </template>
+        </el-table-column>
+        <el-table-column prop="createTime" label="创建时间" align="center" />
+        <el-table-column
+          label="操作"
+          align="center"
+          class-name="small-padding fixed-width"
+        >
+          <template v-slot="scope">
+            <el-button
+              size="small"
+              type="text"
+              :icon="useRenderIcon('edit')"
+              @click="handlerEdit(scope.row)"
+              v-auth="pageData.permission.update"
+              >修改</el-button
+            >
+            <el-button
+              size="small"
+              type="text"
+              :icon="useRenderIcon('plus')"
+              @click="handlerAdd(scope.row)"
+              v-auth="pageData.permission.add"
+              >新增</el-button
+            >
+            <el-button
+              type="text"
+              size="small"
+              :icon="useRenderIcon('delete')"
+              v-auth="pageData.permission.delete"
+              @click="handlerDelete(scope.row)"
+              >删除</el-button
+            >
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+    <edit ref="editRef" @ok="loadData" @close="loadData" />
+  </el-card>
 </template>
 
 <style scoped></style>

@@ -26,6 +26,8 @@ import Monitor from "@iconify-icons/ep/monitor";
 import Search from "@iconify-icons/ep/search";
 import Lock from "@iconify-icons/ep/lock";
 import Edit from "@iconify-icons/ep/edit";
+import Download from "@iconify-icons/ep/download";
+import Upload from "@iconify-icons/ep/upload";
 
 addIcon("check", Check);
 addIcon("home-filled", HomeFilled);
@@ -51,6 +53,8 @@ addIcon("monitor", Monitor);
 addIcon("search", Search);
 addIcon("lock", Lock);
 addIcon("edit", Edit);
+addIcon("download", Download);
+addIcon("upload", Upload);
 
 // remixicon
 import arrowRightSLine from "@iconify-icons/ri/arrow-right-s-line";

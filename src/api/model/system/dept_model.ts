@@ -1,3 +1,5 @@
+import { BaseQuery } from "../domain";
+
 export interface Dept {
   id: string;
   name: string;
@@ -12,4 +14,9 @@ export interface Dept {
 }
 export interface DeptTree extends Dept {
   children: DeptTree[];
+}
+
+export interface DeptQuery extends BaseQuery {
+  name?: string;
+  isEnabled?: string;
 }

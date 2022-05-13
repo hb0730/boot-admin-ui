@@ -48,7 +48,8 @@ import {
   ElPagination,
   ElDialog,
   ElUpload,
-  ElDatePicker
+  ElDatePicker,
+  ElTreeSelect
 } from "element-plus";
 
 // Directives
@@ -103,7 +104,8 @@ const components = [
   ElUpload,
   ElDatePicker,
   ElDialog,
-  ElCard
+  ElCard,
+  ElTreeSelect
 ];
 
 export function useElementPlus(app: App) {

@@ -69,55 +69,66 @@ const _searchReset = function () {
 </script>
 
 <template>
-  <el-row>
-    <!---->
-    <el-form ref="searchForm" :inline="true">
-      <el-row :gutter="24">
-        <template v-for="(item, i) in formField">
+  <!---->
+  <el-form ref="searchForm" :inline="true">
+    <el-row :gutter="24">
+      <!--eslint-disable-next-line-->
+      <template v-for="(item, i) in formField">
+        <!--eslint-disable-next-line-->
+        <el-col :xl="item.xl || 6" :lg="8" :md="8" :sm="12" :xs="24">
           <template v-if="item.type === 'input'">
-            <el-col
-              :key="i"
-              :xl="item.xl || 6"
-              :lg="8"
-              :md="8"
-              :sm="12"
-              :xs="24"
-            >
-              <el-form-item :label="item.name">
-                <el-input
-                  v-model="pageData.searchForm[item.key]"
-                  :placeholder="item.tips"
-                  :max-length="item.max || max"
-                  @change="_searchChange(item)"
-                />
-              </el-form-item>
-            </el-col>
+            <el-form-item :label="item.name">
+              <el-input
+                v-model="pageData.searchForm[item.key]"
+                :placeholder="item.tips"
+                :max-length="item.max || max"
+                clearable
+                @change="_searchChange(item)"
+              />
+            </el-form-item>
           </template>
-        </template>
-        <el-col v-show="isSearchAuth" :md="8" :sm="12" :xs="24">
-          <span
-            style="overflow: hidden"
-            class="table-page-search-submitButtons"
-          >
-            <el-button
-              plain
-              type="primary"
-              :icon="useRenderIcon('iconify-fa-search')"
-              @click="_search"
-              >查询</el-button
-            >
-            <el-button
-              plain
-              type="primary"
-              :icon="useRenderIcon('iconify-refreshLine')"
-              @click="_searchReset"
-              >重置</el-button
-            >
-          </span>
+          <template v-if="item.type === 'select'">
+            <el-form-item :label="item.name">
+              <!----->
+              <el-select
+                v-model="pageData.searchForm[item.key]"
+                :filterable="item.options ? item.options.showSearch : false"
+                clearable
+                :placeholder="item.tips"
+                style="width: 100%"
+                @change="_searchChange(item)"
+              >
+                <el-option
+                  v-for="sub in dataSource[item.dataList]"
+                  :key="sub.value"
+                  :value="sub.value"
+                  :label="sub.label"
+                />
+              </el-select>
+            </el-form-item>
+          </template>
         </el-col>
-      </el-row>
-    </el-form>
-  </el-row>
+      </template>
+      <el-col v-show="isSearchAuth" :md="8" :sm="12" :xs="24">
+        <span style="overflow: hidden" class="table-page-search-submitButtons">
+          <el-button
+            plain
+            type="primary"
+            :icon="useRenderIcon('iconify-fa-search')"
+            @click="_search"
+            >查询</el-button
+          >
+          <el-button
+            plain
+            type="primary"
+            :icon="useRenderIcon('iconify-refreshLine')"
+            @click="_searchReset"
+            >重置</el-button
+          >
+        </span>
+      </el-col>
+    </el-row>
+  </el-form>
 </template>
 
 <style scoped>
