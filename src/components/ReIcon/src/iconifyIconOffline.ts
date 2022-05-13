@@ -24,6 +24,8 @@ import Rank from "@iconify-icons/ep/rank";
 import videoPlay from "@iconify-icons/ep/video-play";
 import Monitor from "@iconify-icons/ep/monitor";
 import Search from "@iconify-icons/ep/search";
+import Lock from "@iconify-icons/ep/lock";
+import Edit from "@iconify-icons/ep/edit";
 
 addIcon("check", Check);
 addIcon("home-filled", HomeFilled);
@@ -47,6 +49,8 @@ addIcon("video-play", videoPlay);
 addIcon("rank", Rank);
 addIcon("monitor", Monitor);
 addIcon("search", Search);
+addIcon("lock", Lock);
+addIcon("edit", Edit);
 
 // remixicon
 import arrowRightSLine from "@iconify-icons/ri/arrow-right-s-line";
