@@ -20,12 +20,14 @@ const permission = reactive({
   delete: ["dict:entry:update"]
 });
 const pageData = reactive<{
+  loading: boolean;
   entryDataList: DictEntry[];
   isUpdate: boolean;
   dialogVisible: boolean;
   searchEntryInfo: DictEntryQuery;
   dictEntryInfo: DictEntry;
 }>({
+  loading: false,
   entryDataList: [],
   isUpdate: false,
   dialogVisible: false,
@@ -56,14 +58,27 @@ const props = defineProps({
 });
 const ifAddEntry = toRef(props, "parentId");
 const parent = toRef(props, "parent");
-const sizeChange = (pageSize: number) => {};
-const currentChange = (pageNum: number) => {};
-const getPage = async () => {
-  const result: Page<DictEntry[]> = await dictEntryApi.page(
-    pageData.searchEntryInfo
-  );
-  pageData.entryDataList = result.records;
-  pageData.searchEntryInfo.total = Number(result.total);
+const sizeChange = (pageSize: number) => {
+  pageData.searchEntryInfo.pageSize = pageSize;
+  getPage();
+};
+const currentChange = (pageNum: number) => {
+  pageData.searchEntryInfo.pageNum = pageNum;
+  getPage();
+};
+const getPage = () => {
+  pageData.loading = true;
+  dictEntryApi
+    .page(pageData.searchEntryInfo)
+    .then((res: Page<DictEntry[]> | string) => {
+      if (res !== "fail") {
+        pageData.entryDataList = (res as Page<DictEntry[]>).records;
+        pageData.searchEntryInfo.total = Number(
+          (res as Page<DictEntry[]>).total
+        );
+      }
+    })
+    .finally(() => (pageData.loading = false));
 };
 const initDictEntry = (data: DictEntry) => {
   if (data) {
@@ -152,6 +167,7 @@ watch(
         :data="pageData.entryDataList"
         style="width: 100%"
         ref="dictEntryListRef"
+        v-loading="pageData.loading"
         border
         :fit="true"
         highlight-current-row
@@ -164,7 +180,7 @@ watch(
           resizable
           :show-overflow-tooltip="true"
           align="center"
-        ></el-table-column>
+        />
         <el-table-column
           prop="value"
           label="值"
@@ -172,7 +188,7 @@ watch(
           resizable
           :show-overflow-tooltip="true"
           align="center"
-        ></el-table-column>
+        />
         <el-table-column
           prop="sort"
           label="排序"
@@ -180,7 +196,7 @@ watch(
           resizable
           :show-overflow-tooltip="true"
           align="center"
-        ></el-table-column>
+        />
         <el-table-column
           prop="description"
           label="备注"
@@ -188,7 +204,7 @@ watch(
           resizable
           :show-overflow-tooltip="true"
           align="center"
-        ></el-table-column>
+        />
         <el-table-column
           label="操作"
           sortable
@@ -204,7 +220,7 @@ watch(
               @click="handlerEdit(scope.row)"
               v-auth="permission.edit"
               size="small"
-            ></el-button>
+            />
             <el-button
               title="删除"
               type="danger"
@@ -212,7 +228,7 @@ watch(
               @click="handlerDelete(scope.row)"
               v-auth="permission.delete"
               size="small"
-            ></el-button>
+            />
           </template>
         </el-table-column>
       </el-table>
@@ -224,7 +240,7 @@ watch(
         :total="pageData.searchEntryInfo.total"
         @size-change="sizeChange"
         @current-change="currentChange"
-      ></el-pagination>
+      />
     </el-card>
   </el-col>
   <dict-entry-edit
@@ -233,7 +249,7 @@ watch(
     :dict-entry-info="pageData.dictEntryInfo"
     :dict-info="parent"
     @refresh="handlerRefresh"
-  ></dict-entry-edit>
+  />
 </template>
 
 <style scoped></style>

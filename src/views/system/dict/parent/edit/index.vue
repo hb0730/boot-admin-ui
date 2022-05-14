@@ -7,6 +7,7 @@ import { Dict } from "/@/api/model/system/dict_model";
 import { ElForm } from "element-plus";
 import { successMessage, warnMessage } from "/@/utils/message";
 import { dictApi } from "/@/api/system/dict";
+import SpanLoading from "/@/components/loading";
 const permission = reactive({
   update: ["dict:save", "dict:update"]
 });
@@ -15,6 +16,7 @@ const emit = defineEmits<{
 }>();
 const dictFormRef = ref<InstanceType<typeof ElForm>>();
 const pageData = reactive({
+  loading: false,
   dictRules: {
     name: [{ required: true, message: "请输入名称", trigger: "blur" }],
     type: [{ required: true, message: "请输入类型", trigger: "blur" }]
@@ -59,15 +61,25 @@ const handlerSave = () => {
     }
   });
 };
-const save = async () => {
-  await dictApi.save(dictInfo.value);
-  successMessage("保存成功");
-  handleDialogClose();
+const save = () => {
+  pageData.loading = true;
+  dictApi
+    .save(dictInfo.value)
+    .then(res => {
+      successMessage("保存成功");
+      handleDialogClose();
+    })
+    .finally(() => (pageData.loading = false));
 };
-const update = async () => {
-  await dictApi.updateById(dictInfo.value.id, dictInfo.value);
-  successMessage("保存成功");
-  handleDialogClose();
+const update = () => {
+  pageData.loading = true;
+  dictApi
+    .updateById(dictInfo.value.id, dictInfo.value)
+    .then(res => {
+      successMessage("修改成功");
+      handleDialogClose();
+    })
+    .finally(() => (pageData.loading = false));
 };
 </script>
 
@@ -78,30 +90,33 @@ const update = async () => {
     v-model="dialogVisible"
     :before-close="handleDialogClose"
   >
-    <el-form
-      label-width="auto"
-      :model="dictInfo"
-      :label-position="position"
-      ref="dictFormRef"
-      required-asterisk
-      :rules="pageData.dictRules"
-      center
-    >
-      <el-form-item required label="名称" prop="name">
-        <el-input v-model="dictInfo.name" clearable></el-input>
-      </el-form-item>
-      <el-form-item required label="类型" prop="type">
-        <el-input v-model="dictInfo.type" clearable></el-input>
-      </el-form-item>
-      <el-form-item label="备注" prop="description">
-        <el-input
-          type="textarea"
-          v-model="dictInfo.description"
-          placeholder="备注"
-          clearable
-        ></el-input>
-      </el-form-item>
-    </el-form>
+    <span-loading v-loading="pageData.loading">
+      <el-form
+        label-width="auto"
+        :model="dictInfo"
+        :label-position="position"
+        ref="dictFormRef"
+        required-asterisk
+        :rules="pageData.dictRules"
+        center
+      >
+        <el-form-item required label="名称" prop="name">
+          <el-input v-model="dictInfo.name" clearable />
+        </el-form-item>
+        <el-form-item required label="类型" prop="type">
+          <el-input v-model="dictInfo.type" clearable />
+        </el-form-item>
+        <el-form-item label="备注" prop="description">
+          <el-input
+            type="textarea"
+            v-model="dictInfo.description"
+            placeholder="备注"
+            clearable
+          />
+        </el-form-item>
+      </el-form>
+    </span-loading>
+
     <template #footer>
       <div class="dialog-footer">
         <el-button

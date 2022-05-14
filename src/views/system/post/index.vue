@@ -300,7 +300,7 @@ onMounted(() => {
           @click="handlerDelete()"
           >删除</el-button
         >
-        <button class="el-button el-button--default" style="padding: 0 0 0 0px">
+        <button class="el-button" style="padding: 0 0 0 0px">
           <el-upload
             ref="uploadRef"
             class="upload-demo"
