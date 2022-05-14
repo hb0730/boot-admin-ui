@@ -86,6 +86,7 @@ const tableParam = reactive({
       sortable: true,
       resizable: true,
       type: "txt",
+      width: 120,
       showOverflowTooltip: true
     },
     {
@@ -96,6 +97,7 @@ const tableParam = reactive({
       sortable: true,
       resizable: true,
       type: "select",
+      width: 120,
       showOverflowTooltip: true
     },
     {
@@ -105,6 +107,7 @@ const tableParam = reactive({
       sortable: true,
       resizable: true,
       type: "txt",
+      width: 120,
       showOverflowTooltip: true
     },
     {
@@ -114,6 +117,7 @@ const tableParam = reactive({
       sortable: true,
       resizable: true,
       type: "txt",
+      width: 120,
       showOverflowTooltip: true
     },
     {
@@ -123,6 +127,7 @@ const tableParam = reactive({
       sortable: true,
       resizable: true,
       type: "txt",
+      width: 120,
       showOverflowTooltip: true
     },
     {
@@ -132,6 +137,7 @@ const tableParam = reactive({
       sortable: true,
       resizable: true,
       type: "tag",
+      width: 120,
       showOverflowTooltip: true
     },
     {
@@ -141,11 +147,13 @@ const tableParam = reactive({
       sortable: true,
       resizable: true,
       type: "txt",
+      width: 120,
       showOverflowTooltip: true
     },
     {
       label: "操作",
       prop: "",
+      width: 200,
       align: "center",
       sortable: false,
       resizable: true,
@@ -253,6 +261,21 @@ const handlerRemove = (ids: string[]) => {
       })
       .catch(() => {});
   }
+};
+const handlerExec = data => {
+  confirm("是否立即执行?")
+    .then(() => {
+      tableParam.loading = true;
+      jobApi
+        .exec(data.id)
+        .then(res => {
+          if (res !== "fail") {
+            successMessage("执行成功!");
+          }
+        })
+        .finally(() => (tableParam.loading = false));
+    })
+    .catch(() => {});
 };
 const handlerLog = () => {
   router.push("/monitor/log/job");
@@ -403,6 +426,7 @@ onMounted(() => {
             :resizable="item.resizable"
             :show-overflow-tooltip="item.showOverflowTooltip"
             :align="item.align"
+            :width="item.width"
           >
             <!---->
             <template v-slot="scope">
@@ -413,6 +437,14 @@ onMounted(() => {
                 v-auth="pageData.permission.update"
                 @click="handlerEdit(scope.row)"
                 >修改</el-button
+              >
+              <el-button
+                type="text"
+                size="small"
+                :icon="useRenderIcon('fa-play-circle')"
+                @click="handlerExec(scope.row)"
+                v-auth="pageData.permission.exec"
+                >执行</el-button
               >
               <el-button
                 type="text"
