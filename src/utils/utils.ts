@@ -38,3 +38,19 @@ export function filterObj(obj) {
   }
   return obj;
 }
+/**
+ * 类型转换
+ * @param source
+ * @param target
+ * @returns
+ */
+export function convertType(source: any, target?: string): any {
+  switch (target) {
+    case "String":
+      return source.toString();
+    case "Number":
+      return Number(source);
+    default:
+      return source.toString();
+  }
+}

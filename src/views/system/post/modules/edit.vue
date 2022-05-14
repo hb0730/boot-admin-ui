@@ -4,6 +4,7 @@ import { reactive, ref } from "vue";
 import SpanLoading from "/@/components/loading";
 import { warnMessage } from "/@/utils/message";
 import { postApi } from "/@/api/system/post";
+import { convertType } from "/@/utils/utils";
 const infoForm = ref<InstanceType<typeof ElForm>>();
 const emit = defineEmits<{ (e: "close"): void; (e: "ok"): void }>();
 const pageData = reactive({
@@ -35,6 +36,7 @@ const formParam = reactive({
       name: "岗位状态",
       key: "isEnabled",
       type: "select-radio",
+      valueType: "Number",
       dataList: "enabledOptions",
       tips: "请选择"
     },
@@ -190,10 +192,10 @@ defineExpose({ open });
             <template v-else-if="item.type === 'select-radio'">
               <el-radio-group v-model="formParam.formData[item.key]">
                 <el-radio
-                  v-for="(items, i) in formParam.dataSource[item.dataList]"
-                  :label="Number(items.value)"
-                  :key="i"
-                  >{{ items.label }}</el-radio
+                  v-for="option in formParam.dataSource[item.dataList]"
+                  :label="convertType(option.value, item.valueType)"
+                  :key="option.value"
+                  >{{ option.label }}</el-radio
                 >
               </el-radio-group>
             </template>
