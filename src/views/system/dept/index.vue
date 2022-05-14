@@ -31,7 +31,7 @@ const searchParams = reactive({
       key: "isEnabled",
       use: true,
       type: "select",
-      tips: "部门名称查询",
+      tips: "请选择",
       dataList: "enabledOptions"
     }
   ],
@@ -202,6 +202,7 @@ onMounted(() => {
         :data="tableParam.tableData"
         row-key="id"
         style="width: 100%"
+        border
         @selection-change="handlerSelectionChange"
       >
         <!----->
@@ -257,7 +258,7 @@ onMounted(() => {
         </el-table-column>
       </el-table>
     </div>
-    <edit ref="editRef" @ok="loadData" @close="loadData" />
+    <edit ref="editRef" @ok="loadData" />
   </el-card>
 </template>
 

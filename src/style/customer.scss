@@ -37,7 +37,7 @@
   min-height: 40px;
   height: auto;
   overflow: hidden;
-  margin-bottom: 5px;
+  margin: 10px 0;
 }
 
 .demo-table-expand {
@@ -71,4 +71,12 @@
   .el-input-group__prepend {
     border: 0px solid #dcdfe6;
   }
+}
+
+.pagination-container {
+  float: right;
+  position: relative;
+  margin-bottom: 10px;
+  margin-top: 15px;
+  padding: 10px 20px !important;
 }
