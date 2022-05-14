@@ -251,6 +251,14 @@ const handlerUpload = async val => {
     })
     .finally(() => (tableParam.loading = false));
 };
+const sizeChange = (pageSize: number) => {
+  tableParam.pagination.pageSize = pageSize;
+  loadData();
+};
+const currentChange = (pageNum: number) => {
+  tableParam.pagination.current = pageNum;
+  loadData();
+};
 onMounted(() => {
   loadData(1);
   getEnableOptions();
@@ -417,6 +425,8 @@ onMounted(() => {
           layout="total,sizes, prev, pager, next, jumper"
           background
           v-model:total="tableParam.pagination.total"
+          @current-change="currentChange"
+          @size-change="sizeChange"
         />
       </div>
     </div>
