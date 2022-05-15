@@ -193,7 +193,7 @@ const getEnableOptions = () => {
     dictStoreHook().getEntry("sys_common_status");
 };
 const loadPermission = () => {
-  permissionParam.loading = false;
+  permissionParam.loading = true;
   menuApi
     .getMenuPermissionTree()
     .then((res: string | MenuPermissionTree[]) => {
@@ -498,6 +498,7 @@ onMounted(() => {
             </div>
             <el-divider border-style="dashed" />
             <el-tree
+              v-loading="permissionParam.loading"
               class="filter-tree"
               ref="permissionTreeRef"
               node-key="id"
