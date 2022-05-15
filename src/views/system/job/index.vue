@@ -194,12 +194,12 @@ const loadData = (page?: Number) => {
 const getQueryParams = () => {
   const sqp = {};
   const param = Object.assign(sqp, searchParam.formInfo);
-  param.current = tableParam.pagination.current;
-  param.size = tableParam.pagination.pageSize;
+  param.pageNum = tableParam.pagination.current;
+  param.pageSize = tableParam.pagination.pageSize;
   return filterObj(param);
 };
 const getEnableOptions = () => {
-  const result = dictStoreHook().getEntry("sys_common_status");
+  const result = dictStoreHook().getEntry("sys_enable");
   searchParam.dataSource.enabledOptions = result || [];
 };
 const getGroupOptions = () => {

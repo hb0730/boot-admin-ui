@@ -16,11 +16,8 @@ const handlerDictClick = (id: string, data: Dict) => {
 <template>
   <div>
     <el-row>
-      <dict-parent @row-click="handlerDictClick"></dict-parent>
-      <dict-entry-list
-        :parent-id="pageData.parentId"
-        :parent="pageData.data"
-      ></dict-entry-list>
+      <dict-parent @row-click="handlerDictClick" />
+      <dict-entry-list :parent-id="pageData.parentId" :parent="pageData.data" />
     </el-row>
   </div>
 </template>

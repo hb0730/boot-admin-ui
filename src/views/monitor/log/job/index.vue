@@ -34,7 +34,7 @@ const pageData = reactive<{
 });
 const getDict = () => {
   pageData.groupOptions = dictStoreHook().getEntry("sys_job_group");
-  pageData.isEnabledOptions = dictStoreHook().getEntry("sys_common_status");
+  pageData.isEnabledOptions = dictStoreHook().getEntry("sys_enable");
 };
 const getPage = async () => {
   if (pageData.dateTimePicker && pageData.dateTimePicker.length > 0) {

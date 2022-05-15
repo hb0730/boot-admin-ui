@@ -70,7 +70,12 @@ const _searchReset = function () {
 
 <template>
   <!---->
-  <el-form ref="searchForm" :inline="true">
+  <el-form
+    ref="searchForm"
+    :inline="true"
+    label-width="auto"
+    label-position="right"
+  >
     <el-row :gutter="24">
       <!--eslint-disable-next-line-->
       <template v-for="(item, i) in formField">
@@ -105,6 +110,20 @@ const _searchReset = function () {
                   :label="sub.label"
                 />
               </el-select>
+            </el-form-item>
+          </template>
+          <template v-if="item.type === 'daterange'">
+            <el-form-item :label="item.name">
+              <el-date-picker
+                style="width: 50%"
+                v-model="pageData.searchForm[item.key]"
+                type="daterange"
+                unlink-panels
+                :start-placeholder="item.startPlaceholder"
+                :end-placeholder="item.endPlaceholder"
+                :format="item.format"
+                :value-format="item.valueFormat"
+              />
             </el-form-item>
           </template>
         </el-col>

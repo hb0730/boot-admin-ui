@@ -45,8 +45,8 @@ export function filterObj(obj) {
  * @returns
  */
 export function convertType(source: any, target?: string): any {
-  if (!source) {
-    return undefined;
+  if (source === undefined || source === null) {
+    return source;
   }
   switch (target) {
     case "String":

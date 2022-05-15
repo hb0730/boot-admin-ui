@@ -129,7 +129,7 @@ const handlerRemove = (ids: string[]) => {
  * 字典的启用状态
  */
 const getEnableOptions = () => {
-  const result = dictStoreHook().getEntry("sys_common_status");
+  const result = dictStoreHook().getEntry("sys_enable");
   searchParams.dataSource.enabledOptions = result || [];
 };
 /**

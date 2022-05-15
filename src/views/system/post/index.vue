@@ -155,15 +155,15 @@ const loadData = (page?: Number) => {
 const getQueryParams = () => {
   const sqp = {};
   const param = Object.assign(sqp, searchParam.formInfo);
-  param.current = tableParam.pagination.current;
-  param.size = tableParam.pagination.pageSize;
+  param.pageNum = tableParam.pagination.current;
+  param.pageSize = tableParam.pagination.pageSize;
   return filterObj(param);
 };
 /**
  * 字典的启用状态
  */
 const getEnableOptions = () => {
-  const result = dictStoreHook().getEntry("sys_common_status");
+  const result = dictStoreHook().getEntry("sys_enable");
   searchParam.dataSource.enabledOptions = result || [];
 };
 const handlerSearchForm = data => {
@@ -334,6 +334,7 @@ onMounted(() => {
           title="刷新"
           circle
           :icon="useRenderIcon('refresh-right')"
+          @click="loadData(1)"
         />
       </template>
     </table-opera>

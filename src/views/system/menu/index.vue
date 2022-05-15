@@ -206,7 +206,7 @@ const handlerPermissionSearch = () => {
   }
 };
 const getDict = () => {
-  pageData.isEnabledOptions = dictStoreHook().getEntry("sys_common_status");
+  pageData.isEnabledOptions = dictStoreHook().getEntry("sys_enable");
 };
 onMounted(() => {
   getMenuTree();

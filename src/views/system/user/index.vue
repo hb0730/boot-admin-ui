@@ -246,14 +246,14 @@ const loadData = (page?: any) => {
 const getQueryParams = () => {
   const sqp = {};
   const param = Object.assign(sqp, searchParam.formInfo);
-  param.current = tableParam.pagination.current;
-  param.size = tableParam.pagination.pageSize;
+  param.pageNum = tableParam.pagination.current;
+  param.pageSize = tableParam.pagination.pageSize;
   param.deptId = deptParam.current;
   return filterObj(param);
 };
 const getEnableOptions = () => {
   searchParam.dataSource.enabledOptions =
-    dictStoreHook().getEntry("sys_common_status");
+    dictStoreHook().getEntry("sys_enable");
 };
 const getGenderOptions = () => {
   searchParam.dataSource.genderOptions =
