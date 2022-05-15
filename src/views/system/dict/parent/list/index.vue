@@ -2,7 +2,7 @@
 export default { name: "DictParent" };
 </script>
 <script setup lang="ts">
-import { onMounted, reactive } from "vue";
+import { onMounted, reactive, toRef } from "vue";
 import { dictApi } from "/@/api/system/dict";
 import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
 import DictParentEdit from "../edit/index.vue";
@@ -16,6 +16,14 @@ const permission = reactive({
   delete: ["dict:update"]
 });
 const emit = defineEmits<{ (e: "rowClick", v: string, data: Dict) }>();
+const props = defineProps({
+  dataSource: {
+    require: true,
+    type: [],
+    default: []
+  }
+});
+const dataSource = toRef(props, "dataSource");
 const pageData = reactive<{
   loading: boolean;
   selection: any[];
@@ -80,7 +88,13 @@ const initDept = (data: Dict) => {
   if (data) {
     pageData.dictInfo = data;
   } else {
-    pageData.dictInfo = { id: "", name: "", type: "", description: "" };
+    pageData.dictInfo = {
+      id: "",
+      name: "",
+      type: "",
+      description: "",
+      isEnabled: 0
+    };
   }
 };
 const handlerAddNew = () => {
@@ -338,6 +352,7 @@ onMounted(() => {
     :dialog-visible="pageData.dictDialogVisible"
     :is-update="pageData.isUpdate"
     :dict-info="pageData.dictInfo"
+    :dataSource="dataSource"
     @refresh="handlerRefresh"
   />
 </template>

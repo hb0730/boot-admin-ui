@@ -54,10 +54,12 @@ const props = defineProps({
     default: null,
     type: String
   },
-  parent: Object as PropType<Dict>
+  parent: Object as PropType<Dict>,
+  dataSource: Object as PropType<[]>
 });
 const ifAddEntry = toRef(props, "parentId");
 const parent = toRef(props, "parent");
+const dataSource = toRef(props, "dataSource");
 const sizeChange = (pageSize: number) => {
   pageData.searchEntryInfo.pageSize = pageSize;
   getPage();
@@ -89,6 +91,7 @@ const initDictEntry = (data: DictEntry) => {
       parentId: parent.value.id,
       name: "",
       value: "",
+      isEnabled: 0,
       sort: 999,
       description: ""
     };
@@ -248,6 +251,7 @@ watch(
     :dialog-visible="pageData.dialogVisible"
     :dict-entry-info="pageData.dictEntryInfo"
     :dict-info="parent"
+    :dataSource="dataSource"
     @refresh="handlerRefresh"
   />
 </template>

@@ -23,6 +23,7 @@ const pageData = reactive({
   }
 });
 const props = defineProps({
+  dataSource: Object as PropType<[]>,
   dictInfo: Object as PropType<Dict>,
   isUpdate: {
     require: true,
@@ -44,6 +45,7 @@ const dialogVisible = toRef(props, "dialogVisible");
 const isUpdate = toRef(props, "isUpdate");
 const dictInfo = toRef(props, "dictInfo");
 const position = toRef(props, "position");
+const dataSource = toRef(props, "dataSource");
 const handleDialogClose = () => {
   dictFormRef.value!.clearValidate();
   emit("refresh");
@@ -105,6 +107,16 @@ const update = () => {
         </el-form-item>
         <el-form-item required label="类型" prop="type">
           <el-input v-model="dictInfo.type" clearable />
+        </el-form-item>
+        <el-form-item label="是否启用" prop="isEnabled">
+          <el-radio-group v-model="dictInfo.isEnabled">
+            <el-radio
+              v-for="(item, i) in dataSource.enabledOptions"
+              :label="Number(item.value)"
+              :key="i"
+              >{{ item.label }}</el-radio
+            >
+          </el-radio-group>
         </el-form-item>
         <el-form-item label="备注" prop="description">
           <el-input
