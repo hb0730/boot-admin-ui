@@ -98,8 +98,8 @@ watch(
 </script>
 
 <template>
-  <el-row style="padding-top: 10%">
-    <el-col>
+  <div>
+    <div style="margin-top: 10%">
       <el-form
         ref="menuFormRef"
         :model="menuInfo"
@@ -245,8 +245,8 @@ watch(
           >修改</el-button
         >
       </div>
-    </el-col>
-  </el-row>
+    </div>
+  </div>
 </template>
 
 <style scoped></style>

@@ -26,6 +26,8 @@ const treeProps = {
   label: "title"
 };
 const pageData: {
+  loading: boolean;
+  permissionLoading: boolean;
   isUpdate: boolean;
   isEnabledOptions: DictEntryCache[];
   treeData: MenuTree[];
@@ -34,6 +36,8 @@ const pageData: {
   searchPermissionInfo: Query;
   permissionList: Permission[];
 } = reactive({
+  loading: false,
+  permissionLoading: false,
   isUpdate: false,
   isEnabledOptions: [],
   treeData: [],
@@ -104,16 +108,34 @@ const setData = (data?: Menu, isupdate = false) => {
     };
   }
 };
-const getMenuTree = async () => {
-  pageData.treeData = await menuApi.getMenuTree();
+const getMenuTree = () => {
+  pageData.loading = true;
+  menuApi
+    .getMenuTree()
+    .then((res: string | MenuTree[]) => {
+      if (res !== "fail") {
+        pageData.treeData = res as MenuTree[];
+      }
+    })
+    .finally(() => {
+      pageData.loading = false;
+    });
 };
 const getMenuPermission = async (id: string) => {
-  const result: Page<Permission[]> = await permissionApi.getMenuPermission(
-    id,
-    pageData.searchPermissionInfo
-  );
-  pageData.permissionList = result.records;
-  pageData.searchPermissionInfo.total = Number(result.total);
+  pageData.permissionLoading = true;
+  permissionApi
+    .getMenuPermission(id, pageData.searchPermissionInfo)
+    .then((res: string | Page<Permission[]>) => {
+      if (res !== "fail") {
+        pageData.permissionList = (res as Page<Permission[]>).records;
+        pageData.searchPermissionInfo.total = Number(
+          (res as Page<Permission[]>).total
+        );
+      }
+    })
+    .finally(() => {
+      pageData.permissionLoading = false;
+    });
 };
 const handleNodeChangeCheckEvent = (data, checked: boolean) => {
   if (checked) {
@@ -193,62 +215,52 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="app-container">
-    <el-row>
+  <el-card shadow="never" :span="18">
+    <el-row :gutter="20">
       <el-col :span="6">
-        <el-card shadow="never">
-          <el-row>
-            <el-col :span="24">
-              <el-button
-                type="primary"
-                size="large"
-                :icon="useRenderIcon('iconify-plus')"
-                @click="addNew"
-                plain
-                v-auth="permission.add"
-                >新增</el-button
-              >
-              <el-button
-                type="danger"
-                size="large"
-                :icon="useRenderIcon('iconify-delete')"
-                @click="handlerDelete"
-                plain
-                v-auth="permission.delete"
-                >删除</el-button
-              >
-            </el-col>
-          </el-row>
-          <el-row style="padding-top: 10%">
-            <el-col>
-              <el-tree
-                :data="pageData.treeData"
-                :props="treeProps"
-                node-key="id"
-                show-checkbox
-                ref="treeRef"
-                check-strictly
-                :highlight-current="true"
-                :expand-on-click-node="true"
-                default-expand-all
-                @check-change="handleNodeChangeCheckEvent"
-              ></el-tree>
-            </el-col>
-          </el-row>
-        </el-card>
+        <div>
+          <div style="margin: 10px">
+            <el-button
+              type="primary"
+              :icon="useRenderIcon('iconify-plus')"
+              @click="addNew"
+              plain
+              v-auth="permission.add"
+              >新增</el-button
+            >
+            <el-button
+              type="danger"
+              :icon="useRenderIcon('iconify-delete')"
+              @click="handlerDelete"
+              plain
+              v-auth="permission.delete"
+              >删除</el-button
+            >
+          </div>
+          <el-tree
+            v-loading="pageData.loading"
+            :data="pageData.treeData"
+            :props="treeProps"
+            node-key="id"
+            show-checkbox
+            ref="treeRef"
+            check-strictly
+            :highlight-current="true"
+            :expand-on-click-node="true"
+            default-expand-all
+            @check-change="handleNodeChangeCheckEvent"
+          />
+        </div>
       </el-col>
       <el-col :span="8">
-        <el-card shadow="never">
-          <el-row></el-row>
-          <menuEdit
-            :tree-menu="pageData.treeData"
-            :is-update="pageData.isUpdate"
-            :menu-info="pageData.menuInfo"
-            :position="pageData.position"
-            :is-enabled-options="pageData.isEnabledOptions"
-            @new-save-success="handlerNewSaveSuccess"
-          ></menuEdit>
-        </el-card>
+        <menuEdit
+          :tree-menu="pageData.treeData"
+          :is-update="pageData.isUpdate"
+          :menu-info="pageData.menuInfo"
+          :position="pageData.position"
+          :is-enabled-options="pageData.isEnabledOptions"
+          @new-save-success="handlerNewSaveSuccess"
+        />
       </el-col>
       <el-col :span="10">
         <el-card shadow="never">
@@ -264,14 +276,14 @@ onMounted(() => {
                     v-model="pageData.searchPermissionInfo.permission"
                     clearable
                     placeholder="标识"
-                  ></el-input>
+                  />
                 </el-form-item>
                 <el-form-item label="名称">
                   <el-input
                     v-model="pageData.searchPermissionInfo.name"
                     clearable
                     placeholder="名称"
-                  ></el-input>
+                  />
                 </el-form-item>
                 <el-form-item>
                   <el-button
@@ -288,6 +300,7 @@ onMounted(() => {
           </el-row>
 
           <permissionList
+            :loading="pageData.permissionLoading"
             :table-data="pageData.permissionList"
             :search-model="pageData.searchPermissionInfo"
             :tree-menu-data="pageData.treeData"
@@ -295,11 +308,11 @@ onMounted(() => {
             @current-change="currentChange"
             @size-change="sizeChange"
             @refresh="refreshTable"
-          ></permissionList>
+          />
         </el-card>
       </el-col>
     </el-row>
-  </div>
+  </el-card>
 </template>
 
 <style scoped></style>

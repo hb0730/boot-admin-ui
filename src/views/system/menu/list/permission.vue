@@ -58,6 +58,11 @@ const pageData = reactive<{
   }
 });
 const props = defineProps({
+  loading: {
+    require: false,
+    type: Boolean,
+    default: false
+  },
   treeMenuData: Object as PropType<MenuTree[]>,
   tableData: Object as PropType<Permission[]>,
   searchModel: Object as PropType<Query>,
@@ -68,6 +73,7 @@ const emit = defineEmits<{
   (e: "currentChange", v: number): void;
   (e: "refresh"): void;
 }>();
+const loading = toRef(props, "loading");
 const treeMenuData = toRef(props, "treeMenuData");
 const tableData = toRef(props, "tableData");
 const searchModel: Ref<Query> = toRef(props, "searchModel");
@@ -217,11 +223,12 @@ const permissionDelete = async (ids: string[]) => {
             circle
             :icon="useRenderIcon('iconify-fa-refresh')"
             @click="handlerRefreshTable"
-          ></el-button>
+          />
         </div>
       </div>
       <el-col>
         <el-table
+          v-loading="loading"
           :data="tableData"
           ref="permissionTableRef"
           check-strictly
@@ -238,7 +245,7 @@ const permissionDelete = async (ids: string[]) => {
             resizable
             :show-overflow-tooltip="true"
             align="center"
-          ></el-table-column>
+          />
           <el-table-column
             prop="name"
             label="名称"
@@ -246,7 +253,7 @@ const permissionDelete = async (ids: string[]) => {
             resizable
             :show-overflow-tooltip="true"
             align="center"
-          ></el-table-column>
+          />
           <el-table-column
             prop="permission"
             label="标识"
@@ -254,7 +261,7 @@ const permissionDelete = async (ids: string[]) => {
             resizable
             :show-overflow-tooltip="true"
             align="center"
-          ></el-table-column>
+          />
           <el-table-column
             prop="isEnabled"
             label="状态"
@@ -278,8 +285,7 @@ const permissionDelete = async (ids: string[]) => {
             resizable
             :show-overflow-tooltip="true"
             align="center"
-          >
-          </el-table-column>
+          />
         </el-table>
         <el-pagination
           v-model:currentPage="searchModel.pageNum"
@@ -289,7 +295,7 @@ const permissionDelete = async (ids: string[]) => {
           :total="searchModel.total"
           @size-change="sizeChange"
           @current-change="currentChange"
-        ></el-pagination>
+        />
       </el-col>
     </el-row>
     <el-dialog
@@ -309,13 +315,10 @@ const permissionDelete = async (ids: string[]) => {
         center
       >
         <el-form-item required label="名称: " prop="name">
-          <el-input v-model="pageData.permissionInfo.name" clearable></el-input>
+          <el-input v-model="pageData.permissionInfo.name" clearable />
         </el-form-item>
         <el-form-item required label="权限标识: " prop="permission">
-          <el-input
-            v-model="pageData.permissionInfo.permission"
-            clearable
-          ></el-input>
+          <el-input v-model="pageData.permissionInfo.permission" clearable />
         </el-form-item>
         <el-form-item required label="所属菜单: " prop="menuId">
           <TreeSelect
@@ -328,7 +331,7 @@ const permissionDelete = async (ids: string[]) => {
             :tree-data="treeMenuData"
             :field-names="treeProps"
             :getPopupContainer="triggerNode => triggerNode.parentNode"
-          ></TreeSelect>
+          />
         </el-form-item>
         <el-form-item label="排序: " prop="sort">
           <el-input-number
@@ -337,7 +340,7 @@ const permissionDelete = async (ids: string[]) => {
             v-model="pageData.permissionInfo.sort"
             placeholder="排序"
             clearable
-          ></el-input-number>
+          />
         </el-form-item>
         <el-form-item label="备注: " prop="description">
           <el-input
@@ -345,7 +348,7 @@ const permissionDelete = async (ids: string[]) => {
             v-model="pageData.permissionInfo.description"
             placeholder="备注"
             clearable
-          ></el-input>
+          />
         </el-form-item>
         <el-form-item label="是否启用:" prop="isEnabled">
           <el-radio-group v-model="pageData.permissionInfo.isEnabled">
