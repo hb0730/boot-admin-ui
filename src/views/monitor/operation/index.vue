@@ -199,6 +199,14 @@ const loadData = (page?: any) => {
 const getQueryParams = () => {
   const sqp = {};
   const param = Object.assign(sqp, searchParam.formInfo);
+  if (
+    searchParam.formInfo.dateTimePicker &&
+    searchParam.formInfo.dateTimePicker.length > 0
+  ) {
+    param.dateTimePicker = undefined;
+    param.startTime = searchParam.formInfo.dateTimePicker[0] + " 00:00:00";
+    param.endTime = searchParam.formInfo.dateTimePicker[1] + " 23:59:59";
+  }
   param.pageNum = tableParam.pagination.current;
   param.pageSize = tableParam.pagination.pageSize;
   return filterObj(param);
