@@ -5,7 +5,6 @@ import { authAPi } from "/@/api/system/auth";
 import { LoginUser } from "/@/api/model/system/auth_model";
 import { cookies } from "/@/utils/storage/cookie";
 import dayjs from "dayjs";
-import router from "/@/router";
 import { initRouter } from "/@/router/utils";
 import { dictStoreHook } from "./dict";
 import { getCache, updateCache } from "/@/api/system/dict_cache";
@@ -52,7 +51,7 @@ export const tokenStore = defineStore({
         db.dbSet({
           dbName: "sys",
           path: "remember",
-          value: JSON.stringify(login)
+          value: JSON.stringify({})
         });
       }
     },
@@ -72,20 +71,22 @@ export const tokenStore = defineStore({
      *登录
      * @param param0 登录参数
      */
-    async login({ username = "", password = "", remember = false }) {
+    login({ username = "", password = "", remember = false }) {
       //set remember cache
       this.setRemember({ username, password, remember }, remember);
-      try {
-        const result: LoginUser = await authAPi.login({
-          username: username,
-          password: password
-        });
-        this.setToken(result.accessToken, dayjs(result.expireTime).date());
-        this.setUserId(result.id);
-        this.loginAfter(result);
-      } catch (error) {
-        Promise.resolve(error);
-      }
+      return new Promise((resolve, reject) => {
+        authAPi
+          .login({ username: username, password: password })
+          .then(async (res: LoginUser) => {
+            this.setToken(res.accessToken, dayjs(res.expireTime).date());
+            this.setUserId(res.id);
+            this.loginAfter(res);
+            resolve(res);
+          })
+          .catch(error => {
+            reject(error);
+          });
+      });
     },
     async logout() {
       const self = this;
@@ -112,7 +113,6 @@ export const tokenStore = defineStore({
       this.updateCache().then(async () => {
         usePermissionStoreHook().clearAllWholeMenus();
         initRouter(loginUser.username);
-        router.push("/");
       });
     },
     async updateCache(): Promise<void> {

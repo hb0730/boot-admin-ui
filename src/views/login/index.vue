@@ -1,27 +1,43 @@
 <script setup lang="ts">
 import Motion from "./utils/motion";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { tokenStoreHook } from "/@/store/modules/token";
 import { bg, avatar, currentWeek } from "./utils/static";
 import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
 import { warnMessage } from "/@/utils/message";
+import { useRoute } from "vue-router";
+import router from "/@/router";
 
 const loading = ref(false);
 let user = ref("");
 let pwd = ref("");
 let remember = ref(false);
-
+const redirect = ref(undefined);
 const onLogin = (): void => {
   if (user.value == "" || pwd.value == "") {
     warnMessage("请输入用户名/密码");
     return;
   }
-  tokenStoreHook().login({
-    username: user.value,
-    password: pwd.value,
-    remember: remember.value
-  });
+  loading.value = true;
+  tokenStoreHook()
+    .login({
+      username: user.value,
+      password: pwd.value,
+      remember: remember.value
+    })
+    .then(() => {
+      router.push({ path: redirect.value || "/" }).catch(() => {});
+    })
+    .catch(() => {
+      loading.value = false;
+    });
 };
+watch(
+  () => useRoute,
+  route => {
+    redirect.value = route.query && route.query.redirect;
+  }
+);
 onMounted(() => {
   const login = tokenStoreHook().getRemember();
   user.value = login.username;

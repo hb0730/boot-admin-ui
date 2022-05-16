@@ -42,11 +42,10 @@ export function useNav() {
   }
 
   // 退出登录
-  async function logout() {
-    // storageSession.removeItem("info");
-    // router.push("/login");
-    await tokenStoreHook().logout();
-    router.push("/login");
+  function logout() {
+    tokenStoreHook()
+      .logout()
+      .then(() => router.push("/login"));
   }
 
   function backHome() {
