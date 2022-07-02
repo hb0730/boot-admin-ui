@@ -280,7 +280,8 @@ export const IconJson = {
     "watermelon",
     "wind-power",
     "zoom-in",
-    "zoom-out"
+    "zoom-out",
+    "star-filled"
   ],
   "fa:": [
     "500px",

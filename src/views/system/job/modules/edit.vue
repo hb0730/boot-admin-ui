@@ -263,6 +263,7 @@ defineExpose({ open });
     </span-loading>
     <!---->
     <template #footer>
+      <el-divider />
       <div style="flex: auto">
         <el-button @click="drawerCancel">取消</el-button>
         <el-button type="primary" @click="confirmClick">确认</el-button>

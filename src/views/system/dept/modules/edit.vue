@@ -186,7 +186,6 @@ defineExpose({ open });
       <el-form
         ref="infoForm"
         :model="formParam.formData"
-        inline
         :rules="formParam.formRules"
         label-position="left"
         label-width="auto"
@@ -200,7 +199,6 @@ defineExpose({ open });
                 :key="i"
                 :ref="item.key"
                 :prop="item.key"
-                label-width="auto"
                 :label="item.name"
               >
                 <!---->
@@ -216,7 +214,7 @@ defineExpose({ open });
                   <el-input-number
                     v-model="formParam.formData[item.key]"
                     controls-position="right"
-                    style="width: 92.5%"
+                    style="width: 100%"
                     :placeholder="item.tips"
                     :max="item.max"
                     :min="item.min"
@@ -233,7 +231,7 @@ defineExpose({ open });
                 <template v-else-if="item.type === 'treeSelect'">
                   <!---->
                   <el-tree-select
-                    style="width: 92%"
+                    style="width: 100%"
                     v-model="formParam.formData[item.key]"
                     :data="formParam.dataSource[item.dataList]"
                     :props="props"
@@ -244,7 +242,10 @@ defineExpose({ open });
                   />
                 </template>
                 <template v-else-if="item.type === 'select-radio'">
-                  <el-radio-group v-model="formParam.formData[item.key]">
+                  <el-radio-group
+                    style="width: 100%"
+                    v-model="formParam.formData[item.key]"
+                  >
                     <el-radio
                       v-for="(item, i) in formParam.dataSource[item.dataList]"
                       :label="Number(item.value)"
@@ -260,6 +261,7 @@ defineExpose({ open });
       </el-form>
     </span-loading>
     <template #footer>
+      <el-divider />
       <div style="flex: auto">
         <el-button @click="drawerClose">取消</el-button>
         <el-button type="primary" @click="confirmClick">确认</el-button>

@@ -193,7 +193,7 @@ watch(
             v-model="menuInfo.icon"
             clearable
           /> -->
-          <icon-select v-model="menuInfo.icon" />
+          <icon-select v-model="menuInfo.icon" style="width: 100%" />
         </el-form-item>
         <el-form-item label="排序: " prop="sort">
           <el-input-number
