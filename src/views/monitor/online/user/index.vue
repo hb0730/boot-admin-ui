@@ -271,7 +271,7 @@ onMounted(() => {
                 :icon="useRenderIcon('fa-sign-out')"
                 v-auth="permission.delete"
                 @click="handlerLoginOut(scope.row)"
-                >修改</el-button
+                >退出</el-button
               >
             </template>
           </el-table-column>
