@@ -56,7 +56,7 @@ onMounted(() => {
       <div class="login-form">
         <avatar class="avatar" />
         <Motion>
-          <h2>Pure Admin</h2>
+          <h2>Boot Admin</h2>
         </Motion>
 
         <el-form ref="ruleFormRef" size="large" @keyup.enter="onLogin">

@@ -28,7 +28,9 @@ const title =
         class="sidebar-logo-link"
         to="/"
       >
-        <FontIcon icon="team-iconlogo" svg style="width: 35px; height: 35px" />
+        <!-- <FontIcon icon="team-iconlogo" svg style="width: 35px; height: 35px" />
+        <span class="sidebar-title">{{ title }}</span> -->
+        <img src="/src/assets/logo.png" style="width: 35px; height: 35px" />
         <span class="sidebar-title">{{ title }}</span>
       </router-link>
     </transition>
