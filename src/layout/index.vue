@@ -26,6 +26,7 @@ import appMain from "./components/appMain.vue";
 import setting from "./components/setting/index.vue";
 import Vertical from "./components/sidebar/vertical.vue";
 import Horizontal from "./components/sidebar/horizontal.vue";
+import Footer from "./components/footer/index.vue";
 
 const isMobile = deviceDetection();
 const pureSetting = useSettingStoreHook();
@@ -229,6 +230,7 @@ const layoutHeader = defineComponent({
         <layout-header />
         <!-- 主体内容 -->
         <app-main :fixed-header="set.fixedHeader" />
+        <Footer />
       </div>
       <el-scrollbar v-else>
         <el-backtop
@@ -239,6 +241,8 @@ const layoutHeader = defineComponent({
         <layout-header />
         <!-- 主体内容 -->
         <app-main :fixed-header="set.fixedHeader" />
+
+        <Footer />
       </el-scrollbar>
     </div>
     <!-- 系统设置 -->

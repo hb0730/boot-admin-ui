@@ -97,6 +97,8 @@ import faKey from "@iconify-icons/fa/key";
 import faCheck from "@iconify-icons/fa/check";
 import faEdit from "@iconify-icons/fa/edit";
 import faPlayCircle from "@iconify-icons/fa/play-circle";
+import faCopyright from "@iconify-icons/fa/copyright";
+
 addIcon("fa-user", faUser);
 addIcon("fa-lock", faLock);
 addIcon("fa-sign-out", faSignOut);
@@ -110,6 +112,7 @@ addIcon("fa-check", faCheck);
 addIcon("fa-edit", faEdit);
 addIcon("fa-search", Search);
 addIcon("fa-play-circle", faPlayCircle);
+addIcon("fa-copyright", faCopyright);
 
 // Iconify Icon在Vue里离线使用（用于内网环境）https://docs.iconify.design/icon-components/vue/offline.html
 export default defineComponent({
