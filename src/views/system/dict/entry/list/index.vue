@@ -2,7 +2,7 @@
 export default { name: "DictEntryList" };
 </script>
 <script setup lang="ts">
-import { toRef, reactive, watch, PropType } from "vue";
+import { toRef, reactive, watch, PropType, ref } from "vue";
 import { dictEntryApi } from "/@/api/system/dist_entry";
 import {
   Dict,
@@ -14,6 +14,8 @@ import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
 import DictEntryEdit from "../edit/index.vue";
 import { successMessage } from "/@/utils/message";
 import { confirm } from "/@/utils/message/box";
+import Edit from "../edit/index.vue";
+const dictEntryEditRef = ref<InstanceType<typeof Edit>>();
 const permission = reactive({
   add: ["dict:entry:save"],
   edit: ["dict:entry:update"],
@@ -55,7 +57,7 @@ const props = defineProps({
     type: String
   },
   parent: Object as PropType<Dict>,
-  dataSource: Object as PropType<[]>
+  dataSource: Object
 });
 const ifAddEntry = toRef(props, "parentId");
 const parent = toRef(props, "parent");
@@ -82,7 +84,7 @@ const getPage = () => {
     })
     .finally(() => (pageData.loading = false));
 };
-const initDictEntry = (data: DictEntry) => {
+const initDictEntry = (data?: DictEntry) => {
   if (data) {
     pageData.dictEntryInfo = data;
   } else {
@@ -98,14 +100,24 @@ const initDictEntry = (data: DictEntry) => {
   }
 };
 const handlerAddNew = () => {
-  initDictEntry(null);
-  pageData.isUpdate = false;
-  pageData.dialogVisible = true;
+  initDictEntry();
+  dictEntryEditRef.value!.open(
+    "save",
+    pageData.dictEntryInfo,
+    parent.value,
+    dataSource.value
+  );
 };
 const handlerEdit = (data: DictEntry) => {
   initDictEntry(data);
-  pageData.isUpdate = true;
-  pageData.dialogVisible = true;
+  // pageData.isUpdate = true;
+  // pageData.dialogVisible = true;
+  dictEntryEditRef.value!.open(
+    "update",
+    pageData.dictEntryInfo,
+    parent.value,
+    dataSource.value
+  );
 };
 const handlerRefresh = () => {
   pageData.isUpdate = false;
@@ -246,14 +258,7 @@ watch(
       />
     </el-card>
   </el-col>
-  <dict-entry-edit
-    :is-update="pageData.isUpdate"
-    :dialog-visible="pageData.dialogVisible"
-    :dict-entry-info="pageData.dictEntryInfo"
-    :dict-info="parent"
-    :dataSource="dataSource"
-    @refresh="handlerRefresh"
-  />
+  <dict-entry-edit ref="dictEntryEditRef" @refresh="handlerRefresh" />
 </template>
 
 <style scoped></style>

@@ -2,7 +2,7 @@
 export default { name: "DictParent" };
 </script>
 <script setup lang="ts">
-import { onMounted, reactive, toRef } from "vue";
+import { onMounted, reactive, ref, toRef } from "vue";
 import { dictApi } from "/@/api/system/dict";
 import { useRenderIcon } from "/@/components/ReIcon/src/hooks";
 import DictParentEdit from "../edit/index.vue";
@@ -10,6 +10,9 @@ import { Dict, DictQuery } from "/@/api/model/system/dict_model";
 import { Page } from "/@/api/model/domain";
 import { successMessage, warnMessage } from "/@/utils/message";
 import { confirm } from "/@/utils/message/box";
+import Edit from "../edit/index.vue";
+const dictParentEditRef = ref<InstanceType<typeof Edit>>();
+
 const permission = reactive({
   add: ["dict:save"],
   edit: ["dict:update"],
@@ -19,8 +22,8 @@ const emit = defineEmits<{ (e: "rowClick", v: string, data: Dict) }>();
 const props = defineProps({
   dataSource: {
     require: true,
-    type: [],
-    default: []
+    type: Object,
+    default: null
   }
 });
 const dataSource = toRef(props, "dataSource");
@@ -84,7 +87,7 @@ const getPage = () => {
 const handleSelectionChange = val => {
   pageData.selection = val;
 };
-const initDept = (data: Dict) => {
+const initDept = (data?: Dict) => {
   if (data) {
     pageData.dictInfo = data;
   } else {
@@ -99,13 +102,11 @@ const initDept = (data: Dict) => {
 };
 const handlerAddNew = () => {
   initDept(null);
-  pageData.isUpdate = false;
-  pageData.dictDialogVisible = true;
+  dictParentEditRef.value!.open("save", pageData.dictInfo, dataSource.value);
 };
 const handlerEdit = (data: Dict) => {
   initDept(data);
-  pageData.isUpdate = true;
-  pageData.dictDialogVisible = true;
+  dictParentEditRef.value!.open("update", pageData.dictInfo, dataSource.value);
 };
 const handlerUpdate = () => {
   if (pageData.selection.length <= 0) {
@@ -348,13 +349,7 @@ onMounted(() => {
       </el-row>
     </el-card>
   </el-col>
-  <dict-parent-edit
-    :dialog-visible="pageData.dictDialogVisible"
-    :is-update="pageData.isUpdate"
-    :dict-info="pageData.dictInfo"
-    :dataSource="dataSource"
-    @refresh="handlerRefresh"
-  />
+  <dict-parent-edit ref="dictParentEditRef" @refresh="handlerRefresh" />
 </template>
 
 <style scoped></style>
