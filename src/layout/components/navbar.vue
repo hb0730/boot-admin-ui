@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import Search from "./search/index.vue";
 import Notice from "./notice/index.vue";
+import Logout from "./logout/index.vue";
 import mixNav from "./sidebar/mixNav.vue";
 import { useNav } from "@/layout/hooks/useNav";
 import Breadcrumb from "./sidebar/breadCrumb.vue";
@@ -42,18 +43,23 @@ const {
       <!-- 菜单搜索 -->
       <Search />
       <!-- 通知 -->
-      <Notice id="header-notice" />
+      <Notice id="header-notice" v-if="false" />
       <!-- 退出登录 -->
       <el-dropdown trigger="click">
         <span class="el-dropdown-link navbar-bg-hover select-none">
           <img
             src="https://avatars.githubusercontent.com/u/44761321?v=4"
             :style="avatarsStyle"
+            v-if="false"
           />
           <p v-if="username" class="dark:text-white">{{ username }}</p>
         </span>
         <template #dropdown>
-          <el-dropdown-menu class="logout">
+          <el-dropdown-menu class="el-dropdown-gb-hover">
+            <el-dropdown-item>
+              <IconifyIconOffline style="margin: 5px" :icon="Setting" />
+              修改密码
+            </el-dropdown-item>
             <el-dropdown-item @click="logout">
               <IconifyIconOffline
                 :icon="LogoutCircleRLine"
@@ -64,10 +70,12 @@ const {
           </el-dropdown-menu>
         </template>
       </el-dropdown>
+      <Logout />
       <span
         class="set-icon navbar-bg-hover"
         title="打开项目配置"
         @click="onPanel"
+        v-if="false"
       >
         <IconifyIconOffline :icon="Setting" />
       </span>

@@ -8,6 +8,7 @@ export default {
   meta: {
     icon: "homeFilled",
     title: "首页",
+    showLink: true,
     rank: 0
   },
   children: [

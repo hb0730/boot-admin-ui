@@ -1,7 +1,7 @@
 import Cookies from "js-cookie";
 import { storageSession } from "@pureadmin/utils";
 import { useUserStoreHook } from "@/store/modules/user";
-
+import { useAuthStoreHook } from "@/store/modules/auth";
 export interface DataInfo<T> {
   /** token */
   accessToken: string;
@@ -77,3 +77,21 @@ export function removeToken() {
 export const formatToken = (token: string): string => {
   return "Bearer " + token;
 };
+
+export interface AuthInfo {
+  [KEY: string]: any;
+  token: string;
+  username: string;
+}
+export const authTokenKey = "auth_token";
+export const authInfoKey = "auth_info";
+export function cacheAuth(info: AuthInfo) {
+  const token = info.token;
+  storageSession().setItem(authTokenKey, token);
+  storageSession().setItem(authInfoKey, info);
+  useAuthStoreHook().setAuthToken(token);
+  useAuthStoreHook().setUserInfo(info);
+}
+export function getAuthToken(): string {
+  return storageSession().getItem<string>(authTokenKey);
+}

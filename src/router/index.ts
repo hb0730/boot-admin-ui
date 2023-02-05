@@ -1,7 +1,7 @@
 // import "@/utils/sso";
 import { getConfig } from "@/config";
 import NProgress from "@/utils/progress";
-import { sessionKey, type DataInfo } from "@/utils/auth";
+import { type AuthInfo, authInfoKey } from "@/utils/auth";
 import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
 import { usePermissionStoreHook } from "@/store/modules/permission";
 import {
@@ -104,7 +104,8 @@ router.beforeEach((to: toRouteType, _from, next) => {
       handleAliveRoute(newMatched);
     }
   }
-  const userInfo = storageSession().getItem<DataInfo<number>>(sessionKey);
+  // const userInfo = storageSession().getItem<DataInfo<number>>(sessionKey);
+  const token = storageSession().getItem<AuthInfo>(authInfoKey);
   NProgress.start();
   const externalLink = isUrl(to?.name as string);
   if (!externalLink) {
@@ -119,11 +120,11 @@ router.beforeEach((to: toRouteType, _from, next) => {
   function toCorrectRoute() {
     whiteList.includes(to.fullPath) ? next(_from.fullPath) : next();
   }
-  if (userInfo) {
+  if (token) {
     // 无权限跳转403页面
-    if (to.meta?.roles && !isOneOfArray(to.meta?.roles, userInfo?.roles)) {
-      next({ path: "/error/403" });
-    }
+    // if (to.meta?.roles && !isOneOfArray(to.meta?.roles, userInfo?.roles)) {
+    //   next({ path: "/error/403" });
+    // }
     if (_from?.name) {
       // name为超链接
       if (externalLink) {

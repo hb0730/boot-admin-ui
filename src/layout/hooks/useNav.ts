@@ -7,8 +7,8 @@ import { useGlobal } from "@pureadmin/utils";
 import { useRouter, useRoute } from "vue-router";
 import { router, remainingPaths } from "@/router";
 import { useAppStoreHook } from "@/store/modules/app";
-import { useUserStoreHook } from "@/store/modules/user";
 import { usePermissionStoreHook } from "@/store/modules/permission";
+import { useAuthStoreHook } from "@/store/modules/auth";
 
 const errorInfo = "当前路由配置不正确，请检查配置";
 
@@ -22,7 +22,7 @@ export function useNav() {
 
   /** 用户名 */
   const username = computed(() => {
-    return useUserStoreHook()?.username;
+    return useAuthStoreHook().userInfo?.nickname;
   });
 
   const avatarsStyle = computed(() => {
@@ -55,7 +55,8 @@ export function useNav() {
 
   /** 退出登录 */
   function logout() {
-    useUserStoreHook().logOut();
+    // useUserStoreHook().logOut();
+    useAuthStoreHook().logout();
   }
 
   function backHome() {

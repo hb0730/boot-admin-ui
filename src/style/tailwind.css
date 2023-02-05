@@ -18,4 +18,7 @@
   .navbar-bg-hover {
     @apply dark:text-white dark:hover:!bg-[#242424];
   }
+  .el-dropdown-gb-hover{
+    @apply hover:bg-[#f6f6f6] dark:hover:!bg-[#242424];
+  }
 }

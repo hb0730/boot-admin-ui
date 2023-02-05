@@ -11,11 +11,11 @@ import {
 } from "./types.d";
 import { stringify } from "qs";
 import NProgress from "../progress";
-import { getToken, formatToken } from "@/utils/auth";
-import { useUserStoreHook } from "@/store/modules/user";
+import { useAuthStoreHook } from "@/store/modules/auth";
 
 // 相关配置请参考：www.axios-js.com/zh-cn/docs/#axios-request-config-1
 const defaultConfig: AxiosRequestConfig = {
+  baseURL: import.meta.env.VITE_API_SERVER,
   // 请求超时时间
   timeout: 10000,
   headers: {
@@ -51,7 +51,8 @@ class PureHttp {
   private static retryOriginalRequest(config: PureHttpRequestConfig) {
     return new Promise(resolve => {
       PureHttp.requests.push((token: string) => {
-        config.headers["Authorization"] = formatToken(token);
+        // config.headers["Authorization"] = formatToken(token);
+        config.headers["X-Access-Token"] = token;
         resolve(config);
       });
     });
@@ -73,40 +74,44 @@ class PureHttp {
           return config;
         }
         /** 请求白名单，放置一些不需要token的接口（通过设置请求白名单，防止token过期后再请求造成的死循环问题） */
-        const whiteList = ["/refreshToken", "/login"];
+        // const whiteList = ["/refreshToken", "/login"];
+        const whiteList = ["/login"];
         return whiteList.some(v => config.url.indexOf(v) > -1)
           ? config
           : new Promise(resolve => {
-              const data = getToken();
-              if (data) {
-                const now = new Date().getTime();
-                const expired = parseInt(data.expires) - now <= 0;
-                if (expired) {
-                  if (!PureHttp.isRefreshing) {
-                    PureHttp.isRefreshing = true;
-                    // token过期刷新
-                    useUserStoreHook()
-                      .handRefreshToken({ refreshToken: data.refreshToken })
-                      .then(res => {
-                        const token = res.data.accessToken;
-                        config.headers["Authorization"] = formatToken(token);
-                        PureHttp.requests.forEach(cb => cb(token));
-                        PureHttp.requests = [];
-                      })
-                      .finally(() => {
-                        PureHttp.isRefreshing = false;
-                      });
-                  }
-                  resolve(PureHttp.retryOriginalRequest(config));
-                } else {
-                  config.headers["Authorization"] = formatToken(
-                    data.accessToken
-                  );
-                  resolve(config);
-                }
-              } else {
-                resolve(config);
-              }
+              // const data = getToken();
+              // if (data) {
+              //   const now = new Date().getTime();
+              //   const expired = parseInt(data.expires) - now <= 0;
+              //   if (expired) {
+              //     if (!PureHttp.isRefreshing) {
+              //       PureHttp.isRefreshing = true;
+              //       // token过期刷新
+              //       useUserStoreHook()
+              //         .handRefreshToken({ refreshToken: data.refreshToken })
+              //         .then(res => {
+              //           const token = res.data.accessToken;
+              //           config.headers["Authorization"] = formatToken(token);
+              //           PureHttp.requests.forEach(cb => cb(token));
+              //           PureHttp.requests = [];
+              //         })
+              //         .finally(() => {
+              //           PureHttp.isRefreshing = false;
+              //         });
+              //     }
+              //     resolve(PureHttp.retryOriginalRequest(config));
+              //   } else {
+              //     config.headers["Authorization"] = formatToken(
+              //       data.accessToken
+              //     );
+              //     resolve(config);
+              //   }
+              // } else {
+              //   resolve(config);
+              // }
+              const token = useAuthStoreHook().authToken;
+              config.headers["X-Access-Token"] = token;
+              resolve(config);
             });
       },
       error => {
