@@ -60,7 +60,7 @@ const {
               <IconifyIconOffline style="margin: 5px" :icon="Setting" />
               修改密码
             </el-dropdown-item>
-            <el-dropdown-item @click="logout">
+            <el-dropdown-item @click="logout" v-if="false">
               <IconifyIconOffline
                 :icon="LogoutCircleRLine"
                 style="margin: 5px"

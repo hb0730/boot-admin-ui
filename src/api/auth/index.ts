@@ -18,5 +18,5 @@ export function login(username: string, password: string) {
  * @returns .
  */
 export function logout() {
-  return post("/auth/logout", {});
+  return post<any, Result<any>>("/auth/logout", {});
 }
