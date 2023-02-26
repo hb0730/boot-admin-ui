@@ -12,7 +12,12 @@ import {
 import { stringify } from "qs";
 import NProgress from "../progress";
 import { useAuthStoreHook } from "@/store/modules/auth";
-
+import errorCode from "./error-code";
+import { message } from "../message";
+import { ElMessageBox, ElNotification } from "element-plus";
+import { reactive } from "vue";
+// 是否显示重新登录
+const isRelogin = reactive({ show: false });
 // 相关配置请参考：www.axios-js.com/zh-cn/docs/#axios-request-config-1
 const defaultConfig: AxiosRequestConfig = {
   baseURL: import.meta.env.VITE_API_SERVER,
@@ -136,6 +141,52 @@ class PureHttp {
         if (PureHttp.initConfig.beforeResponseCallback) {
           PureHttp.initConfig.beforeResponseCallback(response);
           return response.data;
+        }
+        // 二进制数据则直接返回
+        if (
+          response.request.responseType === "blob" ||
+          response.request.responseType === "arraybuffer"
+        ) {
+          return response.data;
+        }
+        // dataAxios 是 axios 返回数据中的 data
+        const code = response.data.code || 200;
+        // 获取错误信息
+        const msg =
+          errorCode[code] || response.data.msg || errorCode["default"];
+        if (code === 401) {
+          if (!isRelogin.show) {
+            isRelogin.show = true;
+            ElMessageBox.confirm(
+              "登录状态已过期，您可以继续留在该页面，或者重新登录",
+              "系统提示",
+              {
+                confirmButtonText: "重新登录",
+                cancelButtonText: "取消",
+                type: "warning"
+              }
+            )
+              .then(() => {
+                isRelogin.show = false;
+                useAuthStoreHook()
+                  .logout()
+                  .then(() => {
+                    location.href = "/logout";
+                  });
+              })
+              .catch(() => {
+                isRelogin.show = false;
+              });
+          }
+        } else if (code === 500) {
+          message(msg, { type: "error" });
+          return Promise.reject(new Error(msg));
+        } else if (code === 601) {
+          message(msg, { type: "warning" });
+          return Promise.reject("error");
+        } else if (code !== 200) {
+          ElNotification.error({ title: msg });
+          return Promise.reject("error");
         }
         return response.data;
       },

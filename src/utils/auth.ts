@@ -82,6 +82,7 @@ export interface AuthInfo {
   [KEY: string]: any;
   token: string;
   username: string;
+  permissions: string[];
 }
 export const authTokenKey = "auth_token";
 export const authInfoKey = "auth_info";

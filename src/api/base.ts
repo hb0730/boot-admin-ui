@@ -6,6 +6,10 @@ export interface Result<T> {
   success: boolean;
   timestamp: number;
 }
+export interface BaseQuery {
+  size?: number;
+  current?: number;
+}
 /**
  * post
  */
@@ -17,4 +21,14 @@ export function post<T, P>(url: string, data: T): Promise<Result<P>> {
  */
 export function get<T, P>(url: string, params: T): Promise<Result<P>> {
   return http.get<T, Result<P>>(url, { params: params });
+}
+/**
+ * put
+ * @param url path
+ * @param params query
+ * @param data body
+ * @returns .
+ */
+export function put<T>(url: string, params: any, data: T): Promise<Result<T>> {
+  return http.request("put", url, { params: params, data: data });
 }

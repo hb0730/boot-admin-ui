@@ -29,6 +29,7 @@ const modulesRoutes = import.meta.glob("/src/views/**/*.{vue,tsx}");
 // 动态路由
 // import { getAsyncRoutes } from "@/api/routes";
 import { getRoutes } from "@/api/auth/routes";
+import { useAuthStoreHook } from "@/store/modules/auth";
 
 function handRank(routeInfo: any) {
   const { name, path, parentId, meta } = routeInfo;
@@ -206,7 +207,6 @@ function initRouter() {
     } else {
       return new Promise(resolve => {
         getRoutes().then(({ result }) => {
-          console.log(result);
           handleAsyncRoutes(cloneDeep(result));
           storageSession().setItem(key, result);
           resolve(router);
@@ -356,7 +356,14 @@ function getAuths(): Array<string> {
 function hasAuth(value: string | Array<string>): boolean {
   if (!value) return false;
   /** 从当前路由的`meta`字段里获取按钮级别的所有自定义`code`值 */
-  const metaAuths = getAuths();
+  let metaAuths = getAuths();
+  // 认证用户的权限
+  const authPermission = useAuthStoreHook().getPermission();
+  if (!metaAuths) {
+    metaAuths = authPermission;
+  } else {
+    metaAuths = [...metaAuths, ...authPermission];
+  }
   if (!metaAuths) return false;
   const isAuths = isString(value)
     ? metaAuths.includes(value)

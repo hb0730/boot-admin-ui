@@ -17,6 +17,7 @@ import setting from "./components/setting/index.vue";
 import Vertical from "./components/sidebar/vertical.vue";
 import Horizontal from "./components/sidebar/horizontal.vue";
 import backTop from "@/assets/svg/back_top.svg?component";
+import LayoutFooter from "./components/footer/index.vue";
 
 const { isDark } = useDark();
 const { layout } = useLayout();
@@ -160,6 +161,8 @@ const layoutHeader = defineComponent({
         <layout-header />
         <!-- 主体内容 -->
         <app-main :fixed-header="set.fixedHeader" />
+        <!--footer-->
+        <layout-footer />
       </div>
       <el-scrollbar v-else>
         <el-backtop
@@ -171,6 +174,8 @@ const layoutHeader = defineComponent({
         <layout-header />
         <!-- 主体内容 -->
         <app-main :fixed-header="set.fixedHeader" />
+        <!--footer -->
+        <layout-footer />
       </el-scrollbar>
     </div>
     <!-- 系统设置 -->

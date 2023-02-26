@@ -38,6 +38,9 @@ export const authStore = defineStore({
     setUserInfo(userInfo: AuthInfo) {
       this.userInfo = userInfo;
     },
+    getPermission(): string[] {
+      return this.userInfo.permissions;
+    },
     /**
      * 缓存登录信息
      * @param data .
@@ -45,8 +48,10 @@ export const authStore = defineStore({
     cacheRemember(data: LoginRequest) {
       if (data.remember) {
         storageLocal().setItem<LoginRequest>("login_info", data);
+        this.loginUser = data;
       } else {
         storageLocal().removeItem("login_info");
+        this.loginUser = { username: "", password: "", remember: false };
       }
     },
     /**
