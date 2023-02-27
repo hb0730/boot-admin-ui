@@ -6,9 +6,11 @@ import { reactive, onMounted, ref } from "vue";
 import * as permissionApi from "@/api/sys/permission";
 import { message } from "@/utils/message";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
+import { hasAuth } from "@/router/utils";
 const menuEditRef = ref();
 const pageData = reactive<any>({
   permission: {
+    query: ["menu:query"],
     add: ["menu:save"],
     update: ["menu:update"],
     delete: ["menu:delete"]
@@ -114,7 +116,7 @@ const _handlerAdd = () => {
 onMounted(() => {
   _loadData();
 });
-defineOptions({ name: "menu" });
+defineOptions({ name: "sysMenu" });
 </script>
 
 <template>
@@ -128,6 +130,7 @@ defineOptions({ name: "menu" });
         @search-form="_updateSearchFormData"
         @search="_searchForm"
         @reset="_resetSearchForm"
+        :query-permission="pageData.permission.query"
       />
       <!--operator-->
       <TableOperation
@@ -174,13 +177,25 @@ defineOptions({ name: "menu" });
         </el-table-column>
         <el-table-column label="操作" align="center" width="200">
           <template #default="scope">
-            <el-link type="primary" @click="_editMenu(scope.row)">编辑</el-link>
+            <el-link
+              :disabled="!hasAuth(pageData.permission.update)"
+              type="primary"
+              @click="_editMenu(scope.row)"
+              >编辑</el-link
+            >
             <el-divider direction="vertical" />
-            <el-link type="primary" @click="_handleRowAdd(scope.row)"
+            <el-link
+              :disabled="!hasAuth(pageData.permission.add)"
+              type="primary"
+              @click="_handleRowAdd(scope.row)"
               >新增</el-link
             >
             <el-divider direction="vertical" />
-            <el-link type="primary">删除</el-link>
+            <el-link
+              :disabled="!hasAuth(pageData.permission.delete)"
+              type="primary"
+              >删除</el-link
+            >
           </template>
         </el-table-column>
       </el-table>

@@ -272,6 +272,7 @@ defineOptions({ name: "FormSearch" });
         plain
         type="primary"
         :icon="useRenderIcon('ep:search')"
+        v-auth="props.queryPermission"
         @click="_search"
         >查询</el-button
       >
