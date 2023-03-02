@@ -7,3 +7,21 @@
     // font-size: 13px;
   }
 }
+
+.el-dialog-header {
+  header {
+    border-bottom: 1px solid #e8e8e8;
+  }
+}
+.el-drawer-header {
+  header {
+    border-bottom: 1px solid #e8e8e8;
+    padding: var(--el-drawer-padding-primary);
+    margin-bottom: 10px;
+  }
+}
+.el-dialog-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

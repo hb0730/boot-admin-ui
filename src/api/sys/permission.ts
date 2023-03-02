@@ -5,14 +5,18 @@ import { BaseQuery, get, post, put, Result } from "../base";
  * @param query 查询参数
  * @returns 树形列表
  */
-export function treeList<T>(query?: BaseQuery): Promise<Result<T>> {
+export function treeList<P extends BaseQuery, T>(
+  query?: P
+): Promise<Result<T>> {
   return get("/sys/permission/tree", query);
 }
 /**
  * 菜单树形列表
  * @param query .
  */
-export function treeMenus<T>(query?: BaseQuery): Promise<Result<T>> {
+export function treeMenus<P extends BaseQuery, T>(
+  query?: P
+): Promise<Result<T>> {
   return get("/sys/permission/tree/menu", query);
 }
 /**

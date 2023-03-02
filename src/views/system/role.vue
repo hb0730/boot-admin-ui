@@ -2,13 +2,19 @@
 import FormSearch from "@/components/opts/form-search.vue";
 import TableOperation from "@/components/opts/btns.vue";
 import { PureTable } from "@pureadmin/table";
-import { reactive } from "vue";
+import { hasAuth } from "@/router/utils";
+import * as roleApi from "@/api/sys/role";
+import RoleEdit from "./modules/role-edit.vue";
+import RolePermission from "./modules/role-permission.vue";
+import { reactive, onMounted, ref } from "vue";
+const roleEditRef = ref();
+const rolePermissionRef = ref();
 const pageData = reactive<any>({
   permission: {
     query: [],
-    add: ["menu:save"],
-    update: ["menu:update"],
-    delete: ["menu:delete"]
+    add: ["role:save"],
+    update: ["role:update"],
+    delete: ["role:delete"]
   },
   /**
    * 是否显示搜索
@@ -38,8 +44,8 @@ const pageData = reactive<any>({
       permission: ["menu:save"]
     },
     update: {
-      show: true,
-      state: true,
+      show: false,
+      state: false,
       permission: ["menu:update"]
     }
   },
@@ -77,6 +83,7 @@ const pageData = reactive<any>({
     currentData: {},
     pagination: {
       pageSize: 10,
+      defaultPageSize: 10,
       currentPage: 1,
       background: true,
       total: 0
@@ -95,7 +102,7 @@ const _updateSearchFormData = (data: any) => {
  */
 const _searchForm = (data: any) => {
   pageData.searchForm = data;
-  // _loadData();
+  _loadData();
 };
 /**
  * 重置
@@ -110,19 +117,52 @@ const _updateSearchState = () => {
   pageData.searchState = !pageData.searchState;
 };
 const handleChangePageSize = (val: any) => {
-  console.log("pageSizeChange", val);
+  pageData.tableParams.pagination.pageSize = val;
+  _loadData();
 };
 const handleChangeCurrentPage = (val: any) => {
-  console.log("pageCurrentChange", val);
+  pageData.tableParams.pagination.currentPage = val;
+  _loadData();
+};
+const getQueryParams = () => {
+  const sqp = {};
+  const param = Object.assign(sqp, pageData.searchForm);
+  param.current = pageData.tableParams.pagination.currentPage;
+  param.size = pageData.tableParams.pagination.pageSize;
+  return param;
 };
 /**
  * 查询数据
  */
-const _loadData = () => {};
+const _loadData = () => {
+  pageData.tableParams.loading = true;
+  roleApi
+    .roleQueryPage(getQueryParams())
+    .then((res: any) => {
+      if (res.success) {
+        pageData.tableParams.list = res.result.records;
+        pageData.tableParams.pagination.total = Number(res.result.total);
+      }
+    })
+    .finally(() => {
+      pageData.tableParams.loading = false;
+    });
+};
 /**
  * 新增
  */
-const _handlerAdd = () => {};
+const _handlerAdd = () => {
+  roleEditRef.value!.open();
+};
+const handleEdit = (data: any) => {
+  roleEditRef.value!.open(data, "修改角色");
+};
+const handleAuthorize = (row: any) => {
+  rolePermissionRef.value!.open(row);
+};
+onMounted(() => {
+  _loadData();
+});
 defineOptions({ name: "sysRole" });
 </script>
 
@@ -140,6 +180,7 @@ defineOptions({ name: "sysRole" });
       <TableOperation
         :size="'small'"
         :add="pageData.btnOpts.add"
+        :update="pageData.btnOpts.update"
         @click-search="_updateSearchState"
         @click-refresh="_loadData"
         @click-add="_handlerAdd"
@@ -152,18 +193,39 @@ defineOptions({ name: "sysRole" });
         :loading="pageData.tableParams.loading"
         :pagination="pageData.tableParams.pagination"
         :header-row-class-name="'table-header'"
-        @page-size-change="handleChangePageSize"
-        @page-current-change="handleChangeCurrentPage"
+        @current-change="handleChangeCurrentPage"
+        @size-change="handleChangePageSize"
       >
-        <template #operation="">
-          <el-link type="primary">授权</el-link>
-          <el-divider direction="vertical" />
-          <el-link type="primary">编辑</el-link>
-          <el-divider direction="vertical" />
-          <el-link type="primary">删除</el-link>
-          <el-divider direction="vertical" />
+        <template #operation="{ row }">
+          <el-link
+            v-show="hasAuth(pageData.permission.update) && row.isSystem != 1"
+            type="primary"
+            @click="handleAuthorize(row)"
+            >授权</el-link
+          >
+          <el-divider
+            v-show="hasAuth(pageData.permission.update) && row.isSystem !== 1"
+            direction="vertical"
+          />
+          <el-link
+            v-show="hasAuth(pageData.permission.update) && row.isSystem !== 1"
+            type="primary"
+            @click="handleEdit(row)"
+            >编辑</el-link
+          >
+          <el-divider
+            v-show="hasAuth(pageData.permission.delete) && row.isSystem !== 1"
+            direction="vertical"
+          />
+          <el-link
+            v-show="hasAuth(pageData.permission.delete) && row.isSystem !== 1"
+            type="primary"
+            >删除</el-link
+          >
         </template>
       </pure-table>
+      <role-edit ref="roleEditRef" @ok="_loadData" />
+      <role-permission ref="rolePermissionRef" />
     </template>
   </el-card>
 </template>

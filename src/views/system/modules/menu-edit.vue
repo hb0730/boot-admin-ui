@@ -124,7 +124,6 @@ const handleChangeMenuType = (val: number) => {
 const handleConfirm = () => {
   formRef.value!.validate((isValid: boolean) => {
     if (isValid) {
-      console.log(pageData.formData);
       if (pageData.formData.id) {
         _update();
       } else {
