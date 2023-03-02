@@ -3,6 +3,8 @@ import FormSearch from "@/components/opts/form-search.vue";
 import TableOperation from "@/components/opts/btns.vue";
 import { PureTable } from "@pureadmin/table";
 import { hasAuth } from "@/router/utils";
+import { enableConvert, enabledBooleanConvert } from "@/constants/convert";
+import { enableOptions } from "@/constants/constants";
 import * as roleApi from "@/api/sys/role";
 import RoleEdit from "./modules/role-edit.vue";
 import RolePermission from "./modules/role-permission.vue";
@@ -33,8 +35,26 @@ const pageData = reactive<any>({
       label: "角色名称",
       prop: "roleName",
       placeholder: "模糊查询角色名称"
+    },
+    {
+      type: "select",
+      label: "状态",
+      prop: "enabled",
+      placeholder: "请选择",
+      dataSourceKey: "enabledOptions",
+      options: {
+        keys: {
+          label: "label",
+          value: "value",
+          prop: "value"
+        },
+        filterable: true
+      }
     }
   ],
+  dataSource: {
+    enabledOptions: enableOptions
+  },
   searchForm: {},
   /*按钮 */
   btnOpts: {
@@ -61,6 +81,16 @@ const pageData = reactive<any>({
       {
         label: "角色名称",
         prop: "roleName"
+      },
+      {
+        label: "类型",
+        props: "isSystem",
+        slot: "roleType"
+      },
+      {
+        label: "状态",
+        prop: "enabled",
+        slot: "roleEnable"
       },
       {
         label: "创建时间",
@@ -172,6 +202,7 @@ defineOptions({ name: "sysRole" });
       <form-search
         :show="pageData.searchState"
         :form-field="pageData.searchField"
+        :data-source="pageData.dataSource"
         @search-form="_updateSearchFormData"
         @search="_searchForm"
         @reset="_resetSearchForm"
@@ -196,6 +227,22 @@ defineOptions({ name: "sysRole" });
         @current-change="handleChangeCurrentPage"
         @size-change="handleChangePageSize"
       >
+        <template #roleType="{ row }">
+          <el-tag
+            effect="plain"
+            :type="enabledBooleanConvert(row.isSystem) ? 'danger' : ''"
+            >{{
+              enabledBooleanConvert(row.isSystem) ? "内置" : "自定义"
+            }}</el-tag
+          >
+        </template>
+        <template #roleEnable="{ row }">
+          <el-tag
+            effect="plain"
+            :type="row.enabled === 1 ? 'success' : 'info'"
+            >{{ enableConvert(row.enabled) }}</el-tag
+          >
+        </template>
         <template #operation="{ row }">
           <el-link
             v-show="hasAuth(pageData.permission.update) && row.isSystem != 1"
