@@ -3,11 +3,11 @@ import Motion from "./utils/motion";
 import { useRouter } from "vue-router";
 import { message } from "@/utils/message";
 import { loginRules } from "./utils/rule";
-import { initRouter } from "@/router/utils";
 import { useNav } from "@/layout/hooks/useNav";
 import type { FormInstance } from "element-plus";
 import { useLayout } from "@/layout/hooks/useLayout";
 import { useAuthStoreHook } from "@/store/modules/auth";
+import { initRouter, getTopMenu } from "@/router/utils";
 import { bg, avatar, illustration } from "./utils/static";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import { ref, reactive, toRaw, onMounted, onBeforeUnmount } from "vue";
@@ -64,7 +64,7 @@ const onLogin = async (formEl: FormInstance | undefined) => {
           if (res.success) {
             // 获取后端路由
             initRouter().then(() => {
-              router.push("/");
+              router.push(getTopMenu(true).path);
               message("登录成功", { type: "success" });
             });
           }

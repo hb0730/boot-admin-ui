@@ -2,6 +2,7 @@
 import { ListItem } from "./data";
 import { ref, PropType, nextTick } from "vue";
 import { useNav } from "@/layout/hooks/useNav";
+import { deviceDetection } from "@pureadmin/utils";
 
 const props = defineProps({
   noticeItem: {
@@ -15,6 +16,7 @@ const titleTooltip = ref(false);
 const descriptionRef = ref(null);
 const descriptionTooltip = ref(false);
 const { tooltipEffect } = useNav();
+const isMobile = deviceDetection();
 
 function hoverTitle() {
   nextTick(() => {
@@ -63,6 +65,7 @@ function hoverDescription(event, description) {
           :disabled="!titleTooltip"
           :content="props.noticeItem.title"
           placement="top-start"
+          :enterable="!isMobile"
         >
           <div
             ref="titleRef"
@@ -115,6 +118,7 @@ function hoverDescription(event, description) {
   align-items: flex-start;
   justify-content: space-between;
   padding: 12px 0;
+
   // border-bottom: 1px solid #f0f0f0;
 
   .notice-container-avatar {
@@ -124,15 +128,15 @@ function hoverDescription(event, description) {
 
   .notice-container-text {
     display: flex;
+    flex: 1;
     flex-direction: column;
     justify-content: space-between;
-    flex: 1;
 
     .notice-text-title {
       display: flex;
       margin-bottom: 8px;
-      font-weight: 400;
       font-size: 14px;
+      font-weight: 400;
       line-height: 1.5715;
       cursor: pointer;
 
@@ -140,8 +144,8 @@ function hoverDescription(event, description) {
         flex: 1;
         width: 200px;
         overflow: hidden;
-        white-space: nowrap;
         text-overflow: ellipsis;
+        white-space: nowrap;
       }
 
       .notice-title-extra {
@@ -159,8 +163,8 @@ function hoverDescription(event, description) {
 
     .notice-text-description {
       display: -webkit-box;
-      text-overflow: ellipsis;
       overflow: hidden;
+      text-overflow: ellipsis;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
     }

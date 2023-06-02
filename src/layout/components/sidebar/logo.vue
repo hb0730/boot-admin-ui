@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { getTopMenu } from "@/router/utils";
 import { useNav } from "@/layout/hooks/useNav";
 
 const props = defineProps({
@@ -6,6 +7,7 @@ const props = defineProps({
 });
 
 const { title } = useNav();
+const topPath = getTopMenu().path;
 </script>
 
 <template>
@@ -16,9 +18,9 @@ const { title } = useNav();
         key="props.collapse"
         :title="title"
         class="sidebar-logo-link"
-        to="/"
+        :to="topPath"
       >
-        <FontIcon icon="team-iconlogo" svg style="width: 35px; height: 35px" />
+        <img src="/logo.svg" alt="logo" />
         <span class="sidebar-title">{{ title }}</span>
       </router-link>
       <router-link
@@ -26,9 +28,9 @@ const { title } = useNav();
         key="expand"
         :title="title"
         class="sidebar-logo-link"
-        to="/"
+        :to="topPath"
       >
-        <FontIcon icon="team-iconlogo" svg style="width: 35px; height: 35px" />
+        <img src="/logo.svg" alt="logo" />
         <span class="sidebar-title">{{ title }}</span>
       </router-link>
     </transition>
@@ -40,34 +42,30 @@ const { title } = useNav();
   position: relative;
   width: 100%;
   height: 48px;
-  text-align: center;
   overflow: hidden;
 
   .sidebar-logo-link {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
     height: 100%;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    margin-top: 5px;
+
+    img {
+      display: inline-block;
+      height: 32px;
+    }
 
     .sidebar-title {
-      display: block;
-      width: 160px;
+      display: inline-block;
+      height: 32px;
+      margin: 2px 0 0 12px;
       overflow: hidden;
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 32px;
+      color: $subMenuActiveText;
       text-overflow: ellipsis;
       white-space: nowrap;
-      text-align: left;
-      color: #1890ff;
-      font-weight: 600;
-      font-size: 20px;
-      margin-top: 10px;
-      font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
-    }
-  }
-
-  .collapses {
-    .sidebar-logo {
-      margin-right: 0;
     }
   }
 }

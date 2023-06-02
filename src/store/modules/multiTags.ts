@@ -1,39 +1,48 @@
 import { defineStore } from "pinia";
 import { store } from "@/store";
-import { isEqual } from "@pureadmin/utils";
 import { routerArrays } from "@/layout/types";
 import { multiType, positionType } from "./types";
-import { isUrl, storageLocal } from "@pureadmin/utils";
+import { responsiveStorageNameSpace } from "@/config";
+import { isEqual, isBoolean, isUrl, storageLocal } from "@pureadmin/utils";
 
 export const useMultiTagsStore = defineStore({
   id: "pure-multiTags",
   state: () => ({
     // 存储标签页信息（路由信息）
-    multiTags: storageLocal().getItem<StorageConfigs>("responsive-configure")
-      ?.multiTagsCache
-      ? storageLocal().getItem<StorageConfigs>("responsive-tags")
+    multiTags: storageLocal().getItem<StorageConfigs>(
+      `${responsiveStorageNameSpace()}configure`
+    )?.multiTagsCache
+      ? storageLocal().getItem<StorageConfigs>(
+          `${responsiveStorageNameSpace()}tags`
+        )
       : [...routerArrays],
     multiTagsCache: storageLocal().getItem<StorageConfigs>(
-      "responsive-configure"
+      `${responsiveStorageNameSpace()}configure`
     )?.multiTagsCache
   }),
   getters: {
-    getMultiTagsCache() {
-      return this.multiTagsCache;
+    getMultiTagsCache(state) {
+      return state.multiTagsCache;
     }
   },
   actions: {
     multiTagsCacheChange(multiTagsCache: boolean) {
       this.multiTagsCache = multiTagsCache;
       if (multiTagsCache) {
-        storageLocal().setItem("responsive-tags", this.multiTags);
+        storageLocal().setItem(
+          `${responsiveStorageNameSpace()}tags`,
+          this.multiTags
+        );
       } else {
-        storageLocal().removeItem("responsive-tags");
+        storageLocal().removeItem(`${responsiveStorageNameSpace()}tags`);
       }
     },
     tagsCache(multiTags) {
       this.getMultiTagsCache &&
-        storageLocal().setItem("responsive-tags", multiTags);
+        storageLocal().setItem(
+          `${responsiveStorageNameSpace()}tags`,
+          multiTags
+        );
     },
     handleTags<T>(
       mode: string,
@@ -54,6 +63,9 @@ export const useMultiTagsStore = defineStore({
             if (isUrl(tagVal?.name)) return;
             // 如果title为空拒绝添加空信息到标签页
             if (tagVal?.meta?.title.length === 0) return;
+            // showLink:false 不添加到标签页
+            if (isBoolean(tagVal?.meta?.showLink) && !tagVal?.meta?.showLink)
+              return;
             const tagPath = tagVal.path;
             // 判断tag是否已存在
             const tagHasExits = this.multiTags.some(tag => {

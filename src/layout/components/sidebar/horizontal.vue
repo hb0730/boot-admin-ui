@@ -16,7 +16,7 @@ const {
   title,
   routers,
   logout,
-  backHome,
+  backTopMenu,
   onPanel,
   menuSelect,
   username,
@@ -40,9 +40,9 @@ watch(
     v-loading="usePermissionStoreHook().wholeMenus.length === 0"
     class="horizontal-header"
   >
-    <div class="horizontal-header-left" @click="backHome">
-      <FontIcon icon="team-iconlogo" svg style="width: 35px; height: 35px" />
-      <h4>{{ title }}</h4>
+    <div class="horizontal-header-left" @click="backTopMenu">
+      <img src="/logo.svg" alt="logo" />
+      <span>{{ title }}</span>
     </div>
     <el-menu
       router
@@ -112,9 +112,9 @@ watch(
   max-width: 120px;
 
   ::v-deep(.el-dropdown-menu__item) {
-    min-width: 100%;
     display: inline-flex;
     flex-wrap: wrap;
+    min-width: 100%;
   }
 }
 </style>

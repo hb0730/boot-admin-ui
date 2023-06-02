@@ -3,13 +3,11 @@ import {
   RouteRecordRaw,
   RouteComponent,
   createWebHistory,
-  createWebHashHistory,
-  RouteRecordNormalized
+  createWebHashHistory
 } from "vue-router";
 import { router } from "./index";
 import { isProxy, toRaw } from "vue";
 import { useTimeoutFn } from "@vueuse/core";
-import { RouteConfigs } from "@/layout/types";
 import {
   isString,
   cloneDeep,
@@ -19,8 +17,10 @@ import {
   isIncludeAllChildren
 } from "@pureadmin/utils";
 import { getConfig } from "@/config";
+import { menuType } from "@/layout/types";
 import { buildHierarchyTree } from "@/utils/tree";
 import { sessionKey, type DataInfo } from "@/utils/auth";
+import { useMultiTagsStoreHook } from "@/store/modules/multiTags";
 import { usePermissionStoreHook } from "@/store/modules/permission";
 const IFrame = () => import("@/layout/frameView.vue");
 // https://cn.vitejs.dev/guide/features.html#glob-import
@@ -96,30 +96,20 @@ function filterNoPermissionTree(data: RouteComponent[]) {
   return filterChildrenTree(newTree);
 }
 
-/** 批量删除缓存路由(keepalive) */
-function delAliveRoutes(delAliveRouteList: Array<RouteConfigs>) {
-  delAliveRouteList.forEach(route => {
-    usePermissionStoreHook().cacheOperate({
-      mode: "delete",
-      name: route?.name
-    });
-  });
-}
-
-/** 通过path获取父级路径 */
-function getParentPaths(path: string, routes: RouteRecordRaw[]) {
+/** 通过指定 `key` 获取父级路径集合，默认 `key` 为 `path` */
+function getParentPaths(value: string, routes: RouteRecordRaw[], key = "path") {
   // 深度遍历查找
-  function dfs(routes: RouteRecordRaw[], path: string, parents: string[]) {
+  function dfs(routes: RouteRecordRaw[], value: string, parents: string[]) {
     for (let i = 0; i < routes.length; i++) {
       const item = routes[i];
-      // 找到path则返回父级path
-      if (item.path === path) return parents;
+      // 返回父级path
+      if (item[key] === value) return parents;
       // children不存在或为空则不递归
       if (!item.children || !item.children.length) continue;
       // 往下查找时将当前path入栈
       parents.push(item.path);
 
-      if (dfs(item.children, path, parents).length) return parents;
+      if (dfs(item.children, value, parents).length) return parents;
       // 深度遍历查找未找到时当前path 出栈
       parents.pop();
     }
@@ -127,10 +117,10 @@ function getParentPaths(path: string, routes: RouteRecordRaw[]) {
     return [];
   }
 
-  return dfs(routes, path, []);
+  return dfs(routes, value, []);
 }
 
-/** 查找对应path的路由信息 */
+/** 查找对应 `path` 的路由信息 */
 function findRouteByPath(path: string, routes: RouteRecordRaw[]) {
   let res = routes.find((item: { path: string }) => item.path == path);
   if (res) {
@@ -243,7 +233,7 @@ function formatFlatteningRoutes(routesList: RouteRecordRaw[]) {
 
 /**
  * 一维数组处理成多级嵌套数组（三级及以上的路由全部拍成二级，keep-alive 只支持到二级缓存）
- * https://github.com/xiaoxian521/vue-pure-admin/issues/67
+ * https://github.com/pure-admin/vue-pure-admin/issues/67
  * @param routesList 处理后的一维路由菜单数组
  * @returns 返回将一维数组重新处理成规定路由的格式
  */
@@ -268,27 +258,35 @@ function formatTwoStageRoutes(routesList: RouteRecordRaw[]) {
 }
 
 /** 处理缓存路由（添加、删除、刷新） */
-function handleAliveRoute(matched: RouteRecordNormalized[], mode?: string) {
+function handleAliveRoute({ name }: toRouteType, mode?: string) {
   switch (mode) {
     case "add":
-      matched.forEach(v => {
-        usePermissionStoreHook().cacheOperate({ mode: "add", name: v.name });
+      usePermissionStoreHook().cacheOperate({
+        mode: "add",
+        name
       });
       break;
     case "delete":
       usePermissionStoreHook().cacheOperate({
         mode: "delete",
-        name: matched[matched.length - 1].name
+        name
+      });
+      break;
+    case "refresh":
+      usePermissionStoreHook().cacheOperate({
+        mode: "refresh",
+        name
       });
       break;
     default:
       usePermissionStoreHook().cacheOperate({
         mode: "delete",
-        name: matched[matched.length - 1].name
+        name
       });
       useTimeoutFn(() => {
-        matched.forEach(v => {
-          usePermissionStoreHook().cacheOperate({ mode: "add", name: v.name });
+        usePermissionStoreHook().cacheOperate({
+          mode: "add",
+          name
         });
       }, 100);
   }
@@ -324,8 +322,7 @@ function addAsyncRoutes(arrRoutes: Array<RouteRecordRaw>) {
 }
 
 /** 获取路由历史模式 https://next.router.vuejs.org/zh/guide/essentials/history-mode.html */
-function getHistoryMode(): RouterHistory {
-  const routerHistory = import.meta.env.VITE_ROUTER_HISTORY;
+function getHistoryMode(routerHistory): RouterHistory {
   // len为1 代表只有历史模式 为2 代表历史模式中存在base参数 https://next.router.vuejs.org/zh/api/#%E5%8F%82%E6%95%B0-1
   const historyMode = routerHistory.split(",");
   const leftMode = historyMode[0];
@@ -371,16 +368,24 @@ function hasAuth(value: string | Array<string>): boolean {
   return isAuths ? true : false;
 }
 
+/** 获取所有菜单中的第一个菜单（顶级菜单）*/
+function getTopMenu(tag = false): menuType {
+  const topMenu = usePermissionStoreHook().wholeMenus[0]?.children[0];
+  tag && useMultiTagsStoreHook().handleTags("push", topMenu);
+  return topMenu;
+}
+
 export {
   hasAuth,
   getAuths,
   ascending,
   filterTree,
   initRouter,
+  getTopMenu,
+  addPathMatch,
   isOneOfArray,
   getHistoryMode,
   addAsyncRoutes,
-  delAliveRoutes,
   getParentPaths,
   findRouteByPath,
   handleAliveRoute,

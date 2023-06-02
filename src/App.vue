@@ -1,6 +1,7 @@
 <template>
   <el-config-provider :locale="currentLocale">
     <router-view />
+    <ReDialog />
   </el-config-provider>
 </template>
 
@@ -9,6 +10,8 @@ import { defineComponent } from "vue";
 import { ElConfigProvider } from "element-plus";
 import zhCn from "element-plus/lib/locale/lang/zh-cn";
 import { useWatermark } from "@pureadmin/utils";
+import { ReDialog } from "@/components/ReDialog";
+
 const watermark = useWatermark();
 watermark.setWatermark("boot-admin", {
   globalAlpha: 0.15,
@@ -21,7 +24,8 @@ watermark.setWatermark("boot-admin", {
 export default defineComponent({
   name: "app",
   components: {
-    [ElConfigProvider.name]: ElConfigProvider
+    [ElConfigProvider.name]: ElConfigProvider,
+    ReDialog
   },
   computed: {
     currentLocale() {
