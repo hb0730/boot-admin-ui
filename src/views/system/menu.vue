@@ -5,6 +5,7 @@ import MenuEdit from "./modules/menu-edit.vue";
 import { reactive, onMounted, ref } from "vue";
 import * as permissionApi from "@/api/sys/permission";
 import { message } from "@/utils/message";
+import { PureTable } from "@pureadmin/table";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import { hasAuth } from "@/router/utils";
 const menuEditRef = ref();
@@ -43,8 +44,54 @@ const pageData = reactive<any>({
     /*加载 */
     loading: false,
     /*数据 */
-    tableData: [],
-    currentData: {}
+    list: [],
+    columns: [
+      {
+        label: "菜单名称",
+        prop: "title"
+      },
+      {
+        label: "菜单图标",
+        prop: "icon",
+        slot: "iconScope"
+      },
+      {
+        label: "权限标识",
+        prop: "perms"
+      },
+      {
+        label: "是否缓存",
+        prop: "keepAlive",
+        slot: "booleanScope"
+      },
+      {
+        label: "是否可见",
+        prop: "showLink",
+        slot: "booleanScope"
+      },
+      {
+        label: "菜单类型",
+        prop: "menuTypeName"
+      },
+      {
+        label: "状态",
+        prop: "enabled",
+        slot: "enabledScope"
+      },
+      {
+        label: "操作",
+        fixed: "right",
+        slot: "operation"
+      }
+    ],
+    currentData: {},
+    pagination: {
+      pageSize: 10,
+      defaultPageSize: 10,
+      currentPage: 1,
+      background: true,
+      total: 0
+    }
   }
 });
 /**
@@ -78,11 +125,12 @@ const _updateSearchState = () => {
  */
 const _loadData = () => {
   pageData.tableParams.loading = true;
+  const query = getQueryParams();
   permissionApi
-    .treeList(pageData.searchForm)
+    .treeList(query)
     .then((res: any) => {
       if (res.success) {
-        pageData.tableParams.tableData = res.result;
+        pageData.tableParams.list = res.result || [];
       } else {
         message(res.message, { type: "warning" });
       }
@@ -90,6 +138,11 @@ const _loadData = () => {
     .finally(() => {
       pageData.tableParams.loading = false;
     });
+};
+const getQueryParams = () => {
+  const sqp = {};
+  const param = Object.assign(sqp, pageData.searchForm);
+  return param;
 };
 /**
  * 更新
@@ -141,64 +194,48 @@ defineOptions({ name: "sysMenu" });
         @click-add="_handlerAdd"
       />
       <!--table-->
-      <el-table
-        v-loading="pageData.tableParams.loading"
-        :data="pageData.tableParams.tableData"
-        style="width: 100%"
+      <pure-table
+        :loading="pageData.tableParams.loading"
+        :columns="pageData.tableParams.columns"
+        :data="pageData.tableParams.list"
+        :border="true"
+        :stripe="true"
+        :header-row-class-name="'table-header'"
         row-key="id"
-        highlight-current-row
-        header-row-class-name="table-header"
       >
-        <el-table-column prop="title" label="菜单名称" width="200" />
-        <el-table-column prop="icon" label="菜单图标">
-          <template #default="scope">
-            <component :is="useRenderIcon(scope.row.icon)" />
-          </template>
-        </el-table-column>
-        <el-table-column prop="rank" label="排序" />
-        <el-table-column prop="perms" label="权限标识" min-width="100" />
-        <el-table-column prop="component" label="组件路径" min-width="100" />
-        <el-table-column prop="keepAlive" label="是否缓存">
-          <template #default="scope">
-            {{ scope.row.keepAlive ? "是" : "否" }}
-          </template>
-        </el-table-column>
-        <el-table-column prop="showLink" label="是否可见">
-          <template #default="scope">
-            {{ scope.row.showLink ? "是" : "否" }}
-          </template>
-        </el-table-column>
-        <el-table-column prop="menuTypeName" label="菜单类型" />
-        <el-table-column prop="enabled" label="状态">
-          <template #default="scope">
-            <el-tag v-if="scope.row.enabled">启用</el-tag>
-            <el-tag v-else type="info">禁用</el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" align="center" width="200">
-          <template #default="scope">
-            <el-link
-              :disabled="!hasAuth(pageData.permission.update)"
-              type="primary"
-              @click="_editMenu(scope.row)"
-              >编辑</el-link
-            >
-            <el-divider direction="vertical" />
-            <el-link
-              :disabled="!hasAuth(pageData.permission.add)"
-              type="primary"
-              @click="_handleRowAdd(scope.row)"
-              >新增</el-link
-            >
-            <el-divider direction="vertical" />
-            <el-link
-              :disabled="!hasAuth(pageData.permission.delete)"
-              type="primary"
-              >删除</el-link
-            >
-          </template>
-        </el-table-column>
-      </el-table>
+        <template #booleanScope="scope">
+          {{ scope.row.keepAlive ? "是" : "否" }}
+        </template>
+        <template #iconScope="scope">
+          <component :is="useRenderIcon(scope.row.icon)" />
+        </template>
+        <template #enabledScope="scope">
+          <el-tag v-if="scope.row.enabled">启用</el-tag>
+          <el-tag v-else type="info">禁用</el-tag>
+        </template>
+        <template #operation="scope">
+          <el-link
+            :disabled="!hasAuth(pageData.permission.update)"
+            type="primary"
+            @click="_editMenu(scope.row)"
+            >编辑</el-link
+          >
+          <el-divider direction="vertical" />
+          <el-link
+            :disabled="!hasAuth(pageData.permission.add)"
+            type="primary"
+            @click="_handleRowAdd(scope.row)"
+            >新增</el-link
+          >
+          <el-divider direction="vertical" />
+          <el-link
+            :disabled="!hasAuth(pageData.permission.delete)"
+            type="primary"
+            >删除</el-link
+          >
+        </template>
+      </pure-table>
+
       <menu-edit ref="menuEditRef" @ok="_loadData()" />
     </template>
   </el-card>
