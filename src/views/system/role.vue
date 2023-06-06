@@ -194,8 +194,9 @@ const getQueryParams = () => {
  */
 const _loadData = () => {
   pageData.tableParams.loading = true;
+  const query = getQueryParams();
   roleApi
-    .roleQueryPage(getQueryParams())
+    .roleQueryPage(query)
     .then((res: any) => {
       if (res.success) {
         pageData.tableParams.list = res.result.records;
@@ -265,8 +266,8 @@ defineOptions({ name: "sysRole" });
         :loading="pageData.tableParams.loading"
         :pagination="pageData.tableParams.pagination"
         :header-row-class-name="'table-header'"
-        @current-change="handleChangeCurrentPage"
-        @size-change="handleChangePageSize"
+        @page-current-change="handleChangeCurrentPage"
+        @page-size-change="handleChangePageSize"
       >
         <template #roleType="{ row }">
           <el-tag
