@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import FormSearch from "@/components/opts/form-search.vue";
-import TableOperation from "@/components/opts/btns.vue";
+import TableButtons from "@/components/opts/btns2.vue";
 import MenuEdit from "./modules/menu-edit.vue";
 import { reactive, onMounted, ref } from "vue";
 import * as permissionApi from "@/api/sys/permission";
@@ -29,16 +29,55 @@ const pageData: any = reactive({
   searchForm: {},
   /*按钮 */
   btnOpts: {
-    add: {
-      show: true,
-      state: true,
-      permission: ["menu:save"]
-    },
-    update: {
-      show: true,
-      state: true,
-      permission: ["menu:update"]
-    }
+    // add: {
+    //   show: true,
+    //   state: true,
+    //   permission: ["menu:save"]
+    // },
+    // update: {
+    //   show: true,
+    //   state: true,
+    //   permission: ["menu:update"]
+    // }
+    size: "small",
+    left: [
+      {
+        key: "add",
+        label: "新增",
+        type: "primary",
+        icon: "ep:plus",
+        state: true,
+        permission: ["org:save"]
+      }
+      // {
+      //   key: "update",
+      //   label: "修改",
+      //   type: "success",
+      //   icon: "ep:edit",
+      //   state: false,
+      //   permission: ["org:update"]
+      // }
+    ],
+    right: [
+      {
+        key: "search",
+        label: "查询",
+        icon: "ep:search",
+        state: true,
+        options: {
+          circle: true
+        }
+      },
+      {
+        key: "refresh",
+        label: "刷新",
+        icon: "ep:refresh",
+        state: true,
+        options: {
+          circle: true
+        }
+      }
+    ]
   },
   tableParams: {
     /*加载 */
@@ -144,6 +183,21 @@ const getQueryParams = () => {
   const param = Object.assign(sqp, pageData.searchForm);
   return param;
 };
+const handleBtnClick = (val: String) => {
+  switch (val) {
+    case "add":
+      _handlerAdd();
+      break;
+    case "update":
+      break;
+    case "search":
+      _updateSearchState();
+      break;
+    case "refresh":
+      _loadData();
+      break;
+  }
+};
 /**
  * 更新
  * @param data .
@@ -186,12 +240,18 @@ defineOptions({ name: "sysMenu" });
         :query-permission="pageData.permission.query"
       />
       <!--operator-->
-      <TableOperation
+      <!-- <TableOperation
         :size="'small'"
         :add="pageData.btnOpts.add"
         @click-search="_updateSearchState"
         @click-refresh="_loadData"
         @click-add="_handlerAdd"
+      /> -->
+      <table-buttons
+        :size="pageData.btnOpts.size"
+        :left-btns="pageData.btnOpts.left"
+        :right-btns="pageData.btnOpts.right"
+        @click="handleBtnClick"
       />
       <!--table-->
       <pure-table

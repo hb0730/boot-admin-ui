@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import FormSearch from "@/components/opts/form-search.vue";
-import TableOperation from "@/components/opts/btns.vue";
+import TableButtons from "@/components/opts/btns2.vue";
 import { PureTable } from "@pureadmin/table";
 import { hasAuth } from "@/router/utils";
 import { enableConvert, enabledBooleanConvert } from "@/constants/convert";
@@ -58,16 +58,44 @@ const pageData: any = reactive({
   searchForm: {},
   /*按钮 */
   btnOpts: {
-    add: {
-      show: true,
-      state: true,
-      permission: ["menu:save"]
-    },
-    update: {
-      show: false,
-      state: false,
-      permission: ["menu:update"]
-    }
+    left: [
+      {
+        key: "add",
+        label: "新增",
+        type: "primary",
+        icon: "ep:plus",
+        state: true,
+        permission: ["org:save"]
+      }
+      // {
+      //   key: "update",
+      //   label: "修改",
+      //   type: "success",
+      //   icon: "ep:edit",
+      //   state: false,
+      //   permission: ["org:update"]
+      // }
+    ],
+    right: [
+      {
+        key: "search",
+        label: "查询",
+        icon: "ep:search",
+        state: true,
+        options: {
+          circle: true
+        }
+      },
+      {
+        key: "refresh",
+        label: "刷新",
+        icon: "ep:refresh",
+        state: true,
+        options: {
+          circle: true
+        }
+      }
+    ]
   },
   tableParams: {
     /**
@@ -137,7 +165,7 @@ const _searchForm = (data: any) => {
 /**
  * 重置
  */
-const _resetSearchForm = (data?) => {
+const _resetSearchForm = (data?: any) => {
   pageData.searchForm = data;
 };
 /**
@@ -178,6 +206,21 @@ const _loadData = () => {
       pageData.tableParams.loading = false;
     });
 };
+const handleBtnClick = (val: String) => {
+  switch (val) {
+    case "add":
+      _handlerAdd();
+      break;
+    case "update":
+      break;
+    case "search":
+      _updateSearchState();
+      break;
+    case "refresh":
+      _loadData();
+      break;
+  }
+};
 /**
  * 新增
  */
@@ -208,13 +251,11 @@ defineOptions({ name: "sysRole" });
         @reset="_resetSearchForm"
         :query-permission="pageData.permission.query"
       />
-      <TableOperation
+      <table-buttons
         :size="'small'"
-        :add="pageData.btnOpts.add"
-        :update="pageData.btnOpts.update"
-        @click-search="_updateSearchState"
-        @click-refresh="_loadData"
-        @click-add="_handlerAdd"
+        :left-btns="pageData.btnOpts.left"
+        :right-btns="pageData.btnOpts.right"
+        @click="handleBtnClick"
       />
       <pure-table
         :columns="pageData.tableParams.columns"
@@ -276,5 +317,3 @@ defineOptions({ name: "sysRole" });
     </template>
   </el-card>
 </template>
-
-<style scoped></style>
