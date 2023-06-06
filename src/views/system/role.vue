@@ -11,7 +11,7 @@ import RolePermission from "./modules/role-permission.vue";
 import { reactive, onMounted, ref } from "vue";
 const roleEditRef = ref();
 const rolePermissionRef = ref();
-const pageData = reactive<any>({
+const pageData: any = reactive({
   permission: {
     query: [],
     add: ["role:save"],

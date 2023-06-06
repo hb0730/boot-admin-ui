@@ -62,6 +62,10 @@ export interface FormField {
   dataSourceKey: string;
   options?: {
     /**
+     * 是否允许清除, 默认true
+     */
+    clearable?: boolean;
+    /**
      * 选项
      */
     keys?: OptionKey;
@@ -142,10 +146,8 @@ const props = defineProps({
 });
 // change 控件change事件,searchForm 实时变更,search btn搜索事件,reset重置事件
 const emits = defineEmits(["change", "searchForm", "search", "reset"]);
-type FormData = {
-  [key: string]: any;
-};
-const pageData = reactive<{ formData: FormData }>({ formData: {} });
+
+const pageData: any = reactive({ formData: {} });
 /**
  * 获取默认值
  */
@@ -212,7 +214,7 @@ defineOptions({ name: "FormSearch" });
           :placeholder="item.placeholder"
           :maxlength="item.max"
           :min="item.min"
-          clearable
+          :clearable="item.options?.clearable || true"
           @change="_change(item)"
         />
       </template>
@@ -221,7 +223,7 @@ defineOptions({ name: "FormSearch" });
         <el-select
           v-model="pageData.formData[item.prop]"
           :filterable="item.options ? item.options?.filterable : false"
-          clearable
+          :clearable="item.options?.clearable || true"
           :placeholder="item.placeholder"
           style="width: 100%"
           @change="_change(item)"
@@ -257,7 +259,7 @@ defineOptions({ name: "FormSearch" });
         <el-date-picker
           v-model="pageData.formData[item.prop]"
           :placeholder="item.placeholder"
-          clearable
+          :clearable="item.options?.clearable || true"
           :type="item.dateType ? item.dateType : 'date'"
           :format="item.dateFormat ? item.dateFormat : 'YYYY-MM-DD'"
           :value-format="

@@ -9,7 +9,7 @@ import { PureTable } from "@pureadmin/table";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import { hasAuth } from "@/router/utils";
 const menuEditRef = ref();
-const pageData = reactive<any>({
+const pageData: any = reactive({
   permission: {
     query: ["menu:query"],
     add: ["menu:save"],

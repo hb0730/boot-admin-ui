@@ -13,7 +13,7 @@ import type { FormInstance } from "element-plus";
 import { message } from "@/utils/message";
 import { cloneDeep } from "@pureadmin/utils";
 const formRef = ref<FormInstance>();
-const pageData = reactive<any>({
+const pageData: any = reactive({
   isShow: false,
   title: "新增菜单/权限",
   formLoading: false,

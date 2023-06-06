@@ -21,7 +21,7 @@ const checkRoleCode = (rule: any, value: any, callback: any) => {
   }
 };
 const formRef = ref<FormInstance>();
-const pageData = reactive<any>({
+const pageData: any = reactive({
   dialogVisible: false,
   title: "新增角色",
   formLoading: false,
