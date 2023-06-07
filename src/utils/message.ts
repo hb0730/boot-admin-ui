@@ -1,6 +1,12 @@
 import { type VNode } from "vue";
 import { isFunction } from "@pureadmin/utils";
-import { type MessageHandler, ElMessage } from "element-plus";
+import {
+  type MessageHandler,
+  ElMessage,
+  ElMessageBox,
+  type MessageBoxData,
+  type messageType
+} from "element-plus";
 
 type messageStyle = "el" | "antd";
 type messageTypes = "info" | "success" | "warning" | "error";
@@ -82,4 +88,53 @@ const message = (
  */
 const closeAllMessage = (): void => ElMessage.closeAll();
 
+/**
+ *成功
+ * @param msg  .
+ * @returns .
+ */
+const success = (msg: string): MessageHandler => {
+  return message(msg, { type: "success" });
+};
+/**
+ * 警告
+ * @param msg .
+ * @returns.
+ */
+const warning = (msg: string): MessageHandler => {
+  return message(msg, { type: "warning" });
+};
+/**
+ * 异常
+ * @param msg .
+ * @returns.
+ */
+const error = (msg: string): MessageHandler => {
+  return message(msg, { type: "error" });
+};
+/**
+ * 确认提示框
+ * @param msg .
+ * @returns .
+ */
+const confirm = (
+  msg: string,
+  title = "提示",
+  type: messageType = "warning"
+): Promise<MessageBoxData> => {
+  return ElMessageBox.confirm(msg, title, {
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+    type: type
+  });
+};
+
 export { message, closeAllMessage };
+export default {
+  success,
+  message,
+  warning,
+  error,
+  confirm,
+  closeAllMessage
+};
