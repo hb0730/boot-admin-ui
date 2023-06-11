@@ -13,7 +13,7 @@ import { onBeforeMount } from "vue";
 import { hasAuth } from "@/router/utils";
 import message from "@/utils/message";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
-import { column } from "element-plus/es/components/table-v2/src/common";
+import { watch } from "vue";
 const userEditRef = ref();
 const userResetPasswdRef = ref();
 defineOptions({
@@ -24,6 +24,11 @@ const props: any = defineProps({
     required: false,
     type: String,
     default: "table"
+  },
+  orgInfo: {
+    required: false,
+    type: Object,
+    default: () => ({})
   }
 });
 const searchFormFields = computed((): FormField[] => {
@@ -296,6 +301,9 @@ const getQueryParams = () => {
   const param = Object.assign(sqp, pageData.searchForm);
   param.current = pageData.tableParam.pagination.currentPage;
   param.size = pageData.tableParam.pagination.pageSize;
+  if (props.orgInfo) {
+    param.orgId = props.orgInfo.id;
+  }
   return param;
 };
 const _loadData = (page?: number) => {
@@ -357,6 +365,14 @@ const handleResetPasswd = (row: any) => {
 const handleDetail = (row: any) => {
   userEditRef.value!.open(row, pageData.dataSource, "detail");
 };
+watch(
+  () => props.orgInfo,
+  val => {
+    if (val) {
+      _loadData();
+    }
+  }
+);
 onBeforeMount(() => {
   queryOrg();
   queryRoles();
@@ -453,5 +469,3 @@ const emits = defineEmits(["switchMode"]);
     <user-reset-passwd ref="userResetPasswdRef" />
   </div>
 </template>
-
-<style lang="scss" scoped></style>
