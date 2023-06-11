@@ -25,3 +25,15 @@
   justify-content: center;
   align-items: center;
 }
+
+:deep(.el-drawer .el-drawer__body) {
+  border-top: 1px solid #e8e8e8 !important;
+}
+
+:deep(.el-drawer .el-drawer__footer) {
+  border-top: 1px solid #e8e8e8 !important;
+}
+
+.form-row {
+  margin-bottom: 20px;
+}

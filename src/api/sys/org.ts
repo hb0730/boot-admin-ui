@@ -5,7 +5,7 @@ import { Result, deleteRequest, get, post, put } from "../base";
  * @param query .
  * @returns .
  */
-export function queryPage<T>(query: any): Promise<Result<T>> {
+export function queryPage<T>(query?: any): Promise<Result<T>> {
   return get("/sys/org/query/page", query);
 }
 /**
@@ -13,7 +13,7 @@ export function queryPage<T>(query: any): Promise<Result<T>> {
  * @param query .
  * @returns .
  */
-export function queryTree<T>(query: any): Promise<Result<T>> {
+export function queryTree<T>(query?: any): Promise<Result<T>> {
   return get("/sys/org/query/tree", query);
 }
 /**
@@ -21,7 +21,7 @@ export function queryTree<T>(query: any): Promise<Result<T>> {
  * @param query .
  * @returns .
  */
-export function queryList<T>(query: any): Promise<Result<T>> {
+export function queryList<T>(query?: any): Promise<Result<T>> {
   return get("/sys/org/query/list", query);
 }
 /**

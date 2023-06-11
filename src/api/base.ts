@@ -41,8 +41,8 @@ export function put<T>(url: string, params: any, data: T): Promise<Result<T>> {
  */
 export function deleteRequest<T>(
   url: string,
-  params: any,
-  data: T
+  params?: any,
+  data?: any
 ): Promise<Result<T>> {
   return http.request("delete", url, { params: params, data: data });
 }

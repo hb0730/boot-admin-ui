@@ -59,7 +59,7 @@ export interface FormField {
   /**
    * 指定的dataSource key
    */
-  dataSourceKey: string;
+  dataSourceKey?: string;
   options?: {
     /**
      * 是否允许清除, 默认true
