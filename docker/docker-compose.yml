@@ -1,0 +1,6 @@
+version: "3"
+services:
+  admin-ui:
+    image: boot-admin-ui:v5
+    ports:
+      - "8081:80"
