@@ -29,7 +29,11 @@ export function get<T, P>(url: string, params: T): Promise<Result<P>> {
  * @param data body
  * @returns .
  */
-export function put<T>(url: string, params: any, data: T): Promise<Result<T>> {
+export function put<T>(
+  url: string,
+  params?: any,
+  data?: T
+): Promise<Result<T>> {
   return http.request("put", url, { params: params, data: data });
 }
 /**
