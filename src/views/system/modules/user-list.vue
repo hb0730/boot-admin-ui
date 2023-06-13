@@ -54,7 +54,7 @@ const searchFormFields = computed((): FormField[] => {
     {
       type: "select",
       label: "状态",
-      prop: "enabled",
+      prop: "enable",
       placeholder: "请选择",
       dataSourceKey: "enabledOptions",
       options: {
@@ -120,7 +120,7 @@ const pageData: any = reactive({
       {
         type: "select",
         label: "状态",
-        prop: "enabled",
+        prop: "enable",
         placeholder: "请选择",
         dataSourceKey: "enabledOptions",
         options: {
@@ -298,7 +298,7 @@ const handleChangeCurrentPage = (val: any) => {
 };
 const getQueryParams = () => {
   const sqp = {};
-  const param = Object.assign(sqp, pageData.searchForm);
+  const param = Object.assign(sqp, pageData.searchParam.searchForm);
   param.current = pageData.tableParam.pagination.currentPage;
   param.size = pageData.tableParam.pagination.pageSize;
   if (props.orgInfo) {
