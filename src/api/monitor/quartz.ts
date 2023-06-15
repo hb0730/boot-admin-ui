@@ -6,7 +6,7 @@ import { get, Result, post, put, deleteRequest } from "../base";
  * @returns .
  */
 export function queryPage<T>(query?: any): Promise<Result<T>> {
-  return get("/quartz/job/query/page", query);
+  return get("/monitor/quartz/job/query/page", query);
 }
 /**
  * 列表查询
@@ -14,7 +14,7 @@ export function queryPage<T>(query?: any): Promise<Result<T>> {
  * @returns .
  */
 export function queryList<T>(query?: any): Promise<Result<T>> {
-  return get("/quartz/job/query/list", query);
+  return get("/monitor/quartz/job/query/list", query);
 }
 /**
  *  保存
@@ -22,7 +22,7 @@ export function queryList<T>(query?: any): Promise<Result<T>> {
  * @returns  .
  */
 export function save<T>(data?: T): Promise<Result<T>> {
-  return post("/quartz/job/save", data);
+  return post("/monitor/quartz/job/save", data);
 }
 /**
  * 更新
@@ -31,7 +31,7 @@ export function save<T>(data?: T): Promise<Result<T>> {
  * @returns .
  */
 export function update<T>(id: string, data?: T): Promise<Result<T>> {
-  return put(`/quartz/job/update/${id}`, {}, data);
+  return put(`/monitor/quartz/job/update/${id}`, {}, data);
 }
 /**
  * 删除
@@ -39,7 +39,7 @@ export function update<T>(id: string, data?: T): Promise<Result<T>> {
  * @returns .
  */
 export function delByIds<T>(id: string[]): Promise<Result<T>> {
-  return deleteRequest(`/quartz/job/delete`, {}, id);
+  return deleteRequest(`/monitor/quartz/job/delete`, {}, id);
 }
 /**
  * 检查cron表达式
@@ -47,7 +47,7 @@ export function delByIds<T>(id: string[]): Promise<Result<T>> {
  * @returns .
  */
 export function checkCorn<T>(cron: string): Promise<Result<T>> {
-  return get(`/quartz/job/check/cron`, { cron: cron });
+  return get(`/monitor/quartz/job/check/cron`, { cron: cron });
 }
 
 /**
@@ -56,7 +56,7 @@ export function checkCorn<T>(cron: string): Promise<Result<T>> {
  * @returns .
  */
 export function resume<T>(id: string): Promise<Result<T>> {
-  return put(`/quartz/job/resume/${id}`);
+  return put(`/monitor/quartz/job/resume/${id}`);
 }
 
 /**
@@ -65,7 +65,7 @@ export function resume<T>(id: string): Promise<Result<T>> {
  * @returns .
  */
 export function execute<T>(id: string): Promise<Result<T>> {
-  return put(`/quartz/job/execute/${id}`);
+  return put(`/monitor/quartz/job/execute/${id}`);
 }
 /**
  * 根据ID删除
@@ -73,5 +73,5 @@ export function execute<T>(id: string): Promise<Result<T>> {
  * @returns .
  */
 export function delById<T>(id: string): Promise<Result<T>> {
-  return deleteRequest(`/quartz/job/delete`, { id: id }, {});
+  return deleteRequest(`/monitor/quartz/job/delete`, { id: id }, {});
 }

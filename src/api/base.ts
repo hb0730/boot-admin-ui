@@ -19,7 +19,7 @@ export function post<T, P>(url: string, data: T): Promise<Result<P>> {
 /**
  * get
  */
-export function get<T, P>(url: string, params: T): Promise<Result<P>> {
+export function get<T, P>(url: string, params?: T): Promise<Result<P>> {
   return http.get<T, Result<P>>(url, { params: params });
 }
 /**

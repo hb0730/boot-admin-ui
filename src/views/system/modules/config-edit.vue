@@ -40,7 +40,7 @@ const pageData: any = reactive({
         }
       },
       {
-        type: "input",
+        type: "textarea",
         label: "配置值",
         prop: "value",
         placeholder: "请输入配置值",
@@ -200,6 +200,15 @@ defineExpose({
               :clearable="item.options?.clearable ?? true"
               :max="item.max ?? 255"
               :disabled="disabledField(item)"
+            />
+          </template>
+          <template v-else-if="item.type === 'textarea'">
+            <el-input
+              v-model="pageData.formParam.infoForm[item.prop]"
+              :clearable="item.options?.clearable ?? true"
+              :max="item.max ?? 255"
+              :disabled="disabledField(item)"
+              type="textarea"
             />
           </template>
           <template v-else-if="item.type === 'select'">

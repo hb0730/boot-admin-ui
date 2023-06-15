@@ -153,7 +153,7 @@ class PureHttp {
         const code = response.data.code || 200;
         // 获取错误信息
         const msg =
-          errorCode[code] || response.data.msg || errorCode["default"];
+          errorCode[code] || response.data.message || errorCode["default"];
         if (code === 401) {
           if (!isRelogin.show) {
             isRelogin.show = true;

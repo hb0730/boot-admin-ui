@@ -29,10 +29,10 @@
     "not op_mini all"
   ],
   "dependencies": {
-    "@types/jsrsasign": "^10.5.5",
     "@pureadmin/descriptions": "^1.1.1",
     "@pureadmin/table": "^2.2.0",
     "@pureadmin/utils": "^1.9.3",
+    "@types/jsrsasign": "^10.5.5",
     "@vueuse/core": "^10.1.2",
     "@vueuse/motion": "^2.0.0",
     "animate.css": "^4.1.1",
@@ -41,9 +41,9 @@
     "echarts": "^5.4.2",
     "element-plus": "^2.3.6",
     "element-resize-detector": "^1.2.4",
+    "js-cookie": "^3.0.5",
     "jsrsasign": "^10.6.1",
     "jsrsasign-util": "^1.0.5",
-    "js-cookie": "^3.0.5",
     "mitt": "^3.0.0",
     "mockjs": "^1.1.0",
     "nprogress": "^0.2.0",
@@ -54,7 +54,8 @@
     "sortablejs": "^1.15.0",
     "vue": "^3.3.4",
     "vue-router": "^4.2.2",
-    "vue-types": "^5.0.3"
+    "vue-types": "^5.0.3",
+    "vue3-json-viewer": "^2.2.2"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.6.5",

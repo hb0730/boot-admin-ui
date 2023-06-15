@@ -57,7 +57,7 @@ export const ifOptions: SelectOption<boolean>[] = [
  */
 export const configTypeOptions: SelectOption<number>[] = [
   { label: "系统配置", value: 1 },
-  { label: "业务配置", value: 0 }
+  { label: "业务配置", value: 2 }
 ];
 export const configTypeMap: SelectOptionMap<string> = {
   1: "系统配置",
