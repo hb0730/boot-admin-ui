@@ -3,14 +3,15 @@ import "animate.css";
 // 引入 src/components/ReIcon/src/offlineIcon.ts 文件中所有使用addIcon添加过的本地图标
 import "@/components/ReIcon/src/offlineIcon";
 import { setType } from "./types";
-import { emitter } from "@/utils/mitt";
 import { useLayout } from "./hooks/useLayout";
+import { useResizeObserver } from "@vueuse/core";
 import { useAppStoreHook } from "@/store/modules/app";
 import { useSettingStoreHook } from "@/store/modules/settings";
 import { deviceDetection, useDark, useGlobal } from "@pureadmin/utils";
 import { useDataThemeChange } from "@/layout/hooks/useDataThemeChange";
 import {
   h,
+  ref,
   reactive,
   computed,
   onMounted,
@@ -27,6 +28,7 @@ import Horizontal from "./components/sidebar/horizontal.vue";
 import backTop from "@/assets/svg/back_top.svg?component";
 import LayoutFooter from "./components/footer/index.vue";
 
+const appWrapperRef = ref();
 const { isDark } = useDark();
 const { layout } = useLayout();
 const isMobile = deviceDetection();
@@ -79,10 +81,10 @@ function toggle(device: string, bool: boolean) {
 // 判断是否可自动关闭菜单栏
 let isAutoCloseSidebar = true;
 
-// 监听容器
-emitter.on("resize", ({ detail }) => {
+useResizeObserver(appWrapperRef, entries => {
   if (isMobile) return;
-  const { width } = detail;
+  const entry = entries[0];
+  const { width } = entry.contentRect;
   width <= 760 ? setTheme("vertical") : setTheme(useAppStoreHook().layout);
   /** width app-wrapper类容器宽度
    * 0 < width <= 760 隐藏侧边栏
@@ -148,7 +150,7 @@ const layoutHeader = defineComponent({
 </script>
 
 <template>
-  <div :class="['app-wrapper', set.classes]" v-resize>
+  <div ref="appWrapperRef" :class="['app-wrapper', set.classes]">
     <div
       v-show="
         set.device === 'mobile' &&
