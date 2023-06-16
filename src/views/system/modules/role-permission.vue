@@ -4,7 +4,7 @@ import { treeList as permissionTree } from "@/api/sys/permission";
 import * as roleApi from "@/api/sys/role";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import { Result } from "@/api/base";
-import { message } from "@/utils/message";
+import message from "@/utils/message";
 import { ElMessageBox, type ElTree } from "element-plus";
 const treeRef = ref<InstanceType<typeof ElTree>>();
 const pageData: any = reactive({
@@ -59,13 +59,14 @@ const _updatePermission = (permissionIds: any, close?: boolean) => {
     .updatePermission(pageData.role.id, permissionIds)
     .then((res: any) => {
       if (res.success) {
+        message.success("更新授权成功");
         if (close) {
           _handleClose();
         } else {
           loadRolePermission();
         }
       } else {
-        message(res.message, { type: "warning" });
+        message.warning(res.message);
       }
     })
     .finally(() => {
@@ -89,8 +90,9 @@ const loadRolePermission = () => {
     .then((res: Result<string[]>) => {
       if (res.success) {
         pageData.rolePermission = res.result;
+        treeRef.value!.setCheckedKeys(res.result);
       } else {
-        message(res.message, { type: "warning" });
+        message.warning(res.message);
       }
     })
     .finally(() => {
@@ -121,8 +123,8 @@ defineOptions({ name: "RolePermission" });
             node-key="id"
             show-checkbox
             default-expand-all
+            :check-strictly="false"
             style="width: 100%"
-            :default-checked-keys="pageData.rolePermission"
             v-loading="pageData.treeLoading"
           />
         </el-form-item>
@@ -166,5 +168,3 @@ defineOptions({ name: "RolePermission" });
     </template>
   </el-drawer>
 </template>
-
-<style scoped></style>

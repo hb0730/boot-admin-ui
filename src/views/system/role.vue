@@ -16,7 +16,8 @@ const pageData: any = reactive({
     query: [],
     add: ["role:save"],
     update: ["role:update"],
-    delete: ["role:delete"]
+    delete: ["role:del"],
+    permission: ["role:permission"]
   },
   /**
    * 是否显示搜索
@@ -287,13 +288,17 @@ defineOptions({ name: "sysRole" });
         </template>
         <template #operation="{ row }">
           <el-link
-            v-show="hasAuth(pageData.permission.update) && row.isSystem != 1"
+            v-show="
+              hasAuth(pageData.permission.permission) && row.isSystem != 1
+            "
             type="primary"
             @click="handleAuthorize(row)"
             >授权</el-link
           >
           <el-divider
-            v-show="hasAuth(pageData.permission.update) && row.isSystem !== 1"
+            v-show="
+              hasAuth(pageData.permission.permission) && row.isSystem != 1
+            "
             direction="vertical"
           />
           <el-link
