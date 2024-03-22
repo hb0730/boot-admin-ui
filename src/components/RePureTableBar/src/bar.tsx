@@ -228,13 +228,17 @@ export default defineComponent({
         <div {...attrs} class="w-[99/100] mt-2 px-2 pb-2 bg-bg_color">
           <div class="flex justify-between w-full h-[60px] p-4">
             {slots?.title ? (
-              slots.title()
+              <div class="flex items-center justify-around">
+                {slots.title({ size: size.value })}
+              </div>
             ) : (
               <p class="font-bold truncate">{props.title}</p>
             )}
             <div class="flex items-center justify-around">
               {slots?.buttons ? (
-                <div class="flex mr-4">{slots.buttons()}</div>
+                <div class="flex mr-4">
+                  {slots.buttons({ size: size.value })}
+                </div>
               ) : null}
               {props.tableRef?.size ? (
                 <>

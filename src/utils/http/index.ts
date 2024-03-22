@@ -11,11 +11,18 @@ import type {
 } from "./types.d";
 import { stringify } from "qs";
 import NProgress from "../progress";
-import { getToken, formatToken } from "@/utils/auth";
-import { useUserStoreHook } from "@/store/modules/user";
+import { formatToken } from "@/utils/auth";
+import { useAuthStoreHook } from "@/store/modules/auth";
+import errorCode from "./error-code";
+import { ElMessageBox, ElNotification } from "element-plus";
+import { message } from "../message";
+import { ref } from "vue";
+// 是否显示重新登录
+const isRelogin = ref(false);
 
 // 相关配置请参考：www.axios-js.com/zh-cn/docs/#axios-request-config-1
 const defaultConfig: AxiosRequestConfig = {
+  baseURL: import.meta.env.VITE_SERVER_API_URL ?? "",
   // 请求超时时间
   timeout: 10000,
   headers: {
@@ -51,7 +58,7 @@ class PureHttp {
   private static retryOriginalRequest(config: PureHttpRequestConfig) {
     return new Promise(resolve => {
       PureHttp.requests.push((token: string) => {
-        config.headers["Authorization"] = formatToken(token);
+        config.headers["X-Access-Token"] = formatToken(token);
         resolve(config);
       });
     });
@@ -77,33 +84,10 @@ class PureHttp {
         return whiteList.find(url => url === config.url)
           ? config
           : new Promise(resolve => {
-              const data = getToken();
-              if (data) {
-                const now = new Date().getTime();
-                const expired = parseInt(data.expires) - now <= 0;
-                if (expired) {
-                  if (!PureHttp.isRefreshing) {
-                    PureHttp.isRefreshing = true;
-                    // token过期刷新
-                    useUserStoreHook()
-                      .handRefreshToken({ refreshToken: data.refreshToken })
-                      .then(res => {
-                        const token = res.data.accessToken;
-                        config.headers["Authorization"] = formatToken(token);
-                        PureHttp.requests.forEach(cb => cb(token));
-                        PureHttp.requests = [];
-                      })
-                      .finally(() => {
-                        PureHttp.isRefreshing = false;
-                      });
-                  }
-                  resolve(PureHttp.retryOriginalRequest(config));
-                } else {
-                  config.headers["Authorization"] = formatToken(
-                    data.accessToken
-                  );
-                  resolve(config);
-                }
+              const token = useAuthStoreHook().getAccessToken;
+              if (token) {
+                config.headers["X-Access-Token"] = formatToken(token);
+                resolve(config);
               } else {
                 resolve(config);
               }
@@ -131,6 +115,52 @@ class PureHttp {
         if (PureHttp.initConfig.beforeResponseCallback) {
           PureHttp.initConfig.beforeResponseCallback(response);
           return response.data;
+        }
+
+        // 二进制数据则直接返回
+        if (
+          response.request.responseType === "blob" ||
+          response.request.responseType === "arraybuffer"
+        ) {
+          return response.data;
+        }
+
+        // dataAxios 是 axios 返回数据中的 data
+        const code = response.data.code || 200;
+        // 获取错误信息
+        const msg =
+          errorCode[code] || response.data.message || errorCode["default"];
+
+        if (code === 401) {
+          if (!isRelogin.value) {
+            isRelogin.value = true;
+            ElMessageBox.confirm(
+              "登录状态已过期，您可以继续留在该页面，或者重新登录",
+              "系统提示",
+              {
+                confirmButtonText: "重新登录",
+                cancelButtonText: "取消",
+                type: "warning"
+              }
+            )
+              .then(async () => {
+                isRelogin.value = false;
+                console.log("logout");
+                await useAuthStoreHook()
+                  .logout()
+                  .then(() => {
+                    location.href = "/logout";
+                  });
+              })
+              .catch(() => {
+                isRelogin.value = false;
+              });
+          }
+        } else if (code === 500) {
+          message(msg, { type: "error" });
+        } else if (code != 200) {
+          ElNotification.error({ title: msg });
+          return Promise.reject("error");
         }
         return response.data;
       },

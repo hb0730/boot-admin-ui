@@ -1,0 +1,166 @@
+<script setup lang="ts">
+import { onMounted, ref } from "vue";
+import { FormProps } from "./utils/types";
+import { usePublicHooks } from "../hooks";
+import { useFormRule } from "./utils/rules";
+import { deptTree } from "@/api/sys/dept";
+import ReCol from "@/components/ReCol";
+
+const deptTreeData = ref([]);
+const props = withDefaults(defineProps<FormProps>(), {
+  formInline: () => ({
+    id: undefined,
+    parentId: undefined,
+    code: "",
+    name: "",
+    principal: "",
+    phone: "",
+    email: "",
+    sort: 99,
+    enabled: true,
+    description: ""
+  })
+});
+
+const ruleFormRef = ref();
+const { switchStyle } = usePublicHooks();
+const newFormInline = ref(props.formInline);
+
+function getRef() {
+  return ruleFormRef.value;
+}
+
+function loadDeptTree() {
+  deptTree().then(res => {
+    if (res.success) {
+      deptTreeData.value = res.data;
+    }
+  });
+}
+onMounted(() => {
+  loadDeptTree();
+});
+
+defineExpose({ getRef });
+
+defineOptions({
+  name: "deptEdit"
+});
+</script>
+
+<template>
+  <el-form
+    ref="ruleFormRef"
+    :model="newFormInline"
+    :rules="useFormRule(newFormInline)"
+    label-width="82px"
+  >
+    <el-row :gutter="30">
+      <re-col>
+        <el-form-item label="上级部门">
+          <el-cascader
+            v-model="newFormInline.parentId"
+            class="w-full"
+            :options="deptTreeData"
+            :props="{
+              value: 'id',
+              label: 'name',
+              emitPath: false,
+              checkStrictly: true
+            }"
+            clearable
+            filterable
+            placeholder="请选择上级部门"
+          >
+            <template #default="{ node, data }">
+              <span>{{ data.name }}</span>
+              <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
+            </template>
+          </el-cascader>
+        </el-form-item>
+      </re-col>
+      <re-col :value="12" :xs="24" :sm="24">
+        <el-form-item label="部门编码" prop="code">
+          <el-input
+            v-model="newFormInline.code"
+            clearable
+            placeholder="请输入部门编码"
+            :disabled="!!newFormInline.id"
+          />
+        </el-form-item>
+      </re-col>
+      <re-col :value="12" :xs="24" :sm="24">
+        <el-form-item label="部门名称" prop="name">
+          <el-input
+            v-model="newFormInline.name"
+            clearable
+            placeholder="请输入部门名称"
+          />
+        </el-form-item>
+      </re-col>
+      <re-col :value="12" :xs="24" :sm="24">
+        <el-form-item label="部门负责人">
+          <el-input
+            v-model="newFormInline.principal"
+            clearable
+            placeholder="请输入部门负责人"
+          />
+        </el-form-item>
+      </re-col>
+
+      <re-col :value="12" :xs="24" :sm="24">
+        <el-form-item label="手机号" prop="phone">
+          <el-input
+            v-model="newFormInline.phone"
+            clearable
+            placeholder="请输入手机号"
+          />
+        </el-form-item>
+      </re-col>
+      <re-col :value="12" :xs="24" :sm="24">
+        <el-form-item label="邮箱" prop="email">
+          <el-input
+            v-model="newFormInline.email"
+            clearable
+            placeholder="请输入邮箱"
+          />
+        </el-form-item>
+      </re-col>
+
+      <re-col :value="12" :xs="24" :sm="24">
+        <el-form-item label="排序">
+          <el-input-number
+            v-model="newFormInline.sort"
+            class="!w-full"
+            :min="0"
+            :max="9999"
+            controls-position="right"
+          />
+        </el-form-item>
+      </re-col>
+      <re-col :value="12" :xs="24" :sm="24">
+        <el-form-item label="部门状态">
+          <el-switch
+            v-model="newFormInline.enabled"
+            inline-prompt
+            :active-value="true"
+            :inactive-value="false"
+            active-text="启用"
+            inactive-text="停用"
+            :style="switchStyle"
+          />
+        </el-form-item>
+      </re-col>
+
+      <re-col :value="12" :xs="24" :sm="24">
+        <el-form-item label="备注">
+          <el-input
+            v-model="newFormInline.description"
+            placeholder="请输入备注信息"
+            type="textarea"
+          />
+        </el-form-item>
+      </re-col>
+    </el-row>
+  </el-form>
+</template>

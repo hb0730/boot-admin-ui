@@ -10,7 +10,7 @@ import {
 } from "vue";
 import type { OptionsType } from "./type";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
-import { isFunction, isNumber, useDark } from "@pureadmin/utils";
+import { isFunction, useDark } from "@pureadmin/utils";
 
 const props = {
   options: {
@@ -37,18 +37,22 @@ export default defineComponent({
     const curMouseActive = ref(-1);
     const segmentedItembg = ref("");
     const instance = getCurrentInstance()!;
-    const curIndex = isNumber(props.modelValue)
-      ? toRef(props, "modelValue")
-      : ref(0);
+    const curIndex = ref(0);
+    const modelValue = toRef(props, "modelValue");
+    if (modelValue.value !== undefined || modelValue.value !== null) {
+      props.options.forEach((e, index) => {
+        if (e.value === modelValue.value) {
+          curIndex.value = index;
+        }
+      });
+    }
 
     function handleChange({ option, index }, event: Event) {
       if (option.disabled) return;
       event.preventDefault();
-      isNumber(props.modelValue)
-        ? emit("update:modelValue", index)
-        : (curIndex.value = index);
-      segmentedItembg.value = "";
+      curIndex.value = index;
       emit("change", { index, option });
+      emit("update:modelValue", option.value);
     }
 
     function handleMouseenter({ option, index }, event: Event) {

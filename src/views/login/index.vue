@@ -6,12 +6,12 @@ import { loginRules } from "./utils/rule";
 import { useNav } from "@/layout/hooks/useNav";
 import type { FormInstance } from "element-plus";
 import { useLayout } from "@/layout/hooks/useLayout";
-import { useUserStoreHook } from "@/store/modules/user";
 import { initRouter, getTopMenu } from "@/router/utils";
 import { bg, avatar, illustration } from "./utils/static";
 import { useRenderIcon } from "@/components/ReIcon/src/hooks";
 import { ref, reactive, toRaw, onMounted, onBeforeUnmount } from "vue";
 import { useDataThemeChange } from "@/layout/hooks/useDataThemeChange";
+import { useAuthStoreHook } from "@/store/modules/auth";
 
 import dayIcon from "@/assets/svg/day.svg?component";
 import darkIcon from "@/assets/svg/dark.svg?component";
@@ -34,7 +34,8 @@ const { title } = useNav();
 
 const ruleForm = reactive({
   username: "admin",
-  password: "admin123"
+  password: "Admin123456",
+  rememberMe: false
 });
 
 const onLogin = async (formEl: FormInstance | undefined) => {
@@ -42,16 +43,20 @@ const onLogin = async (formEl: FormInstance | undefined) => {
   if (!formEl) return;
   await formEl.validate((valid, fields) => {
     if (valid) {
-      useUserStoreHook()
-        .loginByUsername({ username: ruleForm.username, password: "admin123" })
+      useAuthStoreHook()
+        .login({
+          username: ruleForm.username,
+          password: ruleForm.password,
+          rememberMe: ruleForm.rememberMe
+        })
         .then(res => {
           if (res.success) {
-            // 获取后端路由
             initRouter().then(() => {
               router.push(getTopMenu(true).path);
               message("登录成功", { type: "success" });
             });
           }
+          loading.value = false;
         });
     } else {
       loading.value = false;
@@ -69,6 +74,9 @@ function onkeypress({ code }: KeyboardEvent) {
 
 onMounted(() => {
   window.document.addEventListener("keypress", onkeypress);
+  ruleForm.password = useAuthStoreHook().loginUser.password;
+  ruleForm.username = useAuthStoreHook().loginUser.username;
+  ruleForm.rememberMe = useAuthStoreHook().loginUser.rememberMe;
 });
 
 onBeforeUnmount(() => {
@@ -135,6 +143,15 @@ onBeforeUnmount(() => {
                   placeholder="密码"
                   :prefix-icon="useRenderIcon(Lock)"
                 />
+              </el-form-item>
+            </Motion>
+            <Motion :delay="150">
+              <el-form-item prop="remember">
+                <div class="w-full h-20px flex justify-between items-center">
+                  <el-checkbox v-model="ruleForm.rememberMe"
+                    >记住密码</el-checkbox
+                  >
+                </div>
               </el-form-item>
             </Motion>
 

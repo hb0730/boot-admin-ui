@@ -61,6 +61,7 @@ declare global {
     VITE_CDN: boolean;
     VITE_HIDE_HOME: string;
     VITE_COMPRESSION: ViteCompression;
+    VITE_SERVER_API_URL: string;
   }
 
   /**
